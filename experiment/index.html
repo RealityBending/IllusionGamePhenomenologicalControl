@@ -2,7 +2,7 @@
 <html>
     <head>
         <!-- Title shown in tab -->
-        <title>Illusion Game</title>
+        <title>Sussex - Research</title>
 
         <!-- Load plugins used in Demographics -->
         <script src="https://unpkg.com/jspsych@7.3.4"></script>
@@ -83,23 +83,27 @@
         timeline.push(demographics1)
         timeline.push(demographics2)
 
-        timeline.push(pcs_timeline)
-
         // Illusion Game =======================================================
-
         // Randomize order of the 2 parts
-        var ig_parts = [
+        var ig_parts = jsPsych.randomization.shuffle([
             IG_create_block(stimuli_part1, (show_marker = false)),
             IG_create_block(stimuli_part2, (show_marker = false)),
-        ]
-        igs = jsPsych.randomization.shuffle(ig_parts)
+        ])
 
-        // // Add to timeline
-        // timeline.push(ig_practice)
-        // timeline.push(ig_parts[0])
-        // timeline.push(Qs[2])
-        // timeline.push(ig_parts[1])
-        // timeline.push(Qs[3])
+        ig_timeline = {
+            timeline: [
+                ig_practice,
+                ig_parts[0],
+                ipip6_questionnaire,
+                pid5_questionnaire,
+                ig_parts[1],
+            ],
+        }
+
+        // Counterbalance order of questionnaires ==============================
+        var tasks = jsPsych.randomization.shuffle([ig_timeline, pcs_timeline])
+        timeline.push(tasks[0])
+        timeline.push(tasks[1])
 
         // End =================================================================
         timeline.push(demographics_waitdatasaving)
@@ -121,7 +125,7 @@
 
         timeline.push(
             demographics_endscreen(
-                "https://realitybending.github.io/IllusionGameSuggestibility/experiment?exp=snow"
+                "https://realitybending.github.io/IllusionGamePhenomenologicalControl/experiment?exp=snow"
             )
         )
 
