@@ -1,0 +1,150 @@
+---
+title: "Is Phenomenological Control related to Illusion Sensitivity"
+# If blank, the running header is the title in upper case.
+shorttitle: "Illusion Sensitivity and Phenomenological Control"
+# Set names and affiliations.
+# It is nice to specify everyone's orcid, if possible.
+# There can be only one corresponding author, but declaring one is optional.
+author:
+  - name: Dominique Makowski
+    corresponding: true
+    orcid: 0000-0001-5375-9967
+    email: D.Makowski@sussex.ac.uk
+    url: https://realitybending.github.io/
+    # Roles are optional. 
+    # Select from the CRediT: Contributor Roles Taxonomy https://credit.niso.org/
+    # conceptualization, data curation, formal Analysis, funding acquisition, investigation, 
+    # methodology, project administration, resources, software, supervision, validation, 
+    # visualization, writing, editing
+    roles:
+      - Conceptualization
+      - Data curation
+      - formal Analysis
+      - Funding acquisition
+      - Investigation
+      - Methodology
+      - Project administration
+      - Resources
+      - Software
+      - Supervision
+      - Validation
+      - Visualization
+      - Writing – original draft
+      - Writing – review & editing
+    affiliations:
+      - id: id1
+        name: "University of Sussex"
+        # group: Clinical Psychology Program
+        department: School of Psychology
+        # address: 1234 Capital St.
+        # city: Albany
+        # region: NY
+        # postal-code: 12084-1234
+  - name: Ana Neves
+    orcid: 0000-0000-0000-0002
+    roles:
+      - Project administration
+      - Data curation
+      - Formal Analysis
+      - Investigation
+      - Visualization
+      - Writing – original draft
+      - Writing – review & editing
+    affiliations: 
+      - ref: id1
+  - name: Zoltan Dienes
+    orcid: 0000-0001-7454-3161
+    roles:
+      - Supervision
+      - Writing – review & editing
+    affiliations: 
+      - ref: id1
+author-note:
+  status-changes: 
+    # Example: [Author name] is now at [affiliation].
+    affiliation-change: ~
+    # Example: [Author name] is deceased.
+    deceased: ~
+  # Disclosures condensed to one paragraph, but you can start a field with two line breaks to break them up: \n\nNew Paragraph
+  disclosures:
+    # Example: This study was registered at X (Identifier Y).
+    study-registration: ~
+    # Acknowledge and cite data/materials to be shared.
+    data-sharing: ~
+    # Example: This article is based on data published in [Reference].
+    # Example: This article is based on the dissertation completed by [citation].  
+    related-report: ~
+    # Example: [Author name] has been a paid consultant for Corporation X, which funded this study.
+    conflict-of-interest: ~
+    # Example: This study was supported by Grant [Grant Number] from [Funding Source].
+    financial-support: ~
+    # Example: The authors are grateful to [Person] for [Reason].
+    gratitude: ~
+    # Example. Because the authors are equal contributors, order of authorship was determined by a fair coin toss.
+    authorship-agreements: ~
+abstract: "Blablablabla blablabla todo todo todo."
+# Put as many keywords at you like, separated by commmas (e.g., [reliability, validity, generalizability])
+keywords: [keyword1, keyword2, keyword3]
+# If true, tables and figures are mingled with the text instead of listed at the end of the document.
+floatsintext: true
+# Numbered lines (.pdf and .docx only)
+numbered-lines: true
+# File with references
+bibliography: bibliography.bib
+# Suppress title page
+suppress-title-page: false
+# Masks references that appear in the masked-citations list
+mask: false
+masked-citations:
+  - schneider2012cattell
+  - schneider2015intelligence
+# Language options. See https://quarto.org/docs/authoring/language.html
+lang: en
+language:
+  citation-last-author-separator: "and"
+  citation-masked-author: "Masked Citation"
+  citation-masked-date: "n.d."
+  citation-masked-title: "Masked Title"
+  title-block-author-note: "Author Note"
+  title-block-correspondence-note: "Correspondence concerning this article should be addressed to"
+  title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; https://credit.niso.org/) as follows:"
+  references-meta-analysis: "References marked with an asterisk indicate studies included in the meta-analysis."
+format:
+  apaquarto-docx: default
+  apaquarto-html: default
+  apaquarto-pdf:
+    # Can be jou (journal), man (manuscript), stu (student), or doc (document)
+    documentmode: man
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(conflicted)
+library(tidyverse)
+library(flextable)
+library(ftExtra)
+library(officer)
+library(knitr)
+
+conflicts_prefer(dplyr::filter, .quiet = TRUE)
+conflicts_prefer(flextable::separate_header, .quiet = TRUE)
+```
+
+This is my introductory paragraph. The title will be placed above it automatically. *Do not start with an introductory heading* (e.g., "Introduction"). The title acts as your Level 1 heading for the introduction.
+
+See [here](https://quarto.org/docs/authoring/footnotes-and-citations.html) for instructions on setting up citations and references.
+
+A parenthetical citation requires square brackets [@CameronTrivedi2013]. This reference was in my bibliography file. An in-text citation is done like so: 
+
+@CameronTrivedi2013 make some important points ...
+
+See [here](https://wjschne.github.io/apaquarto/writing.html#references) for explanations, examples, and citation features exclusive to apaquarto. For example, apaquarto can automatically handle possessive citations:
+
+
+# References
+
+<!-- References will auto-populate in the refs div below -->
+
+::: {#refs}
+:::
