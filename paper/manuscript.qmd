@@ -83,7 +83,7 @@ author-note:
     # Example. Because the authors are equal contributors, order of authorship was determined by a fair coin toss.
     authorship-agreements: ~
 abstract: "
-Visual illusions highlight how easily our conscious experience can be altered with respect to perceptual reality. Despite sharing in-principle mechanisms with phenomenological control, i.e., the ability to alter our perceptual experience to match task demands or expectations, research tying the two remains scarce. This study aims to replicate and expand Lush et al. (2022) reporting an absence of correlation between phenomenological control (measured using the Phenomenological Control Scale) and illusion sensitivity to different illusion types. *[N participants were recruited in an online study. Results will added in the final version of the manuscript]*.
+Visual illusions highlight how easily our conscious experience can be altered with respect to perceptual reality. Despite sharing in-principle mechanisms with phenomenological control, i.e., the ability to alter our perceptual experience to match task demands or expectations, research tying the two remains scarce. This study aims to replicate and expand Lush et al. (2022) reporting an absence of correlation between phenomenological control (measured using the Phenomenological Control Scale) and illusion sensitivity to different illusion types. *[N participants were recruited in an online study. Results will be added in the final version of the manuscript]*.
 "
 # Put as many keywords at you like, separated by commmas (e.g., [reliability, validity, generalizability])
 keywords: [illusion sensitivity, visual illusions, phenomenological control, suggestibility, hypnotizability]
@@ -182,8 +182,8 @@ Illusion Game outliers will be flagged based on their RT distributions, followin
 
 After removing problematic participants and trials, the outcome measures (PC and VI sensitivity scores) will be computed and the Bayesian correlation (with medium prior on the coefficient, i.e., r-scale parameter set to 1/3) will be computed [using the *BayesFactor* package; @BayesFactor]. Following @lush2022, we expect to collect evidence against (BF10 \<= 1/3) a relationship between PCS and VI sensitivity. Data analysis will be carried out using R, using *tidyverse* [@tidyverse] and *easystats* [@easystats; @parameters; @correlation; @bayestestR; @datawizard]. The analysis script and additional information are available at *https://github.com/RealityBending/IllusionGamePhenomenologicalControl*.
 
-\pagebreak 
- 
+\pagebreak
+
 # References
 
 <!-- References will auto-populate in the refs div below -->
