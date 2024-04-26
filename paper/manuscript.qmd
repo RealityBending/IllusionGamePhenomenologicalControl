@@ -71,7 +71,6 @@ author-note:
     study-registration: ~
     # Acknowledge and cite data/materials to be shared.
     data-sharing: ~
-    # Example: This article is based on data published in [Reference].
     # Example: This article is based on the dissertation completed by [citation].  
     related-report: ~
     # Example: [Author name] has been a paid consultant for Corporation X, which funded this study.
@@ -146,38 +145,24 @@ The idea that we are endowed with the potential to unconsciously alter our subje
 
 To encourage the empirical exploration of our ability and tendency to alter our phenomenological experience and further accelerate investigations away from the hypnotic context, @lush2021 adapted the Sussex-Waterloo Scale of Hypnotisability [SWASH, @lush2018] by removing all its references to hypnosis, to measure trait phenomenological control. This newly developed phenomenological control scale (PCS) consists of 10 imaginative suggestions followed by subjective ratings for each suggestion on a 6-point Likert scale and has been demonstrated to be compatible with online experiments [@lush2022].
 
-Interestingly, @lush2022 did test for a relationship between PC and illusion sensitivity using the Müller-Lyer illusion (in which the arrangement of the arrowheads flanking two lines makes them appear as having different lengths), and reported evidence in favour of an absence of correlation between the two measures. This finding was interpreted as indicative of the cognitive impenetrability of illusions, implying that the effect is driven by low-level processes and therefore not influenced by top-down mechanisms such as PC. The goal of this study is thus to replicate the results from @lush2022 pointing to an absence of a relationship between phenomenological control and illusion sensitivity, by generalising them to a different illusion task that would encompass other illusion types (see table 1).
+Interestingly, @lush2022 did test for a relationship between PC and illusion sensitivity using the Müller-Lyer illusion (in which the arrangement of the arrowheads flanking two lines makes them appear as having different lengths), and reported evidence in favour of an absence of correlation between the two measures. This finding was interpreted as indicative of the cognitive impenetrability of illusions, implying that the effect is driven by low-level processes and therefore not influenced by top-down mechanisms such as PC. The goal of this study is thus to replicate the results from @lush2022 pointing to an absence of a relationship between phenomenological control and illusion sensitivity, by generalising them to a different illusion task that would encompass other illusion types (see @tbl-table1).
 
- 
-```{r}
-# Create the dataframe
-df <- data.frame(
-  Question = "Is there a relationship between trait phenomenological control (PC) and visual illusion (VI) sensitivity?",
-  Hypothesis = "Replicating findings from Lush et al., 2022 paper, we expect evidence of favour of an absence of relationship between VI and PCS",
-  Sampling_plan = "The goal is to recruit around 500 adult English speakers using Prolific. This sample size is based on the ones used in Lush et l., 2021 and Lush et al., 2022 that we aim at replicate.",
-  Analysis_Plan = "Bayesian correlations between the PC score and the VI performance for the 3 illusion types (corresponding to the error rate) will be computed using the BayesFactor::BFCorrelation() function (with the r-scale prior parameter set to 'medium')",
-  Rationale = "Evidence against a relationship between PC and VI will be found if BF10 <= 1/3, following the Lush et al., 2022 findings. BF10 > 3 will be taken as evidence for a relationship between these two measures.",
-  Interpretation = "The hypothesis that VI sensitivity is independent from PC.",
-  Theory = ""
-)
+::: {#tbl-table1}
+
+| **Question**                                                                                                                                 | **Hypothesis**                                                                                                                            | **Sampling Plan**                                                                                                               | **Analysis Plan**                                                                                                                                                                             | **Rationale for Deciding the Sensitivity of the Test**                                                                                           | **Interpretation Given Different Outcomes**                         | **Theory That Could Be Shown Wrong by the Outcomes**                                                                                                        |
+|----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Is there a correlation between trait phenomenological control (PC) and visual illusion (VI) sensitivity?                                    | Replicating findings from Lush et al., 2022 paper, we expect evidence of favour of an absence of relationship between VI and PCS         | The goal is to recruit around 500 adult English speakers using Prolific. This sample size is based on the ones used in Lush et al., 2021 and Lush et al., 2022 that we aim at replicate. | Bayesian correlations between the PC score and the VI performance for the 3 illusion types (corresponding to the error rate) will be computed using the BayesFactor::BFCorrelation() function (with the r-scale prior parameter set to 'medium') | Evidence against a relationship between PC and VI will be found if BF10 <= 1/3, following the Lush et al., 2022 findings. BF10 > 3 will be interpreted as evidence for a relationship between these two measures. | The hypothesis that VI sensitivity is independent from PC.          | The cognitive impenetrability of illusions, implying that the effect is driven by low-level processes and therefore not influenced by top-down mechanisms such as PC. |
+
+Study Design Table
+:::
 
 
-# Print the dataframe as a table
-print(kable(df), format = "markdown")
-
-
-```
-
-
-
-
-Table 1. Study Design Table
 
 # Methods
 
 ## Participants
 
-We aim to recruit around 500 [in line with the sample sizes used in @lush2021; @lush2022] adult English native speakers with a desktop device using Prolific (www.prolific.co). Participants will be first presented with an explanatory statement and the consent form, and can proceed by pressing a button to confirm they have read and understood the information. This study will be approved by the ethics board of the School of Psychology of the University of Sussex (XX/XXXX).
+We aim to recruit around 500 [in line with the sample sizes used in @lush2021; @lush2022] adult English native speakers with a desktop device using Prolific (www.prolific.co). Participants will be first presented with an explanatory statement and the consent form, and can proceed by pressing a button to confirm they have read and understood the information. This study has been approved by the ethics board of the School of Psychology of the University of Sussex (ER/ASF25/5).
 
 ## Procedure
 
@@ -206,6 +191,24 @@ The PCS will contain several manipulation check indices to identify problematic 
 Illusion Game outliers will be flagged based on their RT distributions, following the same procedure as in [@makowski2023]. If the RT is collapsed to the left (i.e., has \> 1/3 of ultra-fast responses - typically \< 200 ms) in the first block, the entire participant will be discarded (suggesting that they did not properly do the text), but if only the second block is bad, then only the second block will be discarded (as the illusion sensitivity can still be estimated, albeit with less precision). In addition, the removal of individual trials will also be performed [RT \< 200 ms or \> 3 SD; following @theriault2024].
 
 After removing problematic participants and trials, the outcome measures (PC and VI sensitivity scores) will be computed and the Bayesian correlation (with medium prior on the coefficient, i.e., r-scale parameter set to 1/3) will be computed [using the *BayesFactor* package; @BayesFactor]. Following @lush2022, we expect to collect evidence against (BF10 \<= 1/3) a relationship between PCS and VI sensitivity. Data analysis will be carried out using R, using *tidyverse* [@tidyverse] and *easystats* [@easystats; @parameters; @correlation; @bayestestR; @datawizard]. The analysis script and additional information are available at *https://github.com/RealityBending/IllusionGamePhenomenologicalControl*.
+
+
+# Results
+
+*This section will be completed after data is collected.*
+
+
+# Discussion
+
+*This section will be completed after data is collected.*
+
+# Data Availability
+
+All the study materials, experiment, data, and analysis is available on GitHub at https://github.com/RealityBending/IllusionGamePhenomenologicalControl
+
+# Acknowledgments
+
+We would like to thank An Shu Te for her help in setting up the project, Ryan Scott for his help in implementing the phenomenological control scale, and Zoltan Dienes for his input, feedback and guidance.
 
 \pagebreak
 
