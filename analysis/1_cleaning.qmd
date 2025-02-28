@@ -1,0 +1,29 @@
+---
+title: "Illusion Game & PCS"
+subtitle: "Preprocessing"
+date: "`r Sys.Date()`"
+editor: source
+editor_options: 
+  chunk_output_type: console
+format:
+  html:
+    code-fold: true
+    self-contained: false
+    toc: true
+execute: 
+  cache: true
+---
+
+## Data Preparation
+
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(ggdist)
+library(ggside)
+library(easystats)
+library(patchwork)
+```
+
