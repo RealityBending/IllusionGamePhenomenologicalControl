@@ -150,8 +150,11 @@ Interestingly, @lush2022 did test for a relationship between PC and illusion sen
 
 ::: {#tbl-table1}
 ```{r}
+#| tbl-cap: "Study Design Table"
+
+
 question <- c("Question","Hypothesis","Sampling Plan","Analysis Plan","Rationale for Deciding the Sensitivity of the Test","Interpretation Given Different Outcomes","Theory That Could Be Shown Wrong by the Outcomes")
-answer <- c("Is there a correlation between trait phenomenological control (PC) and visual illusion (VI) sensitivity?", "Replicating findings from Lush et al., 2022 paper, we expect evidence of favour of an absence of relationship between VI and PCS", "The goal is to recruit around 500 adult English speakers using Prolific. This sample size is based on the ones used in Lush et al., 2021 and Lush et al., 2022 that we aim at replicate.", "Bayesian correlations between the PC score and the VI performance for the 3 illusion types (corresponding to the error rate) will be computed using the *BayesFactor::BFCorrelation()* function (with the r-scale prior parameter set to ‘medium’)", "Evidence against a relationship between PC and VI will be found if BF10 <= 1/3, following the Lush et al., 2022 findings. BF10 > 3 will be interpreted as evidence for a relationship between these two measures.", "The hypothesis that VI sensitivity is independent from PC.", "The cognitive impenetrability of illusions, implying that the effect is driven by low-level processes and therefore not influenced by top-down mechanisms such as PC.")
+answer <- c("Is there a correlation between trait phenomenological control (PC) and visual illusion (VI) sensitivity?", "Replicating findings from Lush et al., 2022 paper, we expect evidence of favour of an absence of relationship between VI and PCS", "The goal is to recruit around 500 adult English speakers using Prolific. This sample size is based on the ones used in Lush et al., 2021 and Lush et al., 2022 that we aim at replicate.", "Bayesian correlations between the PC score and the VI performance for the 3 illusion types (corresponding to the error rate) will be computed using the BayesFactor::BFCorrelation() function (with the r-scale prior parameter set to ‘medium’)", "Evidence against a relationship between PC and VI will be found if BF10 <= 1/3, following the Lush et al., 2022 findings. BF10 > 3 will be interpreted as evidence for a relationship between these two measures.", "The hypothesis that VI sensitivity is independent from PC.", "The cognitive impenetrability of illusions, implying that the effect is driven by low-level processes and therefore not influenced by top-down mechanisms such as PC.")
 
 # join variables to create dataframe
 study_design_df <- data.frame(question, answer)
@@ -159,7 +162,7 @@ study_design_df <- data.frame(question, answer)
 ## study design table
 study_design_table <- flextable::flextable(study_design_df)
 study_design_table <- set_table_properties(study_design_table, width = 1, layout = "autofit")
-study_design_table <- set_caption(study_design_table, caption = "Study Design Table")
+#study_design_table <- set_caption(study_design_table, caption = "Study Design Table")
 study_design_table <- delete_part(x = study_design_table, part = "header")
 study_design_table <- bold(study_design_table, j = "question", bold = TRUE, part = "body")
 study_design_table <- theme_apa(study_design_table)
@@ -206,32 +209,39 @@ The two sets of 3 illusion blocks will be separated by 2 short questionnaires ac
 ::: {#tbl-table3}
 
 ```{r}
-illusion <- c("Ebbinghaus", "Müller-Lyer", "Vertical-Horizontal")
-example <- c("img/Ebbinghaus_Demo.png", "img/MullerLyer_Demo.png", "img/VerticalHorizontal_Demo.png")
-instructions <- c("Which red circle is bigger?", "Which red line is longer?", "Which red line is longer?")
-arrows <- c("img/answer_leftright_keyboard.png", "img/answer_updown_keyboard.png", "img/answer_leftright_keyboard.png")
-description <- c("Two circles surrounded by other circles. The circle surrounded by smaller circles appears larger than the one with the larger surrounding circles.", "Two parallel segments that end with inwards/outwards pointing arrow-like fins. The segment with inward-pointing fins is typically perceived to be longer", "Two lines segments, one horizontal and one angled. The angled line is usually perceived as longer.")
+#| tbl-cap: "Illusion bla bla (look at the illusion game validation paper for some inspiration on the figure caption) "
+# illusion <- c("Ebbinghaus", "Müller-Lyer", "Vertical-Horizontal")
+# example <- c("img/Ebbinghaus_Demo.png", "img/MullerLyer_Demo.png", "img/VerticalHorizontal_Demo.png")
+# instructions <- c("Which red circle is bigger?", "Which red line is longer?", "Which red line is longer?")
+# arrows <- c("img/answer_leftright_keyboard.png", "img/answer_updown_keyboard.png", "img/answer_leftright_keyboard.png")
+# description <- c("Two circles surrounded by other circles. The circle surrounded by smaller circles appears larger than the one with the larger surrounding circles.", "Two parallel segments that end with inwards/outwards pointing arrow-like fins. The segment with inward-pointing fins is typically perceived to be longer", "Two lines segments, one horizontal and one angled. The angled line is usually perceived as longer.")
+# 
+# illusion_example_df <- data.frame(illusion, example, arrows, instructions, description)
+# 
+# illusion_example_table <- flextable::flextable(illusion_example_df, col_keys = c("illusion", "example", "instructions", "description")) |>
+#     mk_par(
+#     j = "instructions",
+#     value = as_paragraph(
+#       as_chunk(x = instructions),
+#       as_image(src = arrows, width = .5, height = 0.5),
+#       " "
+#     )
+#   )
+# 
+# illusion_example_table <- illusion_example_table |>
+#   colformat_image(j = "example", width = 1, height = 0.75)
+# 
+# illusion_example_table <- flextable::set_table_properties(illusion_example_table, width = 1, layout = "autofit")
+# illusion_example_table <- flextable::set_header_labels(illusion_example_table, illusion = "Illusion", example = "Example", instructions = "Task", description = "Description")
+# illusion_example_table <- flextable::theme_apa(illusion_example_table)
+# 
+# # illusion_example_table
+# 
+# save_as_pptx(illusion_example_table, path = "IllusionTable.pptx")
 
-illusion_example_df <- data.frame(illusion, example, arrows, instructions, description)
 
-illusion_example_table <- flextable::flextable(illusion_example_df, col_keys = c("illusion", "example", "instructions", "description")) |>
-    mk_par(
-    j = "instructions",
-    value = as_paragraph(
-      as_chunk(x = instructions),
-      as_image(src = arrows, width = .5, height = 0.5),
-      " "
-    )
-  )
+knitr::include_graphics("img/IllusionTable.jpg")
 
-illusion_example_table <- illusion_example_table |>
-  colformat_image(j = "example", width = 1, height = 0.75)
-
-illusion_example_table <- set_table_properties(illusion_example_table, width = 1, layout = "autofit")
-illusion_example_table <- flextable::set_header_labels(illusion_example_table, illusion = "Illusion", example = "Example", instructions = "Task", description = "Description")
-illusion_example_table <- theme_apa(illusion_example_table)
-
-illusion_example_table
 ```
 
 Illusion Task Example Stimuli
