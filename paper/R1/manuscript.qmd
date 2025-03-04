@@ -113,6 +113,7 @@ format:
   apaquarto-pdf:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
     documentmode: man
+output: officedown::rdocx_document
 ---
 
 ```{r}
@@ -198,7 +199,7 @@ The two sets of 3 illusion blocks will be separated by 2 short questionnaires ac
 
 ::: {#tbl-figure1}
 
-![The parametric framework for visual illusions (Makowski et al., 2021) applied to the Müller-Lyer illusion (above). Below are examples of stimuli showcasing the manipulation of two parameters, task difficulty and illusion strength.](img/example_stimuli.webp)
+![The parametric framework for visual illusions (Makowski et al., 2021) applied to the Müller-Lyer illusion (above). Below are examples of stimuli showcasing the manipulation of two parameters, task difficulty and illusion strength.](img/example_stimuli.png)
 
 :::
 
