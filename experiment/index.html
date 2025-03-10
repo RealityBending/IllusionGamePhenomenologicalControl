@@ -28,12 +28,13 @@
     <script src="demographics.js"></script>
     <script src="questionnaires.js"></script>
 
-    <!-- Load Illusion Game scripts -->
-    <script src="https://realitybending.github.io/IllusionGame/v3/stimuli/stimuli_training.js"></script>
-    <script src="https://realitybending.github.io/IllusionGame/v3/stimuli/stimuli_part1.js"></script>
-    <script src="https://realitybending.github.io/IllusionGame/v3/stimuli/stimuli_part2.js"></script>
-    <script src="https://realitybending.github.io/IllusionGame/v3/instructions.js"></script>
-    <script src="https://realitybending.github.io/IllusionGame/v3/IllusionGame.js"></script>
+    <!-- Ilussion  -->
+    <script src="instructions.js"></script>
+    <script src="IllusionGame.js"></script>
+    <script src="stimuli/stimuli_training.js"></script>
+    <script src="stimuli/stimuli_part1.js"></script>
+    <script src="stimuli/stimuli_part2.js"></script>
+
 
     <link href="https://unpkg.com/jspsych@8.0.1/css/jspsych.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@2.0.0/css/survey.css" />
@@ -65,10 +66,12 @@
     })
 
     // Demographics ========================================================
-    timeline.push(demographics_browser_info)
-    timeline.push(restrict_mobile)
-    timeline.push(ConsentForm)
-    timeline.push(demographics_questions)
+    // timeline.push(demographics_browser_info)
+    // timeline.push(restrict_mobile)
+    // timeline.push(ConsentForm)
+    // timeline.push(demographics_questions)
+
+
 
     // Illusion Game =======================================================
     // Randomize order of the 2 parts
@@ -78,23 +81,25 @@
     ])
 
     // Randomize questionnaires 
-    var questionnaires = jsPsych.randomization.shuffle([ipip6_questionnaire, pid5_questionnaire])
+    // var questionnaires = jsPsych.randomization.shuffle([ipip6_questionnaire, pid5_questionnaire])
 
 
     ig_timeline = {
         timeline: [
             ig_practice,
             ig_parts[0],
-            questionnaires_instructions,
-            questionnaires,
+            // questionnaires_instructions,
+            // questionnaires,
             ig_parts[1],
         ],
     }
 
+    timeline.push(ig_timeline)
+
     // Counterbalance order of questionnaires ==============================
-    var tasks = jsPsych.randomization.shuffle([ig_timeline, pcs_timeline])
-    timeline.push(tasks[0])
-    timeline.push(tasks[1])
+    // var tasks = jsPsych.randomization.shuffle([ig_timeline, pcs_timeline])
+    // timeline.push(tasks[0])
+    // timeline.push(tasks[1])
 
     // End =================================================================
     timeline.push(demographics_waitdatasaving)
