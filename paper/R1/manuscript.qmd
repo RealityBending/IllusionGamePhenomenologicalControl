@@ -113,7 +113,6 @@ format:
   apaquarto-pdf:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
     documentmode: man
-output: officedown::rdocx_document
 ---
 
 ```{r}
@@ -170,6 +169,7 @@ study_design_table
 Study Design Table
 :::
 
+
 # Methods
 
 ## Participants
@@ -197,49 +197,24 @@ Visual illusion sensitivity will be measured as the average error rate in the in
 
 The two sets of 3 illusion blocks will be separated by 2 short questionnaires acting as a break, namely the IPIP-6 [@sibley2011mini], measuring 6 personality traits with 24 analogue scales items, and the PID-5 [@krueger2011], measuring 5 maladaptive personality traits with 25 Likert scales items. These questionnaires are included as a way of providing a break between the two cognitively taxing blocks and maintain paradigmatic consistency with previous studies [@makowski2023].
 
-::: {#tbl-figure1}
+::: {#fig-figure1}
 
 ![The parametric framework for visual illusions (Makowski et al., 2021) applied to the Müller-Lyer illusion (above). Below are examples of stimuli showcasing the manipulation of two parameters, task difficulty and illusion strength.](img/example_stimuli.png)
 
+The parametric framework for visual illusions (Makowski et al., 2021) applied to the Müller-Lyer illusion (above). Below are examples of stimuli showcasing the manipulation of two parameters, task difficulty and illusion strength.
 :::
 
-::: {#tbl-table3}
+::: {#tbl-table2}
 
-```{r}
-illusion <- c("Ebbinghaus", "Müller-Lyer", "Vertical-Horizontal")
-example <- c("img/Ebbinghaus_Demo.png", "img/MullerLyer_Demo.png", "img/VerticalHorizontal_Demo.png")
-instructions <- c("Which red circle is bigger?", "Which red line is longer?", "Which red line is longer?")
-arrows <- c("img/answer_leftright_keyboard.png", "img/answer_updown_keyboard.png", "img/answer_leftright_keyboard.png")
-description <- c("Two circles surrounded by other circles. The circle surrounded by smaller circles appears larger than the one with the larger surrounding circles.", "Two parallel segments that end with inwards/outwards pointing arrow-like fins. The segment with inward-pointing fins is typically perceived to be longer", "Two lines segments, one horizontal and one angled. The angled line is usually perceived as longer.")
+![Illusions Task Example Stimuli.](img/illusion_table.png)
 
-illusion_example_df <- data.frame(illusion, example, arrows, instructions, description)
-
-illusion_example_table <- flextable::flextable(illusion_example_df, col_keys = c("illusion", "example", "instructions", "description")) |>
-    mk_par(
-    j = "instructions",
-    value = as_paragraph(
-      as_chunk(x = instructions),
-      as_image(src = arrows, width = .5, height = 0.5),
-      " "
-    )
-  )
-
-illusion_example_table <- illusion_example_table |>
-  colformat_image(j = "example", width = 1, height = 0.75)
-
-illusion_example_table <- set_table_properties(illusion_example_table, width = 1, layout = "autofit")
-illusion_example_table <- flextable::set_header_labels(illusion_example_table, illusion = "Illusion", example = "Example", instructions = "Task", description = "Description")
-illusion_example_table <- theme_apa(illusion_example_table)
-
-illusion_example_table
-```
-
-Illusion Task Example Stimuli
+Illusions Task Example Stimuli.
 :::
+
 
 ## Data Analysis
 
-The PCS will contain several manipulation check indices to identify problematic participants. **The phenomenological control task consists of various auditory and visual exercises. In one such exercise, participants receive the following instruction: “Open your eyes. You will see only two balls on the screen…just two balls”. However, three differently coloured balls are actually displayed. If participants select the option "no balls were shown", it indicates they failed to pay attention to both the auditory instructions and the visual stimuli. In another exercise, participants are asked to press the spacebar six times. If they press it fewer than five times within the allotted time, it suggests a lack of attentiveness to the auditory instructions. Participants will be excluded if they fail at least one of these checks. Participants will be excluded if they fail at least one of the attention checks.**
+The PCS will contain several manipulation check indices to identify problematic participants. **The phenomenological control task consists of various auditory and visual exercises. In one such exercise, participants receive the following instruction: “Open your eyes. You will see only two balls on the screen…just two balls”. However, three differently coloured balls are actually displayed. If participants select the option "no balls were shown", it indicates they failed to pay attention to both the auditory instructions and the visual stimuli. In another exercise, participants are asked to press the spacebar six times. If they press it fewer than five times within the allotted time, it suggests a lack of attentiveness to the auditory instructions. Participants will be excluded if they fail at least one of the attention checks.**
 
 Illusion Game outliers will be flagged based on their RT distributions, following the same procedure as in [@makowski2023]. **If the RT is collapsed to the left (i.e., has \> 1/3 of ultra-fast responses - typically \< 200 ms) in the first set, the entire participant will be discarded (suggesting that they did not properly do the task), but if only the second set is bad, then only the second set will be discarded (as the illusion sensitivity can still be estimated, albeit with less precision).** In addition, the removal of individual trials will also be performed [RT \< 200 ms or \> 3 SD; following @theriault2024].
 
