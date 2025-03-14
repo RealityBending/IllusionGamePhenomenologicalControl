@@ -165,7 +165,7 @@ function IG_create_trial(illusion_name = "Ponzo", type = "updown", marker = true
     var trial = {
         type: jsPsychImageKeyboardResponse,
         stimulus: function () {
-            return path_ig + jsPsych.timelineVariable("stimulus")
+            return jsPsych.timelineVariable("stimulus")
         },
         data: function () {
             return jsPsych.timelineVariable("data")
@@ -249,7 +249,7 @@ function IG_make_trials(stimuli, instructions, illusion_name, type, marker = tru
     // Preload images
     timeline.push({
         type: jsPsychPreload,
-        images: stim_list.map((a) => path_ig + a.stimulus),
+        images: stim_list.map((a) => a.stimulus),
         data: { screen: "IG_Preload" },
     })
 
@@ -275,7 +275,7 @@ function IG_make_trials(stimuli, instructions, illusion_name, type, marker = tru
         randomize_order: true,
         repetitions: 1,
         on_load: function () {
-            let path = stim_list.map(a => path_ig + a.stimulus)
+            let path = stim_list.map(a => a.stimulus)
             console.log(path) // Debugging to check if it works
         },
     })
