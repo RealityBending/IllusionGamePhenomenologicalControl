@@ -103,9 +103,6 @@
             ig_parts[1],
         ],
     }
-
-    timeline.push(ig_timeline)
-
     // Counterbalance order of questionnaires ==============================
     var tasks = jsPsych.randomization.shuffle([ig_timeline, pcs_timeline])
     timeline.push(tasks[0])
