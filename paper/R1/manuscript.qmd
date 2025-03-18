@@ -153,7 +153,7 @@ Interestingly, @lush2022 did test for a relationship between PC and illusion sen
 #| tbl-cap: "Study Design Table"
 
 
-question <- c("Question","Hypothesis","Sampling Plan","Analysis Plan","Rationale for Deciding the Sensitivity of the Test","Interpretation Given Different Outcomes","Theory That Could Be Shown Wrong by the Outcomes")
+question <- c("Question", "Hypothesis", "Sampling Plan", "Analysis Plan", "Rationale for Deciding the Sensitivity of the Test", "Interpretation Given Different Outcomes", "Theory That Could Be Shown Wrong by the Outcomes")
 answer <- c("Is there a correlation between trait phenomenological control (PC) and visual illusion (VI) sensitivity?", "Replicating findings from Lush et al., 2022 paper, we expect evidence of favour of an absence of relationship between VI and PCS", "The goal is to recruit around 500 adult English speakers using Prolific. This sample size is based on the ones used in Lush et al., 2021 and Lush et al., 2022 that we aim at replicate.", "Bayesian correlations between the PC score and the VI performance for the 3 illusion types (corresponding to the error rate) will be computed using the BayesFactor::BFCorrelation() function (with the r-scale prior parameter set to ‘medium’)", "Evidence against a relationship between PC and VI will be found if BF10 <= 1/3, following the Lush et al., 2022 findings. BF10 > 3 will be interpreted as evidence for a relationship between these two measures.", "The hypothesis that VI sensitivity is independent from PC.", "The cognitive impenetrability of illusions, implying that the effect is driven by low-level processes and therefore not influenced by top-down mechanisms such as PC.")
 
 # join variables to create dataframe
@@ -162,7 +162,7 @@ study_design_df <- data.frame(question, answer)
 ## study design table
 study_design_table <- flextable::flextable(study_design_df)
 study_design_table <- set_table_properties(study_design_table, width = 1, layout = "autofit")
-#study_design_table <- set_caption(study_design_table, caption = "Study Design Table")
+# study_design_table <- set_caption(study_design_table, caption = "Study Design Table")
 study_design_table <- delete_part(x = study_design_table, part = "header")
 study_design_table <- bold(study_design_table, j = "question", bold = TRUE, part = "body")
 study_design_table <- theme_apa(study_design_table)
@@ -194,58 +194,33 @@ Participants will be asked to put on their headphones and await further auditory
 
 The task is an adaptation of the one used in @makowski2023 to make it shorter and more reliable, in which participants must make perceptual judgments (e.g., "which red line is the longer") as quickly and accurately as possible. It includes 3 illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal. The procedure encompasses 2 sets of 80 trials for each illusion type. Each set will include, in a random order, the 3 blocks of illusion types, in which trials are separated by a fixation cross, temporally (uniformly sampled duration of 500 - 1000s) and spatially jittered (around the centre of the screen in a radius of a 1 cm) to attenuate its potential usefulness as a reference point. After each illusion type block, a score is presented (computed as a scaled Inverse Efficiency Score) as a gamification mechanism to increase motivation to perform to the best of one's abilities. To mitigate for the potential variability in the speed/accuracy trade-off, the instructions emphasize with equal weight to be fast and to avoid errors.
 
+
+```{r}
+#| warning: false
+#| label: "fig-illusion_framework"
+#| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
+#| out-width: "100%"
+#| fig-cap: "The parametric framework for visual illusions (Makowski et al., 2021) applied to the Müller-Lyer illusion (above). Below are examples of stimuli showcasing the manipulation of two parameters, task difficulty and illusion strength."
+
+knitr::include_graphics("img/example_stimuli.png")
+```
+
 For each illusion type, two continuous dimensions are orthogonally manipulated [see @makowski2021 for details on the rationale and execution], namely task difficulty and illusion strength, so that each trial corresponds to a unique combination. Task difficulty corresponds to the difficulty of the perceptual decision (e.g., if the task is to select the longest red line, task difficulty corresponds to how the lines are objectively different). Illusion strength corresponds to the degree to which the illusion elements (e.g., the black arrow lines in Müller-Lyer) are interfering with the aforementioned task. Note that the illusion effect can be "incongruent" (biasing perception in the direction of the incorrect response) or "congruent" (facilitating, i.e., biasing perception in the direction of the correct response). Participants respond with a key arrow (left vs. right; or up vs. down), and their reaction time (RT) and accuracy are recorded.
 
 Visual illusion sensitivity will be measured as the average error rate in the incongruent condition, separately for the 3 illusion types. Although the error rate is arguably a crude score, which does not take into account the effect of varying illusion strength, the interaction with task difficulty and the possible adjustments in response strategy (speed-accuracy trade off), it is also the most simple and easy to reproduce, hence its usage as our primary outcome for the current **registered report**.
 
 The two sets of 3 illusion blocks will be separated by 2 short questionnaires acting as a break, namely the IPIP-6 [@sibley2011mini], measuring 6 personality traits with 24 analogue scales items, and the PID-5 [@krueger2011], measuring 5 maladaptive personality traits with 25 Likert scales items. These questionnaires are included as a way of providing a break between the two cognitively taxing blocks and maintain paradigmatic consistency with previous studies [@makowski2023].
 
-::: {#tbl-figure1}
-
-![The parametric framework for visual illusions (Makowski et al., 2021) applied to the Müller-Lyer illusion (above). Below are examples of stimuli showcasing the manipulation of two parameters, task difficulty and illusion strength.](img/example_stimuli.png)
-
-:::
-
-::: {#tbl-table3}
 
 ```{r}
-#| tbl-cap: "Illusion bla bla (look at the illusion game validation paper for some inspiration on the figure caption) "
-# illusion <- c("Ebbinghaus", "Müller-Lyer", "Vertical-Horizontal")
-# example <- c("img/Ebbinghaus_Demo.png", "img/MullerLyer_Demo.png", "img/VerticalHorizontal_Demo.png")
-# instructions <- c("Which red circle is bigger?", "Which red line is longer?", "Which red line is longer?")
-# arrows <- c("img/answer_leftright_keyboard.png", "img/answer_updown_keyboard.png", "img/answer_leftright_keyboard.png")
-# description <- c("Two circles surrounded by other circles. The circle surrounded by smaller circles appears larger than the one with the larger surrounding circles.", "Two parallel segments that end with inwards/outwards pointing arrow-like fins. The segment with inward-pointing fins is typically perceived to be longer", "Two lines segments, one horizontal and one angled. The angled line is usually perceived as longer.")
-# 
-# illusion_example_df <- data.frame(illusion, example, arrows, instructions, description)
-# 
-# illusion_example_table <- flextable::flextable(illusion_example_df, col_keys = c("illusion", "example", "instructions", "description")) |>
-#     mk_par(
-#     j = "instructions",
-#     value = as_paragraph(
-#       as_chunk(x = instructions),
-#       as_image(src = arrows, width = .5, height = 0.5),
-#       " "
-#     )
-#   )
-# 
-# illusion_example_table <- illusion_example_table |>
-#   colformat_image(j = "example", width = 1, height = 0.75)
-# 
-# illusion_example_table <- flextable::set_table_properties(illusion_example_table, width = 1, layout = "autofit")
-# illusion_example_table <- flextable::set_header_labels(illusion_example_table, illusion = "Illusion", example = "Example", instructions = "Task", description = "Description")
-# illusion_example_table <- flextable::theme_apa(illusion_example_table)
-# 
-# # illusion_example_table
-# 
-# save_as_pptx(illusion_example_table, path = "IllusionTable.pptx")
-
+#| warning: false
+#| label: "fig-illusionexample"
+#| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
+#| out-width: "100%"
+#| fig-cap: "The study involved three visual illusions, in which participants were instructed to respond as quickly as possible without making errors. Each illusion included two manipulated parameters: strength (e.g., the angle of the outward- or inward-pointing arrow-like fins in the Müller-Lyer illusion) and difficulty (e.g., the difference in line lengths in the Müller-Lyer illusion."
 
 knitr::include_graphics("img/IllusionTable.jpg")
-
 ```
-
-Illusion Task Example Stimuli
-:::
 
 ## Data Analysis
 
