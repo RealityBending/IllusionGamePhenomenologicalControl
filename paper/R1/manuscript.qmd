@@ -187,6 +187,53 @@ Participants will be presented with a consent form followed by demographic quest
 
 Participants will be asked to put on their headphones and await further auditory instructions. The PCS procedure starts with a recorded introduction explaining that a series of tests will be applied to evaluate how experiences can be created through imagination. This will be followed by 10 suggestions in a fixed order [see @lush2021], such as "now extend your arms ahead of you, with palms facing each other, hands about a foot apart" and "as you sit comfortably in your chair with your eyes closed, a picture of two balls will be displayed on the computer screen". **Once the 10 suggestions are completed, participants will be asked to rate their subjective experiences and response to each suggestion on a 6-points Likert scale (from 0-5).** Phenomenological control will be indexed by averaging the scores from the 10 scales.
 
+::: {tbl-table2}
+```{r}
+suggestion <- c("Hand Lowering", "Moving Hands Together", "Mosquito Hallucination", "Taste Hallucination", "Arm Rigidity", "Arm Immobilization", "Music Hallucination", "Negative Visual Illusion", "Amnesia", "Button Press")
+
+example <- c(
+  "Now the hand and arm feel heavy, as if the weight were pressing down...and as it feels heavier and heavier the hand and arm begin to move down...",
+  "You are thinking of your hands being pulled together, and they begin to move together...",
+"You may not have noticed a mosquito that has been buzzing, singing as mosquitoes do...",
+"Imagine that you have something sweet-tasting in your mouth, like a little sugar... ",
+"Your arm feels stiff as if tightly splinted...  Test how stiff and rigid it is ...",
+"Your hand is getting heavier, very heavy, as though it were being pressed against your lap.",
+"In a few moments, a recording of ‘Happy Birthday to You’ will be played for you.  When the recording starts the volume will be turned way down and you will probably not be able to hear it, or you will hear it very faintly.",
+"You will see just two balls on the screen...  just two balls...",
+"You will remember nothing of what you did or felt from the time that you closed your eyes until I say to you: 'Now you can remember everything!'",
+"You will press the space bar six times but forget that I told you to do so, just as you will forget the other things, until I tell you, 'Now you can remember everything'."
+             )
+
+question <- c(
+  "How strongly did you feel your hand become heavy, where 0 means you felt your arm was no more heavy than normal and 5 means you felt your arm becoming as heavy as if you had a heavy object in your hand, pulling it down?", 
+   "How strongly did you feel a force between your hands,  where 0 means you felt no force at all and 5 means you felt a force so strong it was as if your hands were real magnets?",
+   "How strongly did you feel the sensation of a mosquito being there, in either sound or touch, where 0 means you felt no sensation and 5 means you felt by any means as if there actually was a mosquito there?",
+  "How strongly did you taste a SWEET taste in your mouth, where 0 means you felt no taste at all and 5 means you felt a strong taste? 
+  How strongly did you taste a SOUR taste in your mouth, where 0 means you felt no taste at all and 5 means you felt a strong taste?",
+  "How stiff did your arm feel, where 0 means no more stiffness than normal and 5 means you could feel a stiffness so compelling no amount of effort would overcome it?",
+  "How strongly did you feel a heaviness in your hand, where 0 means you felt no heaviness at all and 5 means your hand felt so heavy it was as if a very heavy object was actually pressing it down?",
+  "Report how clearly you heard the music, where 0 means you did not hear any music at all and 5 means you heard it so clearly it was as though it was coming from the best sound system.",
+  "What color balls did you see in the screen?",
+  "How hard was it to remember events before you were told 'now you can remember everything', where 0 means you could remember events as easily as normal and 5 means you found it so difficult to remember it was as if there was an actual blank in your memory?",
+  "Report how strong an urge you felt to press the space bar, where 0 means you had no urge whatsoever and 5 means you had a clear urge to press the space bar repeatedly. 
+  Report how clearly you remembered being given the instruction to press the space bar six times, where 0 means you were able at that time to remember the instruction normally and 5 means you had no memory of the instruction at that time to press the space bar."
+  )
+
+# join variables to create dataframe
+pcs_df <- data.frame(suggestion, example, question)
+
+## study design table
+pcs_table <- flextable::flextable(pcs_df)
+pcs_table <- set_table_properties(pcs_table, width = 1, layout = "autofit")
+pcs_table <- set_caption(pcs_table, caption = "PCS Stimuli Table")
+# pcs_table <- bold(study_design_table, j = "question", bold = TRUE, part = "body")
+pcs_table <- theme_apa(pcs_table)
+
+pcs_table
+```
+
+:::
+
 ### Illusion Game
 
 The task is an adaptation of the one used in @makowski2023 to make it shorter and more reliable, in which participants must make perceptual judgments (e.g., "which red line is the longer") as quickly and accurately as possible. It includes 3 illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal. The procedure encompasses 2 sets of 80 trials for each illusion type. Each set will include, in a random order, the 3 blocks of illusion types, in which trials are separated by a fixation cross, temporally (uniformly sampled duration of 500 - 1000s) and spatially jittered (around the centre of the screen in a radius of a 1 cm) to attenuate its potential usefulness as a reference point. After each illusion type block, a score is presented (computed as a scaled Inverse Efficiency Score) as a gamification mechanism to increase motivation to perform to the best of one's abilities. To mitigate for the potential variability in the speed/accuracy trade-off, the instructions emphasize with equal weight to be fast and to avoid errors.
