@@ -187,7 +187,7 @@ Participants will be presented with a consent form followed by demographic quest
 
 Participants will be asked to put on their headphones and await further auditory instructions. The PCS procedure starts with a recorded introduction explaining that a series of tests will be applied to evaluate how experiences can be created through imagination. This will be followed by 10 suggestions in a fixed order [see @lush2021], such as "now extend your arms ahead of you, with palms facing each other, hands about a foot apart" and "as you sit comfortably in your chair with your eyes closed, a picture of two balls will be displayed on the computer screen". **Once the 10 suggestions are completed, participants will be asked to rate their subjective experiences and response to each suggestion on a 6-points Likert scale (from 0-5).** Phenomenological control will be indexed by averaging the scores from the 10 scales.
 
-::: {tbl-table2}
+::: {#tbl-table2}
 ```{r}
 suggestion <- c("Hand Lowering", "Moving Hands Together", "Mosquito Hallucination", "Taste Hallucination", "Arm Rigidity", "Arm Immobilization", "Music Hallucination", "Negative Visual Illusion", "Amnesia", "Button Press")
 
@@ -226,12 +226,13 @@ pcs_df <- data.frame(suggestion, example, question)
 pcs_table <- flextable::flextable(pcs_df)
 pcs_table <- set_table_properties(pcs_table, width = 1, layout = "autofit")
 pcs_table <- set_caption(pcs_table, caption = "PCS Stimuli Table")
-# pcs_table <- bold(study_design_table, j = "question", bold = TRUE, part = "body")
+pcs_table <- set_header_labels(pcs_table, suggestion = "Suggestion", example = "Example Stimuli", question = "Task Item(s)")
 pcs_table <- theme_apa(pcs_table)
 
 pcs_table
 ```
 
+PCS Stimuli and Task Items
 :::
 
 ### Illusion Game
@@ -251,7 +252,7 @@ The two sets of 3 illusion blocks will be separated by 2 short questionnaires ac
 The parametric framework for visual illusions (Makowski et al., 2021) applied to the Müller-Lyer illusion (above). Below are examples of stimuli showcasing the manipulation of two parameters, task difficulty and illusion strength.
 :::
 
-::: {#tbl-table2}
+::: {#tbl-table3}
 
 ![Illusions Task Example Stimuli.](img/illusion_table.png)
 
