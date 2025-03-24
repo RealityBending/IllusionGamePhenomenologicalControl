@@ -113,7 +113,6 @@ format:
   apaquarto-pdf:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
     documentmode: man
-output: officedown::rdocx_document
 ---
 
 ```{r}
@@ -190,6 +189,7 @@ study_design_table
 
 Study Design Table
 :::
+
 
 # Methods
 
