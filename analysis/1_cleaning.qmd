@@ -14,7 +14,7 @@ execute:
   cache: true
 ---
 
-## Data Preparation
+# Data Preparation
 
 ```{r}
 #| message: false
@@ -26,9 +26,467 @@ library(ggside)
 library(easystats)
 library(patchwork)
 
-data <- read.csv("C:/Users/asf25/Box/IllusionPCS/")
+data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")
+
+
+data_ig <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv")|> 
+  group_by(Illusion_Type) |> 
+  mutate(Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
+         Task_Difficulty = abs(Illusion_Difference),
+         Condition_Illusion = datawizard::categorize(
+           Illusion_Strength, split="quantile", n_groups=4,
+           labels=c("Congruent - Strong", "Congruent - Mild", "Incongruent - Mild", "Incongruent - Strong")),
+         Condition_Difficulty = datawizard::categorize(Task_Difficulty, split="quantile", n_groups=2, labels=c("Hard", "Easy"))) |> 
+  ungroup()
+
+```
+
+The initial sample consisted of `r report::report_participants(data_ppt, age="Age", gender="Gender", education="Education")`, for a total trial number of `r nrow(data_ppt)`.
+
+```{r}
 
 
 
+```
+
+## Score Computation
+
+### IPIP6
+
+```{r}
+SD_per_dim <- function(x, dims="") {
+  m <- matrix(nrow=nrow(x), ncol=0)
+  for(s in dims) {
+    m <- cbind(m, sapply(as.data.frame(t(x[grepl(s, names(x))])), sd))
+  }
+  m
+}
+```
+
+```{r}
+#| code-fold: false
+
+ipip6 <- select(data_ppt, starts_with("ipip_"))
+ipip6[grepl("_R", names(ipip6))] <- 8 - ipip6[grepl("_R", names(ipip6))]
+
+data_ppt$IPIP6_Extraversion <- rowMeans(ipip6[grepl("ext", names(ipip6))])
+data_ppt$IPIP6_Conscientiousness <- rowMeans(ipip6[grepl("cons", names(ipip6))])
+data_ppt$IPIP6_Neuroticism <- rowMeans(ipip6[grepl("neuro", names(ipip6))])
+data_ppt$IPIP6_Openness <- rowMeans(ipip6[grepl("open", names(ipip6))])
+data_ppt$IPIP6_HonestyHumility <- rowMeans(ipip6[grepl("honhum", names(ipip6))])
+data_ppt$IPIP6_Agreeableness <- rowMeans(ipip6[grepl("agr", names(ipip6))])
+data_ppt$IPIP6_SD <- rowMeans(SD_per_dim(ipip6, c("Extraversion", "Conscientiousness", "Neuroticism", "Openness", "HonestyHumility", "Agreeableness")))
+
+
+# data_ppt$IPIP6_Extraversion <- rowMeans(ipip6[grepl("Ext", names(ipip6))])
+# data_ppt$IPIP6_Conscientiousness <- rowMeans(ipip6[grepl("Cons", names(ipip6))])
+# data_ppt$IPIP6_Neuroticism <- rowMeans(ipip6[grepl("Neuro", names(ipip6))])
+# data_ppt$IPIP6_Openness <- rowMeans(ipip6[grepl("Ppen", names(ipip6))])
+# data_ppt$IPIP6_HonestyHumility <- rowMeans(ipip6[grepl("HonHum", names(ipip6))])
+# data_ppt$IPIP6_Agreeableness <- rowMeans(ipip6[grepl("Agr", names(ipip6))])
+# data_ppt$IPIP6_SD <- rowMeans(SD_per_dim(ipip6, c("Extraversion", "Conscientiousness", "Neuroticism", "Openness", "HonestyHumility", "Agreeableness")))
+```
+
+### PID-5
+
+```{r}
+#| code-fold: false
+
+pid5 <- select(data_ppt, starts_with("pid_"))
+
+data_ppt$PID5_Disinhibition <- rowMeans(pid5[grepl("Dis", names(pid5))])
+data_ppt$PID5_Detachment <- rowMeans(pid5[grepl("Det", names(pid5))])
+data_ppt$PID5_NegativeAffect <- rowMeans(pid5[grepl("NegAff", names(pid5))])
+data_ppt$PID5_Antagonism <- rowMeans(pid5[grepl("Ant", names(pid5))])
+data_ppt$PID5_Psychoticism <- rowMeans(pid5[grepl("Psy", names(pid5))])
+data_ppt$PID5_SD <- rowMeans(SD_per_dim(pid5, c("Disinhibition", "Detachment", "NegativeAffect",
+                                             "Antagonism", "Psychoticism")))
+```
+
+### Experiment Duration
+
+The experiment's median duration is `r insight::format_value(median(data_ppt$Experiment_Duration))` min (`r insight::format_ci(bayestestR::hdi(data_ppt$Experiment_Duration, ci=0.5))`).
+
+```{r}
+data_ppt |>
+  mutate(Participant = fct_reorder(Participant, Experiment_Duration),
+         Category = ifelse(Experiment_Duration > 50, "extra", "ok"),
+         Duration = ifelse(Experiment_Duration > 50, 50, Experiment_Duration)) |>
+  ggplot(aes(y = Participant, x = Duration)) +
+  geom_point(aes(color = Category, shape = Category)) +
+  geom_vline(xintercept = median(data_ppt$Experiment_Duration), color = "red", linetype = "dashed") +
+  scale_shape_manual(values = c("extra" = 3, ok = 19)) +
+  scale_color_manual(values = c("extra" = "red", ok = "black")) +
+  guides(color = "none", shape = "none") +
+  ggside::geom_xsidedensity(fill = "grey", color=NA) +
+  ggside::scale_xsidey_continuous(expand = c(0, 0)) +
+  labs(
+    title = "Experiment Completion Time",
+    x = "Duration (in minutes)",
+    y = "Participants"
+  )  +
+  see::theme_modern() +
+  ggside::theme_ggside_void() +
+  theme(ggside.panel.scale = .3, 
+        axis.text.y = element_blank()) 
+```
+
+
+# Exclusion
+
+```{r}
+#| echo: true
+#| code-fold: false
+
+outliers <- list()
+outliers_half <- list()
+```
+
+## Reaction Time (per Block)
+
+```{r}
+#| message: false
+
+errorrate <- data_ig |>
+  group_by(Participant, Illusion_Type, Block) |>
+  summarize(ErrorRate_per_block = sum(Error) / n()) |>
+  ungroup() |>
+  arrange(desc(ErrorRate_per_block))
+
+d_all <- estimate_density(filter(data_ig, RT < 3)$RT)
+
+plot_distribution <- function(dat) {
+  
+  data_error <- errorrate |>
+    filter(Participant %in% unique(dat$Participant)) |>
+    group_by(Participant, Block) |>
+    summarize(y = mean(ErrorRate_per_block), .groups="drop") |>
+    mutate(x = ifelse(Block == "A", 2.1, 2.3),
+           color = case_when(
+              Participant %in% outliers ~ "red",
+              Participant %in% outliers_half ~ "orange",
+              TRUE ~ "blue"
+            ))
+  
+  dat |>
+    filter(RT < 3) |>
+    estimate_density(select = "RT", at = c("Participant", "Block")) |>
+    group_by(Participant) |>
+    normalize(select = "y") |>
+    ungroup() |>
+    mutate(
+      Participant = fct_relevel(Participant, sort(unique(dat$Participant))),
+      color = case_when(
+        Participant %in% outliers ~ "red",
+        Participant %in% outliers_half ~ "orange",
+        TRUE ~ "blue"
+      )
+    ) |>
+    ggplot(aes(x = x, y = y)) +
+    geom_bar(data = data_error, aes(fill = color), stat = "identity", width=0.19) +
+    geom_segment(aes(x = 2, xend = 2.4, y = 0.5, yend = 0.5), color = "black", linetype="dashed", linewidth = 0.5) +
+    geom_area(data = normalize(d_all, select = "y"), alpha = 0.2) +
+    geom_line(aes(color = color, group = interaction(Participant, Block), linetype = Block), linewidth = 0.8) +
+    # geom_vline(xintercept = 0.125, linetype = "dashed", color = "red", size = 0.5) +
+    scale_color_manual(values = c("red" = "#F44336", "orange" = "#FF9800", "blue" = "blue"), guide = "none") +
+    scale_fill_manual(values = c("red" = "#F44336", "orange" = "#FF9800", "blue" = "blue"), guide = "none") +
+    scale_x_continuous(expand = c(0, 0), breaks=c(0, 0.5, 1, 1.5, 2), labels=c("0", "0.5", "1", "1.5", "2")) +
+    scale_y_continuous(expand = c(0, 0)) +
+    coord_cartesian(xlim = c(0, 2.4)) +
+    theme_modern() +
+    theme(axis.text.y = element_blank(),
+          axis.line.y = element_blank(),
+          strip.text.x = element_text(size = rel(1.5)),
+          legend.position = "none") +
+    facet_wrap(~Participant, nrow=10) +
+    labs(y = "", x = "Reaction Time (s)")
+}
+```
+
+### 1-100
+
+```{r}
+#| fig-width: 15
+#| fig-height: 15
+#| eval: false
+
+plot_distribution(data_ig[data_ig$Participant %in% data_ppt$Participant[1:100],])
+```
+
+### 101-200
+
+
+```{r}
+#| fig-width: 15
+#| fig-height: 15
+#| eval: false
+
+plot_distribution(data_ig[data_ig$Participant %in% data_ppt$Participant[1:200],])
+
+```
+
+:::
+
+We discarded `r length(outliers)` participants (entirely) and `r length(outliers_half)` participant's second blocks.
+
+```{r}
+# data_ig <- data_ig |> 
+#   filter(!Participant %in% outliers) |> 
+#   filter(!((Block == "B") & (Participant %in% outliers_half)))
+```
+
+## Error Rate (per Block)
+
+For each block, we computed the error rate and, if more than 50%, we discarded the whole block (as it likely indicates that instructions got mixed up, for instance participants were selecting the smaller instead of the bigger circle).
+
+```{r p_outliers_errorblock}
+#| eval: false
+
+errorrate |>
+  estimate_density(at = c("Illusion_Type", "Block"), method = "KernSmooth") |>
+  ggplot(aes(x = x, y = y)) +
+  geom_line(aes(color = Illusion_Type, linetype = Block)) +
+  geom_vline(xintercept = 0.5, linetype = "dashed") +
+  scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_color_manual(values = c("Ebbinghaus" = "#2196F3", "MullerLyer" = "#4CAF50", "VerticalHorizontal" = "#FF5722")) +
+  labs(y = "Distribution", x = "Error Rate") +
+  theme_modern()
+
+remove_badblocks <- function(df) {
+  n <- nrow(df)
+  df <- df |>
+    group_by(Participant, Illusion_Type, Block) |>
+    mutate(ErrorRate_per_block = sum(Error) / n()) |>
+    ungroup() |>
+    filter(ErrorRate_per_block < 0.5) |>
+    select(-ErrorRate_per_block)
+
+  text <- paste0(
+    "We removed ",
+    n - nrow(df),
+    " (",
+    insight::format_value((n - nrow(df)) / n, as_percent = TRUE),
+    ") trials belonging to bad blocks."
+  )
+  list(data = df, text = text)
+}
+
+out <- remove_badblocks(data_ig)
+print(paste("Illusion (session 1):", out$text))
+data_ig <- out$data
+```
+
+## Reaction Time (per Block)
+
+```{r outliers_RTtrials}
+#| eval: false
+
+
+check_trials <- function(df) {
+  data <- df |>
+    mutate(Outlier = ifelse(RT >= 10, TRUE, FALSE)) |>
+    group_by(Participant) |>
+    mutate(Outlier = ifelse(RT < 0.150 | standardize(RT, robust = TRUE) > 4, TRUE, Outlier)) |>
+    ungroup()
+
+  p1 <- data |>
+    filter(RT < 10) |>
+    estimate_density(select = "RT", at = "Participant") |>
+    group_by(Participant) |>
+    normalize(select = "y") |>
+    ungroup() |>
+    merge(data |>
+      group_by(Participant) |>
+      mutate(Threshold = median(RT) + 4 * mad(RT)) |>
+      filter(Error == 0) |>
+      summarize(Threshold = mean(Threshold))) |>
+    mutate(Outlier = ifelse(x >= Threshold, TRUE, FALSE)) |>
+    ggplot(aes(x = x, y = y)) +
+    geom_area(data = normalize(estimate_density(filter(data, RT < 10), select = "RT"), select = "y"), alpha = 0.2) +
+    geom_line(aes(color = Participant, linetype = Outlier), alpha = 0.2) +
+    geom_vline(xintercept = c(125), linetype = "dashed", color = "red") +
+    scale_color_material_d("rainbow", guide = "none") +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    guides(linetype = "none") +
+    coord_cartesian(xlim = c(0, 5)) +
+    theme_modern() +
+    theme(axis.text.y = element_blank()) +
+    labs(y = "", x = "Reaction Time (s)")
+
+
+  p2 <- data |>
+    group_by(Participant) |>
+    summarize(Outlier = sum(Outlier) / n()) |>
+    mutate(Participant = fct_reorder(Participant, Outlier)) |>
+    ggplot(aes(x = Participant, y = Outlier)) +
+    geom_bar(stat = "identity", aes(fill = Participant)) +
+    scale_fill_material_d("rainbow", guide = "none") +
+    scale_x_discrete(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0), labels = scales::percent) +
+    see::theme_modern() +
+    theme(axis.text.x = element_blank()) +
+    labs(y = "Percentage of outlier trials")
+
+  text <- paste0(
+    "We removed ",
+    sum(data$Outlier),
+    " (",
+    insight::format_value(sum(data$Outlier) / nrow(data), as_percent = TRUE),
+    ") outlier trials (150 ms < RT < 4 MAD above median)."
+  )
+
+  data <- filter(data, Outlier == FALSE)
+  data$Outlier <- NULL
+
+  list(p = p1 / p2, data = data, text = text)
+}
+```
+
+```{r p_outliers_RTtrials}
+#| results: 'asis'
+#| eval: false
+
+out <- check_trials(data_ig)
+out$text
+out$p
+data_ig <- out$data
+```
+
+## Manipulation/Attention Checks
+
+```{r}
+
+outliers$Hello <- data_ppt |>
+  dplyr::filter(pcs_hello != "Hello")
+
+outliers$Hello <- outliers$Hello$Participant
+
+```
+
+We removed `r length(outliers$Hello)` (`r insight::format_percent(length(outliers$Hello) / nrow(data_ppt))`) participants that did not reported hearing "Hello" at the beggining of the experiment.
+
+```{r}
+# remove after more pilots
+outliers$Balls <- data_ppt |>
+  dplyr::filter(pcs_noballs == TRUE) # remove after more pilots
+
+# outliers$balls <- data_ppt |>
+#   dplyr::filter(pcs_noballs == "TRUE")
+
+outliers$Balls <- outliers$Balls$Participant
+
+
+
+```
+
+We removed `r length(outliers$Balls)` (`r insight::format_percent(length(outliers$Balls) / nrow(data_ppt))`) participants that responded that no balls were presented in the screen. 
+
+
+```{r}
+
+outliers$Press <- data_ppt |>
+  dplyr::filter(pcs_press < 5)
+
+outliers$Press <- outliers$Press$Participant
+```
+
+We removed `r length(outliers$Press)` (`r insight::format_percent(length(outliers$Press) / nrow(data_ppt))`) participants that responded that no balls were presented in the screen.
+
+
+```{r}
+data_ppt <- filter(data_ppt, !Participant %in% outliers$Hello)
+data_ppt <- filter(data_ppt, !Participant %in% outliers$Balls)
+data_ppt <- filter(data_ppt, !Participant %in% outliers$Press)
+
+data_ig <- filter(data_ig, !Participant %in% outliers$Hello)
+data_ig <- filter(data_ig, !Participant %in% outliers$Balls)
+data_ig <- filter(data_ig, !Participant %in% outliers$Press)
+```
+
+# Final Sample
+
+```{r}
+# data_ppt<- filter(data_ppt, !Participant %in% outliers)
+# data_ig <- filter(data_ig, Participant %in% data_ppt$Participant)
+```
+
+### Age
+
+```{r}
+p_age <- estimate_density(data_ppt$Age) |>
+  normalize(select = y) |>
+  mutate(y = y * 86) |>  # To match the binwidth
+  ggplot(aes(x = x)) +
+  geom_histogram(data=dfsub, aes(x = Age, fill=Gender), bins=28) +
+  # geom_line(aes(y = y), color = "orange", linewidth=2) +
+  geom_vline(xintercept = mean(dfsub$Age), color = "red", linewidth=1.5) +
+  # geom_label(data = data.frame(x = mean(df$Age) * 1.15, y = 0.95 * 75), aes(y = y), color = "red", label = paste0("Mean = ", format_value(mean(df$Age)))) +
+  scale_fill_manual(values = c("Male"= "#64B5F6", "Female"= "#F06292", "Other"="orange")) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = "Age", y = "Number of Participants", color = NULL, subtitle = "Distribution of participants' age") +
+  theme_modern(axis.title.space = 10) +
+  theme(
+    plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = rel(1.2), vjust = 7),
+    axis.text.y = element_text(size = rel(1.1)),
+    axis.text.x = element_text(size = rel(1.1)),
+    axis.title.x = element_blank()
+  )
+p_age
+```
+
+### Education
+
+```{r}
+p_edu <- data_ppt |>
+  mutate(Education = fct_relevel(Education, "Other", "High School", "Bachelor", "Master", "Doctorate")) |>
+  ggplot(aes(x = Education)) +
+  geom_bar(aes(fill = Education)) +
+  scale_y_continuous(expand = c(0, 0), breaks= scales::pretty_breaks()) +
+  scale_fill_viridis_d(guide = "none") +
+  labs(title = "Education", y = "Number of Participants", subtitle = "Participants per achieved education level") +
+  theme_modern(axis.title.space = 15) +
+  theme(
+    plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = rel(1.2), vjust = 7),
+    axis.text.y = element_text(size = rel(1.1)),
+    axis.text.x = element_text(size = rel(1.1)),
+    axis.title.x = element_blank()
+  )
+p_edu
+```
+
+### Ethnicity
+
+```{r p_ethnicity}
+ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |> 
+  ggplot(aes(x, y, fill = group)) + 
+  ggwaffle::geom_waffle() + 
+  coord_equal() + 
+  scale_fill_flat_d() + 
+  ggwaffle::theme_waffle() +
+  labs(title = "Self-reported Ethnicity", subtitle = "Each square represents a participant", fill="")  +
+  theme(
+    plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = rel(1.2)),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  )
+```
+
+### Summary
+
+The final sample includes `r report::report_participants(dfsub, age="Age", sex="Sex", education="Education")`.
+
+## Save
+
+```{r}
+#| code-fold: false
+
+write.csv(data_ppt, "../data/data_participants.csv", row.names = FALSE)
+write.csv(data_ig, "../data/data_IllusionGame.csv", row.names = FALSE)
 ```
 
