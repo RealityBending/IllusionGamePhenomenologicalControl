@@ -25,5 +25,10 @@ library(ggdist)
 library(ggside)
 library(easystats)
 library(patchwork)
+
+data <- read.csv("C:/Users/asf25/Box/IllusionPCS/")
+
+
+
 ```
 
