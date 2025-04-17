@@ -479,7 +479,7 @@ ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |>
 
 ### Summary
 
-The final sample includes `r report::report_participants(dfsub, age="Age", sex="Sex", education="Education")`.
+The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`.
 
 ## Save
 
