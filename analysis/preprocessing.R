@@ -6,7 +6,7 @@ path <- "C:/Users/asf25/Box/IllusionPCS/"
 # JsPsych experiment ------------------------------------------------------
 
 # files <- list.files(path, pattern = "*.csv")
-files <- "z9650zj48m.csv"
+files <- "ryqwk2oej3.csv"
 
 # Progress bar
 progbar <- progress_bar$new(total = length(files))
@@ -17,6 +17,7 @@ alldata_ig <- data.frame()
 for (file in files) {
   progbar$tick()
   rawdata <- read.csv(paste0(path, "/", file))
+  
   
   # Initialize participant-level data
   dat <- rawdata[rawdata$screen == "browser_info", ]
@@ -69,21 +70,21 @@ for (file in files) {
   data_ppt$pcs_magnetichands <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_magnetichands_r", "response"])))
   data_ppt$pcs_mosquito <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_mosquito_r", "response"])))
   taste <- jsonlite::fromJSON(rawdata$response[rawdata$screen == "pcs_taste_r"])
-  data_ppt$tastesweet <- taste$TasteSweet_r
-  data_ppt$tastesour <- taste$TasteSour_r
+  data_ppt$pcs_tastesweet <- taste$TasteSweet_r
+  data_ppt$pcs_tastesour <- taste$TasteSour_r
   data_ppt$pcs_armrigidity <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_armrigidity_r", "response"])))
   data_ppt$pcs_armimmobile <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_armrimmobile_r", "response"])))
   data_ppt$pcs_music <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_music_r", "response"])))
   
-  # data_ppt$pcs_negativehallucination <- jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_negativehallucination_r", "response"])
-  data_ppt$pcs_negativehallucination <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_negativehallucination", "response"])))
+  data_ppt$pcs_negativehallucination <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_negativehallucination_r", "response"])))
+  # data_ppt$pcs_negativehallucination <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_negativehallucination", "response"])))
   
   PostSessionExp <- jsonlite::fromJSON(rawdata$response[rawdata$screen == "pcs_pss_r"])
   # data_ppt$urgepress <- taste$PostSessionExperiencea_ur
-  data_ppt$urgepress <- taste$PostSessionExperiencea_r
-  data_ppt$memorypress <- taste$PostSessionExperienceb_mr
+  data_ppt$pcs_urgepress <- PostSessionExp$PostSessionExperiencea_ur
+  data_ppt$pcs_memorypress <- PostSessionExp$PostSessionExperienceb_mr
   
-  data_ppt$pcs_rememeber <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_remember_r", "response"])))
+  data_ppt$pcs_amnesia <- as.integer(unlist(jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_amnesia_r", "response"])))
 
   # Initialise all values as FALSE
   data_ppt$pcs_yellowball <- FALSE
@@ -98,7 +99,6 @@ for (file in files) {
   if (any(rawdata$screen == "pcs_balls_mc")) {
     response_raw <- rawdata$response[rawdata$screen == "pcs_balls_mc"]
     
-    # Extract the response (in case it's a list or multiple entries, take the first)
     response <- jsonlite::fromJSON(response_raw[1])$Balls_mc
     
     # Set TRUE where appropriate

@@ -26,7 +26,9 @@ library(ggside)
 library(easystats)
 library(patchwork)
 
-data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")
+# data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")
+
+data_ppt <- read.csv("C:/Users/asf25/Desktop/studies/IllusionGamePhenomenologicalControl/data/rawdata_participants.csv")
 
 
 data_ig <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv")|> 
@@ -101,6 +103,28 @@ data_ppt$PID5_Antagonism <- rowMeans(pid5[grepl("Ant", names(pid5))])
 data_ppt$PID5_Psychoticism <- rowMeans(pid5[grepl("Psy", names(pid5))])
 data_ppt$PID5_SD <- rowMeans(SD_per_dim(pid5, c("Disinhibition", "Detachment", "NegativeAffect",
                                              "Antagonism", "Psychoticism")))
+```
+
+### PCS
+
+```{r}
+
+pcs <-  select(data_ppt, starts_with("pcs_"))
+
+data_ppt$pcs_tastescore <- rowMeans(pcs[grepl("taste", names(pcs))])
+
+data_ppt$pcs_postsessionsuggetsion <- sqrt(data_ppt$pcs_urgepress * data_ppt$pcs_memorypress)
+
+#delete with more participants (changes have been made in script)
+pcs <- pcs |>
+  rename(pcs_amnesia = pcs_rememeber)
+
+# data_ppt$pcs <- rowMeans(pcs[grepl("hands|music|mosquito|tastescore|arm|negative|postsession|amnesia(?!_w)", names(pcs))], na.rm = TRUE)
+
+data_ppt$pcs <- rowMeans(pcs[!grepl("pcs_amnesia_w", names(pcs)) & grepl("hands|music|mosquito|tastescore|arm|negative|postsession|amnesia", names(pcs))], na.rm = TRUE)
+
+
+data_ppt$pcs_SD <- sd(data_ppt$pcs, na.rm = TRUE)
 ```
 
 ### Experiment Duration
@@ -479,7 +503,7 @@ ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |>
 
 ### Summary
 
-The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`.
+The final sample includes `r report::report_participants(dfsub, age="Age", sex="Sex", education="Education")`.
 
 ## Save
 
