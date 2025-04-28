@@ -109,24 +109,6 @@ data_ppt$PID5_SD <- rowMeans(SD_per_dim(pid5, c("Disinhibition", "Detachment", "
                                              "Antagonism", "Psychoticism")))
 ```
 
-### PCS
-
-```{r}
-
-pcs <-  select(data_ppt, starts_with("pcs_"))
-
-pcs$pcs_tastescore <- rowMeans(pcs[grepl("taste", names(pcs))])
-
-pcs$pcs_postsessionsuggetsion <- sqrt(data_ppt$pcs_urgepress * data_ppt$pcs_memorypress)
-
-pcs$pcs_postsessionsuggetsion <- sqrt(data_ppt$pcs_urgepress * data_ppt$pcs_memorypress)
-
-data_ppt$pcs <- rowMeans(pcs[!grepl("pcs_amnesia_w", names(pcs)) & grepl("hands|music|mosquito|tastescore|arm|negative|postsession|amnesia", names(pcs))], na.rm = TRUE)
-
-
-data_ppt$pcs_SD <- sd(data_ppt$pcs, na.rm = TRUE)
-```
-
 ### Experiment Duration
 
 The experiment's median duration is `r insight::format_value(median(data_ppt$Experiment_Duration))` min (`r insight::format_ci(bayestestR::hdi(data_ppt$Experiment_Duration, ci=0.5))`).
@@ -167,6 +149,8 @@ outliers_half <- list()
 ```
 
 ## Reaction Time (per Block)
+
+**Note**. If the RT is collapsed to the left (i.e., has > 1/3 of ultra-fast responses - typically < 200 ms) in the first set, the entire participant will be discarded (suggesting that they did not properly do the task), but if only the second set is bad, then only the second set will be discarded (as the illusion sensitivity can still be estimated, albeit with less precision). 
 
 ```{r}
 #| message: false
@@ -302,6 +286,8 @@ data_ig <- out$data
 ```
 
 ## Reaction Time (per Block)
+
+**Note**. The removal of individual trials will also be performed [RT < 200 ms or > 3 SD; following Thériault et al. (2024)]. To mitigate the risk of confounding effects driven by extreme speed or accuracy strategies, participants whose RTs are significantly slower than the group average (RT > 4 SD above the mean, based on Makowski et al., 2023) will be excluded from the analysis.
 
 ```{r outliers_RTtrials}
 #| eval: false
