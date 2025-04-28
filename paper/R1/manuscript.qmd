@@ -148,19 +148,8 @@ Indeed, traditional methods frequently focus on participant's experience by prom
 Relying on metacognitive judgments about one's subjective experiences adds an additional layer to the measure that might not be desired when attempting to measure illusion **sensitivity**. 
 Moreover, paradigms often face challenges in diversifying the illusory effects (i.e., using multiple stimuli to experimentally manipulate the strength of the illusion) and the illusion types (i.e., using various illusions, such as Müller-Lyer, Ebbinghaus, Delboeuf which might rely on a different admixture of mechanisms), hindering the potential of obtaining a comprehensive, valid, and reliable measure of illusion sensitivity.
 
-
-```{r}
-#| warning: false
-#| label: fig-illusion_framework
-#| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
-#| out-width: "100%"
-#| fig-cap: "The parametric framework for visual illusions (Makowski et al., 2021) applied to the Müller-Lyer illusion. Below are examples of stimuli showcasing the manipulation of two parameters, task difficulty and illusion strength."
-
-knitr::include_graphics("img/IG_framework.png")
-```
-
 The "Illusion Game" paradigm [@makowski2023] has been recently developed to measure illusion sensitivity to various illusion types through its behavioural impact (on response time and error rate) in a perceptual decision task (where participants have to respond as fast as possible; e.g., "which of the left or right circles is bigger"). 
-The stimuli for different classical illusions are created using the *Pyllusion* software [@makowski2021], which allows researchers to modulate the strength of the illusion as a continuous dimension, independently from the difficulty of the perceptual task (see @fig-illusion_framework). 
+The stimuli for different classical illusions are created using the *Pyllusion* software [@makowski2021], which allows researchers to modulate the strength of the illusion as a continuous dimension, independently from the difficulty of the perceptual task. 
 This paradigm, inspired by psychophysics, lends itself to the computational modelling of illusion sensitivity through its **interference effect —an effect that disrupts an individual's ability to accurately discriminate between perceptual stimuli.**
 **This approach aims to bypass some of the metacognitive processes involved in other paradigms, offering a more direct and objective measure of how illusions influence perceptual judgment.**
 
@@ -231,7 +220,9 @@ Phenomenological control will be indexed by averaging the scores from the 10 sca
 
 ### Illusion Game
 
-The task is an adaptation of the one used in @makowski2023 to make it shorter, in which participants must make perceptual judgments (e.g., "which red line is the longer") as quickly and accurately as possible. It includes 3 illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal (see @fig-illusionexample). 
+The task is an adaptation of the one used in @makowski2023 to make it shorter, in which participants must make perceptual judgments (e.g., "which red line is the longer") as quickly and accurately as possible. It includes 3 illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal (see @fig-illusionexample). **In the original Illusion Game, 10 visual illusions were presented in two sets, following a practice trial, and separated by two short questionnaires.**
+**Participants completed a total of 1,340 trials, with the experiment lasting approximately 55 minutes.**
+**In the current procedure, only three illusions are used, selected based on the original study's findings that these illusions most strongly contribute to illusion sensitivity.**
 
 ```{r}
 #| warning: false
@@ -243,16 +234,12 @@ The task is an adaptation of the one used in @makowski2023 to make it shorter, i
 knitr::include_graphics("img/IllusionTable.jpg")
 ```
 
-**In the original Illusion Game, 10 visual illusions were presented in two sets, following a practice trial, and separated by two short questionnaires.**
-**Participants completed a total of 1,340 trials, with the experiment lasting approximately 55 minutes.**
-**In the current procedure, only three illusions are used, selected based on the original study's findings that these illusions most strongly contribute to illusion sensitivity.**
-
 The procedure encompasses 2 sets of 80 trials for each illusion type, **preceded by a practice trial for each illusion**. 
 Each set will include, in a random order, the 3 blocks of illusion types, in which trials are separated by a fixation cross, temporally (uniformly sampled duration of 500 - 1000s) and spatially jittered (around the centre of the screen in a radius of a 1 cm) to attenuate its potential usefulness as a reference point. 
 After each illusion type block, an arbitrary score is presented (computed as a scaled Inverse Efficiency Score) as a gamification mechanism to increase motivation to perform to the best of one's abilities. 
 To mitigate for the potential variability in the speed/accuracy trade-off, the instructions emphasize with equal weight to be fast and to avoid errors.
 
-For each illusion type, two continuous dimensions are orthogonally manipulated namely task difficulty and illusion strength, so that each trial corresponds to a unique combination, **providing an objectively correct answer for each task.**
+For each illusion type, two continuous dimensions are orthogonally manipulated namely task difficulty and illusion strength, so that each trial corresponds to a unique combination, **providing an objectively correct answer for each trial.**
 **The use of these manipulations allows concise, standardised reporting of illusion parameters and ensures our stimuli are fully reproducible [see @makowski2021].**
 
 Task difficulty corresponds to the difficulty of the perceptual decision (e.g., if the task is to select the longest red line, task difficulty corresponds to how the lines are objectively different). 
@@ -296,10 +283,10 @@ The PCS will contain several manipulation check indices to identify problematic 
 Illusion Game outliers will be flagged based on their RT distributions, following the same procedure as in [@makowski2023]. 
 **If the RT is collapsed to the left (i.e., has \> 1/3 of ultra-fast responses - typically \< 200 ms) in the first set, the entire participant will be discarded (suggesting that they did not properly do the task), but if only the second set is bad, then only the second set will be discarded (as the illusion sensitivity can still be estimated, albeit with less precision).** 
 In addition, the removal of individual trials will also be performed [RT \< 200 ms or \> 3 SD; following @theriault2024].
-**To mitigate the risk of confounding effects driven by extreme speed or accuracy strategies, participants whose RTs are significantly slower than the group average (RT > 4 SD above the mean, based on @makowski2023) will be excluded from the analysis.**
+**To mitigate the risk of confounding effects driven by extreme speed or accuracy strategies, participants whose RTs are significantly slower than the group average [RT > 4 SD above the mean, based on @makowski2023] will be excluded from the analysis.**
 
 After removing problematic participants and trials, the outcome measures (PC and VI sensitivity scores) will be computed and the Bayesian correlation (with medium prior on the coefficient, i.e., r-scale parameter set to 1/3) will be computed [using the *BayesFactor* package, @BayesFactor].
-This shifted beta prior, as recommended by @morey2018baysefactor, offers a balanced approach to estimating effect sizes, without placing undue weight on larger effect sizes or artificially inflating evidence for the null hypothesis.
+**This shifted beta prior, as recommended by @morey2018baysefactor, offers a balanced approach to estimating effect sizes, without placing undue weight on larger effect sizes or artificially inflating evidence for the null hypothesis.**
 Following @lush2022, we expect to collect evidence against (BF10 \<= 1/3) a relationship between PCS and VI sensitivity. 
 **Additionally, Bayesian correlations will be computed using the BayesFactor package, employing a medium prior on the coefficient (r-scale parameter set to 1/3) to assess relationships between maladaptive trait facets and illusion sensitivity scores.**
 **Based on prior research (Makowski et al., 2023), we expect to find evidence (BF10 ≥ 3) supporting a relationship between the psychoticism facet of the PID-5 and illusion sensitivity.**

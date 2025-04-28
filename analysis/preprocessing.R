@@ -5,8 +5,7 @@ path <- "C:/Users/asf25/Box/IllusionPCS/"
 
 # JsPsych experiment ------------------------------------------------------
 
-# files <- list.files(path, pattern = "*.csv")
-files <- "ryqwk2oej3.csv"
+files <- list.files(path, pattern = "*.csv")
 
 # Progress bar
 progbar <- progress_bar$new(total = length(files))
@@ -190,7 +189,7 @@ for (file in files) {
   
   df_ig <- ig[, c("Illusion_Type", "Illusion_Difference", "Illusion_Strength")]
   df_ig$participant <- sub("\\.csv$", "", file)
-  df_ig$File <- gsub("https://realitybending.github.io/IllusionGame/v3/stimuli/", "", ig$stimulus)
+  df_ig$File <- gsub(".png", "", ig$file)
   df_ig$Block <- ig$block
   df_ig$Trial <- ig$trial_number
   df_ig$ISI <- ig$isi
