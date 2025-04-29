@@ -28,20 +28,14 @@ library(patchwork)
 
 # data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")
 
-data_ppt <- read.csv("C:/Users/asf25/Desktop/studies/IllusionGamePhenomenologicalControl/data/rawdata_participants.csv")
+data_ppt <- read.csv("../data/rawdata_participants.csv")
 
 
-# data_ig <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv")|> 
-#   group_by(Illusion_Type) |> 
-#   mutate(Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
-#          Task_Difficulty = abs(Illusion_Difference),
-#          Condition_Illusion = datawizard::categorize(
-#            Illusion_Strength, split="quantile", n_groups=4,
-#            labels=c("Congruent - Strong", "Congruent - Mild", "Incongruent - Mild", "Incongruent - Strong")),
-#          Condition_Difficulty = datawizard::categorize(Task_Difficulty, split="quantile", n_groups=2, labels=c("Hard", "Easy"))) |> 
-#   ungroup()
+# path_ig <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv")
+path_ig <- read.csv("../data/rawdata_illusion.csv")
 
-data_ig <- read.csv("C:/Users/asf25/Desktop/studies/IllusionGamePhenomenologicalControl/data/rawdata_illusion.csv")|> 
+
+data_ig <- path_ig |>
   group_by(Illusion_Type) |> 
   mutate(Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
          Task_Difficulty = abs(Illusion_Difference),
@@ -358,10 +352,10 @@ check_trials <- function(df) {
 #| results: 'asis'
 #| eval: false
 
-out <- check_trials(data_ig)
-out$text
-out$p
-data_ig <- out$data
+# out <- check_trials(data_ig)
+# out$text
+# out$p
+# data_ig <- out$data
 ```
 
 ## Manipulation/Attention Checks
