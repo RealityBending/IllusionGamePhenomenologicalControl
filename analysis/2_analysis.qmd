@@ -166,13 +166,33 @@ ies_verticalhorizontal_post <- describe_posterior(cor_verticalhorizontal$IES_Inc
 
 ```{r}
 
+# collapsed_groups_data <- data_vs |>
+#  filter(Illusion_Group %in% c("Mild", "Strong")) |>
+#   group_by(Participant, Illusion_Type) |>
+#   summarise(
+#     Illusion_Group = "Incongruent",
+#     ErrorRate = mean(ErrorRate, na.rm = TRUE),
+#     IES = mean(IES, na.rm = TRUE),
+#     .groups = "drop"
+#   )
 
+# data_vs <- bind_rows(data_vs, collapsed_groups_data) |>
+#   arrange(Participant, Illusion_Type, factor(Illusion_Group, levels = c("Mild", "Strong", "Congruent", "Incongruent"))) |>
+#   filter(Illusion_Group == c( "Congruent", "Incongruent"))
+ 
+```
 
+```{r}
+data_vs_wide <- data_vs|>
+  select(Participant, Illusion_Type, Illusion_Group, ErrorRate, IES) |>
+  unite("group", Illusion_Type, Illusion_Group, sep = "_") |>
+  pivot_wider(names_from = group, values_from = c(ErrorRate, IES)) |>
+  as.data.frame()
 ```
 
 ### Illusion Manipulation Checks
 
-**Note:** Significant differences between the Congruent and Mild and the Mild and Strong groups will be taken as evidence that illsuions functioned as intended
+**Note:** Significant differences between the Congruent and Mild and the Mild and Strong groups will be taken as evidence that illsuions functioned as intended. 
 
 ```{r}
 compute_ttest <- function(data, illusion_type) {
@@ -202,21 +222,37 @@ compute_ttest <- function(data, illusion_type) {
     y = illusion_data$IES[illusion_data$Illusion_Group == "Strong"],
     paired = TRUE
   )
+  
+  # Congruent vs Incongruent if correlation high between mild and strong
+  
+  # ERcong_vs_incon < BayesFactor::ttestBF(
+  #   x = illusion_data$ErrorRate[illusion_data$Illusion_Group == "Congruent"],
+  #   y = illusion_data$ErrorRate[illusion_data$Illusion_Group == "Incongruent"],
+  #   paired = TRUE
+  # )
+  # 
+  # IEScong_vs_incon <- BayesFactor::ttestBF(
+  #   x = illusion_data$IES[illusion_data$Illusion_Group == "Congruent"],
+  #   y = illusion_data$IES[illusion_data$Illusion_Group == "Incongruent"],
+  #   paired = TRUE
+  # )
 
   return(list(
     ERcongruent_vs_mild = ERcongruent_vs_mild,
     ERmild_vs_strong = ERmild_vs_strong,
     IEScongruent_vs_mild = IEScongruent_vs_mild,
     IESmild_vs_strong = IESmild_vs_strong
+    # ERcong_vs_incon = ERcong_vs_incon,
+    # IEScong_vs_incon = IEScong_vs_incon
   ))
 }
 
-````
+```
 
 ```{r}
 
 ttest_ebbinghaus <- compute_ttest(data_vs, "Ebbinghaus")
-ttest <- compute_ttest(data_vs, "MullerLyer")
+ttest_mullerlyer <- compute_ttest(data_vs, "MullerLyer")
 ttest_verticalhorizontal <- compute_ttest(data_vs, "VerticalHorizontal")
 ```
 
@@ -224,24 +260,408 @@ ttest_verticalhorizontal <- compute_ttest(data_vs, "VerticalHorizontal")
 
 er_ebbinghaus_post_cm <- describe_posterior(ttest_ebbinghaus$ERcongruent_vs_mild)
 er_ebbinghaus_post_ms <- describe_posterior(ttest_ebbinghaus$ERmild_vs_strong)
+# er_ebbinghaus_post_ci <- describe_posterior(ttest_ebbinghaus$ERcong_vs_incon)
+
 
 er_mullerlyer_post_cm <- describe_posterior(ttest_mullerlyer$ERcongruent_vs_mild)
-bf_mullerlyer_post_ms <- describe_posterior(ttest_mullerlyer$ERmild_vs_strong)
+er_mullerlyer_post_ms <- describe_posterior(ttest_mullerlyer$ERmild_vs_strong)
+# er_mullerlyer_post_ci <- describe_posterior(ttest_mullerlyer$ERcong_vs_incon)
 
 er_verticalhorizontal_post_cm <- describe_posterior(ttest_verticalhorizontal$ERcongruent_vs_mild)
-er_verticalhorizontal_post_ms <- describe_posterior(ttestcor_verticalhorizontal$ERmild_vs_strong)
+er_verticalhorizontal_post_ms <- describe_posterior(ttest_verticalhorizontal$ERmild_vs_strong)
+# er_verticalhorizontal_post_ci <- describe_posterior(ttestcor_verticalhorizontal$ERcong_vs_incon)
+
 ```
 
 ```{r}
 
-IES_ebbinghaus_post_cm <- describe_posterior(cor_ebbinghaus$IEScongruent_vs_mild)
-IES_ebbinghaus_post_ms <- describe_posterior(cor_ebbinghaus$IESmild_vs_strong)
+IES_ebbinghaus_post_cm <- describe_posterior(ttest_ebbinghaus$IEScongruent_vs_mild)
+IES_ebbinghaus_post_ms <- describe_posterior(ttest_ebbinghaus$IESmild_vs_strong)
+# IES_ebbinghaus_post_ci <- describe_posterior(ttest_ebbinghaus$IEScong_vs_incon)
 
-IES_mullerlyer_post_cm <- describe_posterior(cor_mullerlyer$IEScongruent_vs_mild)
-IES_mullerlyer_post_ms <- describe_posterior(cor_mullerlyer$IESmild_vs_strong)
+IES_mullerlyer_post_cm <- describe_posterior(ttest_mullerlyer$IEScongruent_vs_mild)
+IES_mullerlyer_post_ms <- describe_posterior(ttest_mullerlyer$IESmild_vs_strong)
+# IES_mullerlyer_post_ci <- describe_posterior(ttest_ebbinghaus$IEScong_vs_incon)
 
-IES_verticalhorizontal_post_cm <- describe_posterior(cor_verticalhorizontal$IEScongruent_vs_mild)
-IES_verticalhorizontal_post_ms <- describe_posterior(cor_verticalhorizontal$IESmild_vs_strong)
+
+IES_verticalhorizontal_post_cm <- describe_posterior(ttest_verticalhorizontal$IEScongruent_vs_mild)
+IES_verticalhorizontal_post_ms <- describe_posterior(ttest_verticalhorizontal$IESmild_vs_strong)
+# IES_verticalhorizontal_post_ci <- describe_posterior(ttest_verticalhorizontal$IEScong_vs_incon)
+```
+
+### Reliability
+
+**Note**. Reliability analyses are conducted on all resulting indices.
+
+#### Split-half
+
+
+```{r}
+
+compute_all_split_half <- function(df, score_vars = c("ErrorRate", "IES")) {
+  
+  conditions <- c("Congruent", "Strong", "Mild")
+  # conditions <- c("Congruent", "Incongruent")
+  illusions <- c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")
+  pairs <- list(
+    c("Ebbinghaus", "MullerLyer"),
+    c("VerticalHorizontal", "MullerLyer"),
+    c("VerticalHorizontal", "Ebbinghaus")
+  )
+  
+  # Loop through score vars and compute
+  results <- list()
+  
+  for (score in score_vars) {
+    cat("\n###", score, "\n")
+    
+    for (cond in conditions) {
+      cat("\n##", cond, "\n")
+      
+      for (pair in pairs) {
+        var1 <- paste(score, pair[1], cond, sep = "_")
+        var2 <- paste(score, pair[2], cond, sep = "_")
+        
+        if (all(c(var1, var2) %in% colnames(df))) {
+          cat("Pair:", var1, "vs", var2, "\n")
+          res <- performance::item_split_half(df[, c(var1, var2)])
+          results[[paste(score, cond, paste(pair, collapse = "_"), sep = "_")]] <- res
+        } else {
+          warning(paste("Missing columns:", var1, "or", var2))
+        }
+      }
+    }
+  }
+  
+  return()
+}
+
+split_half_results  <- compute_all_split_half(data_vs_wide)
+
 ```
 
 
+#### Inter-illusion Reliability 
+
+Error Rate
+
+```{r}
+
+con_rel_er <- data_vs_wide |>
+  select(matches("ErrorRate.*_Congruent")) |>
+  psych::alpha()
+
+mild_rel_er <- data_vs_wide |>
+  select(matches("ErrorRate.*_mild")) |>
+  psych::alpha()
+
+strong_rel_er <- data_vs_wide |>
+  select(matches("ErrorRate.*_strong")) |>
+  psych::alpha()
+
+# inc_rel_er <- data_vs_wide |>
+#   select(matches("ErrorRate.*_Inongruent")) |>
+#   psych::alpha()
+
+```
+
+```{r}
+
+con_rel_IES <- data_vs_wide |>
+  select(matches("IES.*_Congruent")) |>
+  psych::alpha()
+
+mild_rel_IES <- data_vs_wide |>
+  select(matches("IES.*_mild")) |>
+  psych::alpha()
+
+strong_rel_IES <- data_vs_wide |>
+  select(matches("IES.*_strong")) |>
+  psych::alpha()
+
+# inc_rel_IES <- data_vs_wide |>
+#   select(matches("IES.*_Inongruent")) |>
+#   psych::alpha()
+
+```
+
+
+## PCS and Illusion Sensitivity
+
+### Error Rate
+
+#### Ebbinghaus 
+```{r}
+
+cor_pcs_er_ebb_con <- BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$ErrorRate_Ebbinghaus_Congruent)
+
+er_pcs_ebb_con_post <- describe_posterior(cor_pcs_er_ebb_con)
+
+cor_pcs_er_ebb_m <- BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$ErrorRate_Ebbinghaus_Mild)
+
+er_pcs_ebb_mild_post <- describe_posterior(cor_pcs_er_ebb_m)
+
+cor_pcs_er_ebb_s <-  BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$ErrorRate_Ebbinghaus_Strong)
+
+er_pcs_ebb_str_post <- describe_posterior(cor_pcs_er_ebb_s)
+
+# Incongruent
+# cor_pcs_er_ebb_inc <-  BayesFactor::correlationBF(
+#   y = data_ppt$pcs,
+#   x = data_vs_wide$ErrorRate_Ebbinghaus_Incongruent)
+# 
+# er_pcs_ebb_inc_post <- describe_posterior(cor_pcs_er_ebb_inc)
+
+```
+
+
+#### Muller-Lyer
+```{r}
+
+cor_pcs_er_mul_con <- BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$ErrorRate_MullerLyer_Congruent)
+
+er_pcs_mul_con_post <- describe_posterior(cor_pcs_er_mul_con)
+
+cor_pcs_er_mul_m <- BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$ErrorRate_MullerLyer_Mild)
+
+er_pcs_mul_mild_post <- describe_posterior(cor_pcs_er_mul_m)
+
+cor_pcs_er_mul_s <-  BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$ErrorRate_MullerLyer_Strong)
+
+er_pcs_mul_str_post <- describe_posterior(cor_pcs_er_mul_s)
+
+# Incongruent
+# cor_pcs_er_mul_inc <-  BayesFactor::correlationBF(
+#   y = data_ppt$pcs,
+#   x = data_vs_wide$ErrorRate_MullerLyer_Incongruent)
+# 
+# er_pcs_mul_inc_post <- describe_posterior(cor_pcs_er_mul_inc)
+
+
+```
+
+#### VerticalHorizontal
+```{r}
+
+cor_pcs_er_vh_con <- BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$ErrorRate_VerticalHorizontal_Congruent)
+
+er_pcs_vh_con_post <- describe_posterior(cor_pcs_er_vh_con)
+
+cor_pcs_er_vh_m <- BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$ErrorRate_VerticalHorizontal_Mild)
+
+er_pcs_vh_mild_post <- describe_posterior(cor_pcs_er_vh_m)
+
+cor_pcs_er_vh_s <-  BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$ErrorRate_VerticalHorizontal_Strong)
+
+er_pcs_vh_str_post <- describe_posterior(cor_pcs_er_vh_s)
+
+# Incongruent
+# cor_pcs_er_vh_inc <-  BayesFactor::correlationBF(
+#   y = data_ppt$pcs,
+#   x = data_vs_wide$ErrorRate_VerticalHorizontal_Incongruent)
+# 
+# er_pcs_vh_inc_post <- describe_posterior(cor_pcs_er_vh_inc)
+```
+
+
+
+### IES
+
+#### Ebbinghaus 
+```{r}
+
+cor_pcs_IES_ebb_con <- BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$IES_Ebbinghaus_Congruent)
+
+IES_pcs_ebb_con_post <- describe_posterior(cor_pcs_IES_ebb_con)
+
+cor_pcs_IES_ebb_m <- BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$IES_Ebbinghaus_Mild)
+
+IES_pcs_ebb_mild_post <- describe_posterior(cor_pcs_IES_ebb_m)
+
+cor_pcs_IES_ebb_s <-  BayesFactor::correlationBF(
+  y = data_ppt$pcs,
+  x = data_vs_wide$IES_Ebbinghaus_Strong)
+
+IES_pcs_ebb_str_post <- describe_posterior(cor_pcs_IES_ebb_s)
+
+# Incongruent
+# cor_pcs_IES_ebb_inc <-  BayesFactor::correlationBF(
+#   y = data_ppt$pcs,
+#   x = data_vs_wide$ErrorRate_Ebbinghaus_Incongruent)
+# 
+# IES_pcs_ebb_inc_post <- describe_posterior(cor_pcs_IES_ebb_inc)
+
+```
+
+#### Muller-Lyer
+```{r}
+
+cor_pcs_IES_mul_con <- BayesFactor::correlationBF(
+  y = data_ppt$pcs, 
+  x = data_vs_wide$IES_MullerLyer_Congruent)
+
+IES_pcs_mul_con_post <- describe_posterior(cor_pcs_IES_mul_con)
+
+cor_pcs_IES_mul_m <- BayesFactor::correlationBF(
+  y = data_ppt$pcs, 
+  x = data_vs_wide$IES_MullerLyer_Mild)
+
+IES_pcs_mul_mild_post <- describe_posterior(cor_pcs_IES_mul_m)
+
+cor_pcs_IES_mul_s <-  BayesFactor::correlationBF(
+  y = data_ppt$pcs, 
+  x = data_vs_wide$IES_MullerLyer_Strong)
+
+IES_pcs_mul_str_post <- describe_posterior(cor_pcs_IES_mul_s)
+
+# Incongruent
+# cor_pcs_IES_mul_inc <-  BayesFactor::correlationBF(
+#   y = data_ppt$pcs,
+#   x = data_vs_wide$ErrorRate_MullerLyer_Incongruent)
+# 
+# IES_pcs_mul_inc_post <- describe_posterior(cor_pcs_IES_mul_inc)
+```
+
+#### Vertical Horizontal
+```{r}
+
+cor_pcs_IES_vh_con <- BayesFactor::correlationBF(
+  y = data_ppt$pcs, 
+  x = data_vs_wide$IES_VerticalHorizontal_Congruent)
+
+IES_pcs_mul_con_post <- describe_posterior(cor_pcs_IES_vh_con)
+
+cor_pcs_IES_vh_m <- BayesFactor::correlationBF(
+  y = data_ppt$pcs, 
+  x = data_vs_wide$IES_VerticalHorizontal_Mild)
+
+IES_pcs_mul_mild_post <- describe_posterior(cor_pcs_IES_vh_m)
+
+cor_pcs_IES_vh_s <-  BayesFactor::correlationBF(
+  y = data_ppt$pcs, 
+  x = data_vs_wide$IES_VerticalHorizontal_Strong)
+
+IES_pcs_vh_str_post <- describe_posterior(cor_pcs_IES_vh_s)
+
+# Incongruent
+# cor_pcs_IES_vh_inc <-  BayesFactor::correlationBF(
+#   y = data_ppt$pcs,
+#   x = data_vs_wide$ErrorRate_VerticalHorizontal_Incongruent)
+# 
+# IES_pcs_vh_inc_post <- describe_posterior(cor_pcs_IES_vh_inc)
+```
+
+
+## Correlations between Illusion scores and Psychoticism 
+
+
+#### Ebbinghaus 
+```{r}
+
+cor_pcs_psy_ebb_con <- BayesFactor::correlationBF(
+  y = data_ppt$PID5_Psychoticism,
+  x = data_vs_wide$IES_Ebbinghaus_Congruent)
+
+IES_psy_ebb_con_post <- describe_posterior(cor_pcs_psy_ebb_con)
+
+cor_pcs_psy_ebb_m <- BayesFactor::correlationBF(
+  y = data_ppt$PID5_Psychoticism,
+  x = data_vs_wide$IES_Ebbinghaus_Mild)
+
+IES_psy_ebb_mild_post <- describe_posterior(cor_pcs_psy_ebb_m)
+
+cor_pcs_psy_ebb_s <- BayesFactor::correlationBF(
+  y = data_ppt$PID5_Psychoticism,
+  x = data_vs_wide$IES_Ebbinghaus_Strong)
+
+IES_psy_ebb_str_post <- describe_posterior(cor_pcs_psy_ebb_s)   
+
+# Incongruent
+# cor_pcs_psy_ebb_inc <-  BayesFactor::correlationBF(
+#   y = data_ppt$pcs,
+#   x = data_vs_wide$IES_Ebbinghaus_Incongruent)
+# 
+# IES_psy_ebb_inc_post <- describe_posterior(cor_pcs_psy_ebb_inc)
+```
+
+#### Muller-Lyer 
+```{r}
+
+cor_pcs_psy_mul_con <- BayesFactor::correlationBF(
+  y = data_ppt$PID5_Psychoticism,
+  x = data_vs_wide$IES_MullerLyer_Congruent)
+
+IES_psy_mul_con_post <- describe_posterior(cor_pcs_psy_mul_con)
+
+cor_pcs_psy_mul_m <- BayesFactor::correlationBF(
+  y = data_ppt$PID5_Psychoticism,
+  x = data_vs_wide$IES_MullerLyer_Mild)
+
+IES_psy_mul_mild_post <- describe_posterior(cor_pcs_psy_mul_m)
+
+cor_pcs_psy_mul_s <- BayesFactor::correlationBF(
+  y = data_ppt$PID5_Psychoticism,
+  x = data_vs_wide$IES_MullerLyer_Strong)
+
+IES_psy_mul_str_post <- describe_posterior(cor_pcs_psy_mul_s)   
+
+# Incongruent
+# cor_pcs_psy_mul_inc <-  BayesFactor::correlationBF(
+#   y = data_ppt$pcs,
+#   x = data_vs_wide$IES_MullerLyer_Incongruent)
+# 
+# IES_psy_mul_inc_post <- describe_posterior(cor_pcs_psy_mul_inc)
+    
+```
+
+#### Vertical-Horizontal
+```{r}
+
+cor_pcs_psy_vh_con <- BayesFactor::correlationBF(
+  y = data_ppt$PID5_Psychoticism,
+  x = data_vs_wide$IES_VerticalHorizontal_Congruent)
+
+IES_psy_vh_con_post <- describe_posterior(cor_pcs_psy_vh_con)
+
+cor_pcs_psy_vh_m <- BayesFactor::correlationBF(
+  y = data_ppt$PID5_Psychoticism,
+  x = data_vs_wide$IES_VerticalHorizontal_Mild)
+
+IES_psy_vh_mild_post <- describe_posterior(cor_pcs_psy_vh_m)
+
+cor_pcs_psy_vh_s <- BayesFactor::correlationBF(
+  y = data_ppt$PID5_Psychoticism,
+  x = data_vs_wide$IES_VerticalHorizontal_Strong)
+
+IES_psy_vh_str_post <- describe_posterior(cor_pcs_psy_vh_s)   
+
+# Incongruent
+# cor_pcs_psy_vh_inc <-  BayesFactor::correlationBF(
+#   y = data_ppt$pcs,
+#   x = data_vs_wide$IES_VerticalHorizontal_Incongruent)
+# 
+# IES_psy_vh_inc_post <- describe_posterior(cor_pcs_psy_vh_inc)
+    
+```

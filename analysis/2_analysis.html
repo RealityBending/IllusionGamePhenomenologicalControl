@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-04-29">
+<meta name="dcterms.date" content="2025-04-30">
 
 <title>Illusion Game &amp; PCS</title>
 <style>
@@ -86,6 +86,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#compute-subjective-scale-score" id="toc-compute-subjective-scale-score" class="nav-link" data-scroll-target="#compute-subjective-scale-score">Compute subjective scale score</a></li>
   <li><a href="#reliability" id="toc-reliability" class="nav-link" data-scroll-target="#reliability">Reliability</a></li>
   </ul></li>
+  <li><a href="#illusion-sensitivity-scores" id="toc-illusion-sensitivity-scores" class="nav-link" data-scroll-target="#illusion-sensitivity-scores">Illusion Sensitivity Scores</a>
+  <ul class="collapse">
+  <li><a href="#error-rate" id="toc-error-rate" class="nav-link" data-scroll-target="#error-rate">Error Rate</a></li>
+  <li><a href="#ies" id="toc-ies" class="nav-link" data-scroll-target="#ies">IES</a></li>
+  <li><a href="#correlations-between-strong-and-mild" id="toc-correlations-between-strong-and-mild" class="nav-link" data-scroll-target="#correlations-between-strong-and-mild">Correlations between Strong and Mild</a></li>
+  <li><a href="#colapsed-scores" id="toc-colapsed-scores" class="nav-link" data-scroll-target="#colapsed-scores">Colapsed scores</a></li>
+  <li><a href="#illusion-manipulation-checks" id="toc-illusion-manipulation-checks" class="nav-link" data-scroll-target="#illusion-manipulation-checks">Illusion Manipulation Checks</a></li>
+  <li><a href="#reliability-1" id="toc-reliability-1" class="nav-link" data-scroll-target="#reliability-1">Reliability</a></li>
+  </ul></li>
+  <li><a href="#pcs-and-illusion-sensitivity" id="toc-pcs-and-illusion-sensitivity" class="nav-link" data-scroll-target="#pcs-and-illusion-sensitivity">PCS and Illusion Sensitivity</a>
+  <ul class="collapse">
+  <li><a href="#error-rate-1" id="toc-error-rate-1" class="nav-link" data-scroll-target="#error-rate-1">Error Rate</a></li>
+  <li><a href="#ies-1" id="toc-ies-1" class="nav-link" data-scroll-target="#ies-1">IES</a></li>
+  </ul></li>
+  <li><a href="#correlations-between-illusion-scores-and-psychoticism" id="toc-correlations-between-illusion-scores-and-psychoticism" class="nav-link" data-scroll-target="#correlations-between-illusion-scores-and-psychoticism">Correlations between Illusion scores and Psychoticism</a></li>
   </ul>
 </nav>
 </div>
@@ -105,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 29, 2025</p>
+      <p class="date">April 30, 2025</p>
     </div>
   </div>
   
@@ -122,38 +137,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdist)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggside)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdist)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggside)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># data_ppt &lt;- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># data_ppt &lt;- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>data_ppt <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/data_participants.csv"</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>data_ig <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/data_IllusionGame.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Illusion_Type) <span class="sc">|&gt;</span> </span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Illusion_Side =</span> <span class="fu">sign</span>(Illusion_Difference), </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Illusion_Effect =</span> <span class="fu">ifelse</span>(<span class="fu">sign</span>(Illusion_Strength) <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">"Incongruent"</span>, <span class="st">"Congruent"</span>),</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">Task_Difficulty =</span> <span class="fu">abs</span>(Illusion_Difference),</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">Condition_Illusion =</span> <span class="fu">case_when</span>(</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        Illusion_Effect <span class="sc">==</span> <span class="st">"Congruent"</span> <span class="sc">~</span> <span class="st">"Congruent"</span>,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        Illusion_Effect <span class="sc">==</span> <span class="st">"Incongruent"</span> <span class="sc">&amp;</span> Illusion_Strength <span class="sc">&lt;=</span> <span class="fu">median</span>(Illusion_Strength[Illusion_Effect <span class="sc">==</span> <span class="st">"Incongruent"</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">~</span> <span class="st">"Mild"</span>,</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        Illusion_Effect <span class="sc">==</span> <span class="st">"Incongruent"</span> <span class="sc">&amp;</span> Illusion_Strength <span class="sc">&gt;</span> <span class="fu">median</span>(Illusion_Strength[Illusion_Effect <span class="sc">==</span> <span class="st">"Incongruent"</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">~</span> <span class="st">"Strong"</span>),</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">Condition_Difficulty =</span> datawizard<span class="sc">::</span><span class="fu">categorize</span>(Task_Difficulty, <span class="at">split=</span><span class="st">"quantile"</span>, <span class="at">n_groups=</span><span class="dv">2</span>, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Hard"</span>, <span class="st">"Easy"</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">Block =</span> <span class="fu">as.factor</span>(Block),</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">Illusion_Side =</span> <span class="fu">as.factor</span>(Illusion_Side),</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">Illusion_Effect =</span> <span class="fu">fct_relevel</span>(<span class="fu">as.factor</span>(Illusion_Effect), <span class="st">"Incongruent"</span>, <span class="st">"Congruent"</span>),</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">Response_Correct =</span> <span class="fu">as.factor</span>(Response_Correct)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>data_ppt <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/data_participants.csv"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>data_ig <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/data_IllusionGame.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Illusion_Type) <span class="sc">|&gt;</span> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Illusion_Side =</span> <span class="fu">sign</span>(Illusion_Difference), </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Illusion_Effect =</span> <span class="fu">ifelse</span>(<span class="fu">sign</span>(Illusion_Strength) <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">"Incongruent"</span>, <span class="st">"Congruent"</span>),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">Task_Difficulty =</span> <span class="fu">abs</span>(Illusion_Difference),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">Illusion_Group =</span> <span class="fu">case_when</span>(</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        Illusion_Effect <span class="sc">==</span> <span class="st">"Congruent"</span> <span class="sc">~</span> <span class="st">"Congruent"</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        Illusion_Effect <span class="sc">==</span> <span class="st">"Incongruent"</span> <span class="sc">&amp;</span> Illusion_Strength <span class="sc">&lt;=</span> <span class="fu">median</span>(Illusion_Strength[Illusion_Effect <span class="sc">==</span> <span class="st">"Incongruent"</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">~</span> <span class="st">"Mild"</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        Illusion_Effect <span class="sc">==</span> <span class="st">"Incongruent"</span> <span class="sc">&amp;</span> Illusion_Strength <span class="sc">&gt;</span> <span class="fu">median</span>(Illusion_Strength[Illusion_Effect <span class="sc">==</span> <span class="st">"Incongruent"</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">~</span> <span class="st">"Strong"</span>),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">Condition_Difficulty =</span> datawizard<span class="sc">::</span><span class="fu">categorize</span>(Task_Difficulty, <span class="at">split=</span><span class="st">"quantile"</span>, <span class="at">n_groups=</span><span class="dv">2</span>, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Hard"</span>, <span class="st">"Easy"</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">Block =</span> <span class="fu">as.factor</span>(Block),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">Illusion_Side =</span> <span class="fu">as.factor</span>(Illusion_Side),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">Illusion_Effect =</span> <span class="fu">fct_relevel</span>(<span class="fu">as.factor</span>(Illusion_Effect), <span class="st">"Incongruent"</span>, <span class="st">"Congruent"</span>),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">Response_Correct =</span> <span class="fu">as.factor</span>(Response_Correct)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -161,7 +173,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="pcs">PCS</h2>
 <section id="compute-subjective-scale-score" class="level3">
 <h3 class="anchored" data-anchor-id="compute-subjective-scale-score">Compute subjective scale score</h3>
-<p><em>Note:</em> Mean subjective scale responses for item 4 (Taste) and item 10 (Post-session suggestion) are each generated from the combination of two responses which require processing prior to generating an overall subjective score. The subjective score for item 4 is the mean of the responses to the (a)‘sour’ and (b)‘sweet’ sub-scales for the taste suggestion. The subjective score for item 10 is the geometric mean (the square root of the product) of he responses to the (a) ‘urge’ and (b) ‘amnesia’ sub-scales for the post-session suggestion.</p>
+<p><strong>Note:</strong> Mean subjective scale responses for item 4 (Taste) and item 10 (Post-session suggestion) are each generated from the combination of two responses which require processing prior to generating an overall subjective score. The subjective score for item 4 is the mean of the responses to the (a)‘sour’ and (b)‘sweet’ sub-scales for the taste suggestion. The subjective score for item 10 is the geometric mean (the square root of the product) of he responses to the (a) ‘urge’ and (b) ‘amnesia’ sub-scales for the post-session suggestion.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -177,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data_ppt <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pcs_rel <span class="ot">&lt;-</span> data_ppt <span class="sc">|&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"pcs_handslow"</span>, <span class="st">"pcs_mosquito"</span>, <span class="st">"pcs_magnetichands"</span>, <span class="st">"pcs_armrigidity"</span>, <span class="st">"pcs_tastescore"</span>, <span class="st">"pcs_postsessionsuggetsion"</span>, <span class="st">"pcs_armimmobile"</span>, <span class="st">"pcs_music"</span>, <span class="st">"pcs_negativehallucination"</span>, <span class="st">"pcs_amnesia"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  psych<span class="sc">::</span><span class="fu">alpha</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -186,59 +198,675 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 probably should be reversed.  
 To do this, run the function again with the 'check.keys=TRUE' option</code></pre>
 </div>
+</div>
+</section>
+</section>
+<section id="illusion-sensitivity-scores" class="level2">
+<h2 class="anchored" data-anchor-id="illusion-sensitivity-scores">Illusion Sensitivity Scores</h2>
+<section id="error-rate" class="level3">
+<h3 class="anchored" data-anchor-id="error-rate">Error Rate</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>errorrate <span class="ot">&lt;-</span> data_ig <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Participant, Illusion_Type, Illusion_Group) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">ErrorRate =</span> <span class="fu">sum</span>(Error) <span class="sc">/</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="ies" class="level3">
+<h3 class="anchored" data-anchor-id="ies">IES</h3>
+<p><strong>Note.</strong> The IES is calculated by dividing the <em>average correct</em> RT by the <em>proportion of correct responses</em>, for each illusion and for each illusion strenght group: Strong Illusion Strength &amp; Incongruent, Mild Illusion Strength &amp; Incongruent, and Congruent</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>IES <span class="ot">&lt;-</span> data_ig <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Participant, Illusion_Type, Illusion_Group) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">IES =</span> <span class="fu">mean</span>(RT[Response_Correct <span class="sc">==</span> <span class="st">"true"</span>] <span class="sc">/</span> <span class="fu">mean</span>(Response_Correct <span class="sc">==</span> <span class="st">"true"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_vs <span class="ot">&lt;-</span> <span class="fu">left_join</span>(IES, errorrate, <span class="at">by=</span> <span class="fu">c</span>(<span class="st">"Participant"</span>, <span class="st">"Illusion_Type"</span>, <span class="st">"Illusion_Group"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="correlations-between-strong-and-mild" class="level3">
+<h3 class="anchored" data-anchor-id="correlations-between-strong-and-mild">Correlations between Strong and Mild</h3>
+<p><strong>Note</strong>. If correlations high between mild and strong conditions then the mild and strong illusion strength groups will be collapsed and the outcomes will be recomputed across all trials, otherwise they will be treated as separate in subsequent analyses.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>compute_correlation <span class="ot">&lt;-</span> <span class="cf">function</span>(data, illusion_type) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  illusion_data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(Illusion_Group <span class="sc">!=</span> <span class="st">"Congruent"</span>, Illusion_Type <span class="sc">==</span> illusion_type) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> Participant,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_from =</span> Illusion_Group,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">values_from =</span> <span class="fu">c</span>(ErrorRate, IES),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_sep =</span> <span class="st">"_"</span>) </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ER_Incongruent <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> illusion_data<span class="sc">$</span>ErrorRate_Mild, </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> illusion_data<span class="sc">$</span>ErrorRate_Strong</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  IES_Incongruent <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> illusion_data<span class="sc">$</span>IES_Mild, </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> illusion_data<span class="sc">$</span>IES_Strong</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">ER_Incongruent =</span> ER_Incongruent,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">IES_Incongruent =</span> IES_Incongruent</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cor_ebbinghaus <span class="ot">&lt;-</span> <span class="fu">compute_correlation</span>(data_vs, <span class="st">"Ebbinghaus"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>cor_mullerlyer <span class="ot">&lt;-</span> <span class="fu">compute_correlation</span>(data_vs, <span class="st">"MullerLyer"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>cor_verticalhorizontal <span class="ot">&lt;-</span> <span class="fu">compute_correlation</span>(data_vs, <span class="st">"VerticalHorizontal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>er_ebbinghaus_post<span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_ebbinghaus<span class="sc">$</span>ER_Incongruent)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>er_mullerlyer_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_mullerlyer<span class="sc">$</span>ER_Incongruent)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>er_verticalhorizontal_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_verticalhorizontal<span class="sc">$</span>ER_Incongruent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ies_ebbinghaus_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_ebbinghaus<span class="sc">$</span>IES_Incongruent)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ies_mullerlyer_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_mullerlyer<span class="sc">$</span>IES_Incongruent)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ies_verticalhorizontal_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_verticalhorizontal<span class="sc">$</span>IES_Incongruent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="colapsed-scores" class="level3">
+<h3 class="anchored" data-anchor-id="colapsed-scores">Colapsed scores</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># collapsed_groups_data &lt;- data_vs |&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  filter(Illusion_Group %in% c("Mild", "Strong")) |&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   group_by(Participant, Illusion_Type) |&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   summarise(</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     Illusion_Group = "Incongruent",</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     ErrorRate = mean(ErrorRate, na.rm = TRUE),</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     IES = mean(IES, na.rm = TRUE),</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     .groups = "drop"</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   )</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># data_vs &lt;- bind_rows(data_vs, collapsed_groups_data) |&gt;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   arrange(Participant, Illusion_Type, factor(Illusion_Group, levels = c("Mild", "Strong", "Congruent", "Incongruent"))) |&gt;</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   filter(Illusion_Group == c( "Congruent", "Incongruent"))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data_vs_wide <span class="ot">&lt;-</span> data_vs<span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Participant, Illusion_Type, Illusion_Group, ErrorRate, IES) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(<span class="st">"group"</span>, Illusion_Type, Illusion_Group, <span class="at">sep =</span> <span class="st">"_"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> group, <span class="at">values_from =</span> <span class="fu">c</span>(ErrorRate, IES)) <span class="sc">|&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="illusion-manipulation-checks" class="level3">
+<h3 class="anchored" data-anchor-id="illusion-manipulation-checks">Illusion Manipulation Checks</h3>
+<p><strong>Note:</strong> Significant differences between the Congruent and Mild and the Mild and Strong groups will be taken as evidence that illsuions functioned as intended.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>compute_ttest <span class="ot">&lt;-</span> <span class="cf">function</span>(data, illusion_type) {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  illusion_data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(Illusion_Type <span class="sc">==</span> illusion_type)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  ERcongruent_vs_mild <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> illusion_data<span class="sc">$</span>ErrorRate[illusion_data<span class="sc">$</span>Illusion_Group <span class="sc">==</span> <span class="st">"Congruent"</span>],</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> illusion_data<span class="sc">$</span>ErrorRate[illusion_data<span class="sc">$</span>Illusion_Group <span class="sc">==</span> <span class="st">"Mild"</span>],</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">paired =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  IEScongruent_vs_mild <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> illusion_data<span class="sc">$</span>IES[illusion_data<span class="sc">$</span>Illusion_Group <span class="sc">==</span> <span class="st">"Congruent"</span>],</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> illusion_data<span class="sc">$</span>IES[illusion_data<span class="sc">$</span>Illusion_Group <span class="sc">==</span> <span class="st">"Mild"</span>],</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">paired =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  ERmild_vs_strong <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> illusion_data<span class="sc">$</span>ErrorRate[illusion_data<span class="sc">$</span>Illusion_Group <span class="sc">==</span> <span class="st">"Mild"</span>],</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> illusion_data<span class="sc">$</span>ErrorRate[illusion_data<span class="sc">$</span>Illusion_Group <span class="sc">==</span> <span class="st">"Strong"</span>],</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">paired =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  IESmild_vs_strong <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> illusion_data<span class="sc">$</span>IES[illusion_data<span class="sc">$</span>Illusion_Group <span class="sc">==</span> <span class="st">"Mild"</span>],</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> illusion_data<span class="sc">$</span>IES[illusion_data<span class="sc">$</span>Illusion_Group <span class="sc">==</span> <span class="st">"Strong"</span>],</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">paired =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Congruent vs Incongruent if correlation high between mild and strong</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ERcong_vs_incon &lt; BayesFactor::ttestBF(</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   x = illusion_data$ErrorRate[illusion_data$Illusion_Group == "Congruent"],</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   y = illusion_data$ErrorRate[illusion_data$Illusion_Group == "Incongruent"],</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   paired = TRUE</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># )</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># IEScong_vs_incon &lt;- BayesFactor::ttestBF(</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   x = illusion_data$IES[illusion_data$Illusion_Group == "Congruent"],</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   y = illusion_data$IES[illusion_data$Illusion_Group == "Incongruent"],</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   paired = TRUE</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># )</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">ERcongruent_vs_mild =</span> ERcongruent_vs_mild,</span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">ERmild_vs_strong =</span> ERmild_vs_strong,</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">IEScongruent_vs_mild =</span> IEScongruent_vs_mild,</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">IESmild_vs_strong =</span> IESmild_vs_strong</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ERcong_vs_incon = ERcong_vs_incon,</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># IEScong_vs_incon = IEScong_vs_incon</span></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ttest_ebbinghaus <span class="ot">&lt;-</span> <span class="fu">compute_ttest</span>(data_vs, <span class="st">"Ebbinghaus"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>ttest_mullerlyer <span class="ot">&lt;-</span> <span class="fu">compute_ttest</span>(data_vs, <span class="st">"MullerLyer"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ttest_verticalhorizontal <span class="ot">&lt;-</span> <span class="fu">compute_ttest</span>(data_vs, <span class="st">"VerticalHorizontal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>er_ebbinghaus_post_cm <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_ebbinghaus<span class="sc">$</span>ERcongruent_vs_mild)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>er_ebbinghaus_post_ms <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_ebbinghaus<span class="sc">$</span>ERmild_vs_strong)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># er_ebbinghaus_post_ci &lt;- describe_posterior(ttest_ebbinghaus$ERcong_vs_incon)</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>er_mullerlyer_post_cm <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_mullerlyer<span class="sc">$</span>ERcongruent_vs_mild)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>er_mullerlyer_post_ms <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_mullerlyer<span class="sc">$</span>ERmild_vs_strong)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># er_mullerlyer_post_ci &lt;- describe_posterior(ttest_mullerlyer$ERcong_vs_incon)</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>er_verticalhorizontal_post_cm <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_verticalhorizontal<span class="sc">$</span>ERcongruent_vs_mild)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>er_verticalhorizontal_post_ms <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_verticalhorizontal<span class="sc">$</span>ERmild_vs_strong)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># er_verticalhorizontal_post_ci &lt;- describe_posterior(ttestcor_verticalhorizontal$ERcong_vs_incon)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>IES_ebbinghaus_post_cm <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_ebbinghaus<span class="sc">$</span>IEScongruent_vs_mild)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>IES_ebbinghaus_post_ms <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_ebbinghaus<span class="sc">$</span>IESmild_vs_strong)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># IES_ebbinghaus_post_ci &lt;- describe_posterior(ttest_ebbinghaus$IEScong_vs_incon)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>IES_mullerlyer_post_cm <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_mullerlyer<span class="sc">$</span>IEScongruent_vs_mild)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>IES_mullerlyer_post_ms <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_mullerlyer<span class="sc">$</span>IESmild_vs_strong)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># IES_mullerlyer_post_ci &lt;- describe_posterior(ttest_ebbinghaus$IEScong_vs_incon)</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>IES_verticalhorizontal_post_cm <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_verticalhorizontal<span class="sc">$</span>IEScongruent_vs_mild)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>IES_verticalhorizontal_post_ms <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(ttest_verticalhorizontal<span class="sc">$</span>IESmild_vs_strong)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># IES_verticalhorizontal_post_ci &lt;- describe_posterior(ttest_verticalhorizontal$IEScong_vs_incon)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="reliability-1" class="level3">
+<h3 class="anchored" data-anchor-id="reliability-1">Reliability</h3>
+<p><strong>Note</strong>. Reliability analyses are conducted on all resulting indices.</p>
+<section id="split-half" class="level4">
+<h4 class="anchored" data-anchor-id="split-half">Split-half</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>compute_all_split_half <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">score_vars =</span> <span class="fu">c</span>(<span class="st">"ErrorRate"</span>, <span class="st">"IES"</span>)) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  conditions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Congruent"</span>, <span class="st">"Strong"</span>, <span class="st">"Mild"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># conditions &lt;- c("Congruent", "Incongruent")</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  illusions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Ebbinghaus"</span>, <span class="st">"MullerLyer"</span>, <span class="st">"VerticalHorizontal"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  pairs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"Ebbinghaus"</span>, <span class="st">"MullerLyer"</span>),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"VerticalHorizontal"</span>, <span class="st">"MullerLyer"</span>),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"VerticalHorizontal"</span>, <span class="st">"Ebbinghaus"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Loop through score vars and compute</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (score <span class="cf">in</span> score_vars) {</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">###"</span>, score, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (cond <span class="cf">in</span> conditions) {</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">##"</span>, cond, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (pair <span class="cf">in</span> pairs) {</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>        var1 <span class="ot">&lt;-</span> <span class="fu">paste</span>(score, pair[<span class="dv">1</span>], cond, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>        var2 <span class="ot">&lt;-</span> <span class="fu">paste</span>(score, pair[<span class="dv">2</span>], cond, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">c</span>(var1, var2) <span class="sc">%in%</span> <span class="fu">colnames</span>(df))) {</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>          <span class="fu">cat</span>(<span class="st">"Pair:"</span>, var1, <span class="st">"vs"</span>, var2, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>          res <span class="ot">&lt;-</span> performance<span class="sc">::</span><span class="fu">item_split_half</span>(df[, <span class="fu">c</span>(var1, var2)])</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>          results[[<span class="fu">paste</span>(score, cond, <span class="fu">paste</span>(pair, <span class="at">collapse =</span> <span class="st">"_"</span>), <span class="at">sep =</span> <span class="st">"_"</span>)]] <span class="ot">&lt;-</span> res</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> {</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>          <span class="fu">warning</span>(<span class="fu">paste</span>(<span class="st">"Missing columns:"</span>, var1, <span class="st">"or"</span>, var2))</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>()</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>split_half_results  <span class="ot">&lt;-</span> <span class="fu">compute_all_split_half</span>(data_vs_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Reliability analysis   
-Call: psych::alpha(x = select(data_ppt, "pcs_handslow", "pcs_mosquito", 
-    "pcs_magnetichands", "pcs_armrigidity", "pcs_tastescore", 
-    "pcs_postsessionsuggetsion", "pcs_armimmobile", "pcs_music", 
-    "pcs_negativehallucination", "pcs_amnesia"))
+### ErrorRate 
 
-  raw_alpha std.alpha G6(smc) average_r   S/N ase mean   sd median_r
-      -1.8      -1.2    -1.1    -0.057 -0.54 1.9  2.6 0.27        0
+## Congruent 
+Pair: ErrorRate_Ebbinghaus_Congruent vs ErrorRate_MullerLyer_Congruent 
+Pair: ErrorRate_VerticalHorizontal_Congruent vs ErrorRate_MullerLyer_Congruent 
+Pair: ErrorRate_VerticalHorizontal_Congruent vs ErrorRate_Ebbinghaus_Congruent 
 
-    95% confidence boundaries 
-         lower alpha upper
-Feldt    -9.29 -1.82  0.80
-Duhachek -5.58 -1.82  1.94
+## Strong 
+Pair: ErrorRate_Ebbinghaus_Strong vs ErrorRate_MullerLyer_Strong 
+Pair: ErrorRate_VerticalHorizontal_Strong vs ErrorRate_MullerLyer_Strong 
+Pair: ErrorRate_VerticalHorizontal_Strong vs ErrorRate_Ebbinghaus_Strong 
 
- Reliability if an item is dropped:
-                          raw_alpha std.alpha G6(smc) average_r   S/N var.r
-pcs_handslow                  -0.40     -0.62   -0.55    -0.044 -0.38  0.28
-pcs_mosquito                  -1.44     -1.32   -1.18    -0.068 -0.57  0.29
-pcs_magnetichands             -0.71     -0.37   -0.33    -0.031 -0.27  0.29
-pcs_armrigidity               -1.32     -0.25   -0.22    -0.023 -0.20  0.28
-pcs_tastescore                -3.46     -5.50   -4.89    -0.104 -0.85  0.33
-pcs_postsessionsuggetsion     -1.47     -2.01   -1.78    -0.080 -0.67  0.30
-pcs_armimmobile               -0.76     -0.41   -0.37    -0.033 -0.29  0.33
-pcs_music                     -7.32     -2.59   -2.31    -0.087 -0.72  0.32
-pcs_negativehallucination     -0.58     -0.25   -0.22    -0.022 -0.20  0.35
-pcs_amnesia                   -5.30     -1.92   -1.70    -0.079 -0.66  0.30
-                           med.r
-pcs_handslow              -0.026
-pcs_mosquito              -0.088
-pcs_magnetichands          0.000
-pcs_armrigidity            0.000
-pcs_tastescore            -0.094
-pcs_postsessionsuggetsion  0.000
-pcs_armimmobile           -0.026
-pcs_music                 -0.088
-pcs_negativehallucination  0.000
-pcs_amnesia                0.000
+## Mild 
+Pair: ErrorRate_Ebbinghaus_Mild vs ErrorRate_MullerLyer_Mild 
+Pair: ErrorRate_VerticalHorizontal_Mild vs ErrorRate_MullerLyer_Mild 
+Pair: ErrorRate_VerticalHorizontal_Mild vs ErrorRate_Ebbinghaus_Mild 
 
- Item statistics 
-                          n raw.r std.r r.cor r.drop mean   sd
-pcs_handslow              4 -0.44  0.01   NaN  -0.73  4.0 1.41
-pcs_mosquito              4 -0.04  0.39   NaN  -0.32  2.0 0.82
-pcs_magnetichands         4  0.22 -0.21   NaN  -0.49  2.5 2.08
-pcs_armrigidity           4  0.11 -0.34   NaN  -0.34  1.2 1.26
-pcs_tastescore            4  0.88  0.98   NaN   0.81  2.8 0.65
-pcs_postsessionsuggetsion 4  0.25  0.60   NaN  -0.28  1.9 1.44
-pcs_armimmobile           4 -0.33 -0.17   NaN  -0.62  2.0 1.15
-pcs_music                 4  0.86  0.71   NaN   0.29  3.8 1.89
-pcs_negativehallucination 4 -0.40 -0.35   NaN  -0.69  2.8 1.26
-pcs_amnesia               4  0.85  0.57   NaN   0.59  2.8 1.26</code></pre>
+### IES 
+
+## Congruent 
+Pair: IES_Ebbinghaus_Congruent vs IES_MullerLyer_Congruent 
+Pair: IES_VerticalHorizontal_Congruent vs IES_MullerLyer_Congruent 
+Pair: IES_VerticalHorizontal_Congruent vs IES_Ebbinghaus_Congruent 
+
+## Strong 
+Pair: IES_Ebbinghaus_Strong vs IES_MullerLyer_Strong 
+Pair: IES_VerticalHorizontal_Strong vs IES_MullerLyer_Strong 
+Pair: IES_VerticalHorizontal_Strong vs IES_Ebbinghaus_Strong 
+
+## Mild 
+Pair: IES_Ebbinghaus_Mild vs IES_MullerLyer_Mild 
+Pair: IES_VerticalHorizontal_Mild vs IES_MullerLyer_Mild 
+Pair: IES_VerticalHorizontal_Mild vs IES_Ebbinghaus_Mild </code></pre>
 </div>
+</div>
+</section>
+<section id="inter-illusion-reliability" class="level4">
+<h4 class="anchored" data-anchor-id="inter-illusion-reliability">Inter-illusion Reliability</h4>
+<p>Error Rate</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>con_rel_er <span class="ot">&lt;-</span> data_vs_wide <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"ErrorRate.*_Congruent"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  psych<span class="sc">::</span><span class="fu">alpha</span>()</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>mild_rel_er <span class="ot">&lt;-</span> data_vs_wide <span class="sc">|&gt;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"ErrorRate.*_mild"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  psych<span class="sc">::</span><span class="fu">alpha</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Some items ( ErrorRate_VerticalHorizontal_Mild ) were negatively correlated with the first principal component and 
+probably should be reversed.  
+To do this, run the function again with the 'check.keys=TRUE' option</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>strong_rel_er <span class="ot">&lt;-</span> data_vs_wide <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"ErrorRate.*_strong"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  psych<span class="sc">::</span><span class="fu">alpha</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Some items ( ErrorRate_Ebbinghaus_Strong ) were negatively correlated with the first principal component and 
+probably should be reversed.  
+To do this, run the function again with the 'check.keys=TRUE' option</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inc_rel_er &lt;- data_vs_wide |&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(matches("ErrorRate.*_Inongruent")) |&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   psych::alpha()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>con_rel_IES <span class="ot">&lt;-</span> data_vs_wide <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"IES.*_Congruent"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  psych<span class="sc">::</span><span class="fu">alpha</span>()</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>mild_rel_IES <span class="ot">&lt;-</span> data_vs_wide <span class="sc">|&gt;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"IES.*_mild"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  psych<span class="sc">::</span><span class="fu">alpha</span>()</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>strong_rel_IES <span class="ot">&lt;-</span> data_vs_wide <span class="sc">|&gt;</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"IES.*_strong"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  psych<span class="sc">::</span><span class="fu">alpha</span>()</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co"># inc_rel_IES &lt;- data_vs_wide |&gt;</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(matches("IES.*_Inongruent")) |&gt;</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   psych::alpha()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+</section>
+<section id="pcs-and-illusion-sensitivity" class="level2">
+<h2 class="anchored" data-anchor-id="pcs-and-illusion-sensitivity">PCS and Illusion Sensitivity</h2>
+<section id="error-rate-1" class="level3">
+<h3 class="anchored" data-anchor-id="error-rate-1">Error Rate</h3>
+<section id="ebbinghaus" class="level4">
+<h4 class="anchored" data-anchor-id="ebbinghaus">Ebbinghaus</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>cor_pcs_er_ebb_con <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>ErrorRate_Ebbinghaus_Congruent)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>er_pcs_ebb_con_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_er_ebb_con)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>cor_pcs_er_ebb_m <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>ErrorRate_Ebbinghaus_Mild)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>er_pcs_ebb_mild_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_er_ebb_m)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>cor_pcs_er_ebb_s <span class="ot">&lt;-</span>  BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>ErrorRate_Ebbinghaus_Strong)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>er_pcs_ebb_str_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_er_ebb_s)</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Incongruent</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cor_pcs_er_ebb_inc &lt;-  BayesFactor::correlationBF(</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = data_ppt$pcs,</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = data_vs_wide$ErrorRate_Ebbinghaus_Incongruent)</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="co"># er_pcs_ebb_inc_post &lt;- describe_posterior(cor_pcs_er_ebb_inc)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="muller-lyer" class="level4">
+<h4 class="anchored" data-anchor-id="muller-lyer">Muller-Lyer</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cor_pcs_er_mul_con <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>ErrorRate_MullerLyer_Congruent)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>er_pcs_mul_con_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_er_mul_con)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>cor_pcs_er_mul_m <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>ErrorRate_MullerLyer_Mild)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>er_pcs_mul_mild_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_er_mul_m)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>cor_pcs_er_mul_s <span class="ot">&lt;-</span>  BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>ErrorRate_MullerLyer_Strong)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>er_pcs_mul_str_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_er_mul_s)</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Incongruent</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cor_pcs_er_mul_inc &lt;-  BayesFactor::correlationBF(</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = data_ppt$pcs,</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = data_vs_wide$ErrorRate_MullerLyer_Incongruent)</span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="co"># er_pcs_mul_inc_post &lt;- describe_posterior(cor_pcs_er_mul_inc)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="verticalhorizontal" class="level4">
+<h4 class="anchored" data-anchor-id="verticalhorizontal">VerticalHorizontal</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>cor_pcs_er_vh_con <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>ErrorRate_VerticalHorizontal_Congruent)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>er_pcs_vh_con_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_er_vh_con)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>cor_pcs_er_vh_m <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>ErrorRate_VerticalHorizontal_Mild)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>er_pcs_vh_mild_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_er_vh_m)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>cor_pcs_er_vh_s <span class="ot">&lt;-</span>  BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>ErrorRate_VerticalHorizontal_Strong)</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>er_pcs_vh_str_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_er_vh_s)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Incongruent</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cor_pcs_er_vh_inc &lt;-  BayesFactor::correlationBF(</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = data_ppt$pcs,</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = data_vs_wide$ErrorRate_VerticalHorizontal_Incongruent)</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="co"># er_pcs_vh_inc_post &lt;- describe_posterior(cor_pcs_er_vh_inc)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="ies-1" class="level3">
+<h3 class="anchored" data-anchor-id="ies-1">IES</h3>
+<section id="ebbinghaus-1" class="level4">
+<h4 class="anchored" data-anchor-id="ebbinghaus-1">Ebbinghaus</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>cor_pcs_IES_ebb_con <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_Ebbinghaus_Congruent)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>IES_pcs_ebb_con_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_IES_ebb_con)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>cor_pcs_IES_ebb_m <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_Ebbinghaus_Mild)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>IES_pcs_ebb_mild_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_IES_ebb_m)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>cor_pcs_IES_ebb_s <span class="ot">&lt;-</span>  BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs,</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_Ebbinghaus_Strong)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>IES_pcs_ebb_str_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_IES_ebb_s)</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Incongruent</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cor_pcs_IES_ebb_inc &lt;-  BayesFactor::correlationBF(</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = data_ppt$pcs,</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = data_vs_wide$ErrorRate_Ebbinghaus_Incongruent)</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="co"># IES_pcs_ebb_inc_post &lt;- describe_posterior(cor_pcs_IES_ebb_inc)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="muller-lyer-1" class="level4">
+<h4 class="anchored" data-anchor-id="muller-lyer-1">Muller-Lyer</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>cor_pcs_IES_mul_con <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs, </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_MullerLyer_Congruent)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>IES_pcs_mul_con_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_IES_mul_con)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>cor_pcs_IES_mul_m <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs, </span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_MullerLyer_Mild)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>IES_pcs_mul_mild_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_IES_mul_m)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>cor_pcs_IES_mul_s <span class="ot">&lt;-</span>  BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs, </span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_MullerLyer_Strong)</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>IES_pcs_mul_str_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_IES_mul_s)</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Incongruent</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cor_pcs_IES_mul_inc &lt;-  BayesFactor::correlationBF(</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = data_ppt$pcs,</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = data_vs_wide$ErrorRate_MullerLyer_Incongruent)</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="co"># IES_pcs_mul_inc_post &lt;- describe_posterior(cor_pcs_IES_mul_inc)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="vertical-horizontal" class="level4">
+<h4 class="anchored" data-anchor-id="vertical-horizontal">Vertical Horizontal</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>cor_pcs_IES_vh_con <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs, </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_VerticalHorizontal_Congruent)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>IES_pcs_mul_con_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_IES_vh_con)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>cor_pcs_IES_vh_m <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs, </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_VerticalHorizontal_Mild)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>IES_pcs_mul_mild_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_IES_vh_m)</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>cor_pcs_IES_vh_s <span class="ot">&lt;-</span>  BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>pcs, </span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_VerticalHorizontal_Strong)</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>IES_pcs_vh_str_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_IES_vh_s)</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Incongruent</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cor_pcs_IES_vh_inc &lt;-  BayesFactor::correlationBF(</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = data_ppt$pcs,</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = data_vs_wide$ErrorRate_VerticalHorizontal_Incongruent)</span></span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a><span class="co"># IES_pcs_vh_inc_post &lt;- describe_posterior(cor_pcs_IES_vh_inc)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+</section>
+<section id="correlations-between-illusion-scores-and-psychoticism" class="level2">
+<h2 class="anchored" data-anchor-id="correlations-between-illusion-scores-and-psychoticism">Correlations between Illusion scores and Psychoticism</h2>
+<section id="ebbinghaus-2" class="level4">
+<h4 class="anchored" data-anchor-id="ebbinghaus-2">Ebbinghaus</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>cor_pcs_psy_ebb_con <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>PID5_Psychoticism,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_Ebbinghaus_Congruent)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>IES_psy_ebb_con_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_psy_ebb_con)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>cor_pcs_psy_ebb_m <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>PID5_Psychoticism,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_Ebbinghaus_Mild)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>IES_psy_ebb_mild_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_psy_ebb_m)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>cor_pcs_psy_ebb_s <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>PID5_Psychoticism,</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_Ebbinghaus_Strong)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>IES_psy_ebb_str_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_psy_ebb_s)   </span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Incongruent</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cor_pcs_psy_ebb_inc &lt;-  BayesFactor::correlationBF(</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = data_ppt$pcs,</span></span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = data_vs_wide$IES_Ebbinghaus_Incongruent)</span></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a><span class="co"># IES_psy_ebb_inc_post &lt;- describe_posterior(cor_pcs_psy_ebb_inc)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="muller-lyer-2" class="level4">
+<h4 class="anchored" data-anchor-id="muller-lyer-2">Muller-Lyer</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>cor_pcs_psy_mul_con <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>PID5_Psychoticism,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_MullerLyer_Congruent)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>IES_psy_mul_con_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_psy_mul_con)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>cor_pcs_psy_mul_m <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>PID5_Psychoticism,</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_MullerLyer_Mild)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>IES_psy_mul_mild_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_psy_mul_m)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>cor_pcs_psy_mul_s <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>PID5_Psychoticism,</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_MullerLyer_Strong)</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>IES_psy_mul_str_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_psy_mul_s)   </span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Incongruent</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cor_pcs_psy_mul_inc &lt;-  BayesFactor::correlationBF(</span></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = data_ppt$pcs,</span></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = data_vs_wide$IES_MullerLyer_Incongruent)</span></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="co"># IES_psy_mul_inc_post &lt;- describe_posterior(cor_pcs_psy_mul_inc)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="vertical-horizontal-1" class="level4">
+<h4 class="anchored" data-anchor-id="vertical-horizontal-1">Vertical-Horizontal</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>cor_pcs_psy_vh_con <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>PID5_Psychoticism,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_VerticalHorizontal_Congruent)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>IES_psy_vh_con_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_psy_vh_con)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>cor_pcs_psy_vh_m <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>PID5_Psychoticism,</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_VerticalHorizontal_Mild)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>IES_psy_vh_mild_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_psy_vh_m)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>cor_pcs_psy_vh_s <span class="ot">&lt;-</span> BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> data_ppt<span class="sc">$</span>PID5_Psychoticism,</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> data_vs_wide<span class="sc">$</span>IES_VerticalHorizontal_Strong)</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>IES_psy_vh_str_post <span class="ot">&lt;-</span> <span class="fu">describe_posterior</span>(cor_pcs_psy_vh_s)   </span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Incongruent</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cor_pcs_psy_vh_inc &lt;-  BayesFactor::correlationBF(</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = data_ppt$pcs,</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = data_vs_wide$IES_VerticalHorizontal_Incongruent)</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="co"># IES_psy_vh_inc_post &lt;- describe_posterior(cor_pcs_psy_vh_inc)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 </section>

@@ -64,8 +64,6 @@ SD_per_dim <- function(x, dims="") {
 ```
 
 ```{r}
-#| code-fold: false
-
 ipip6 <- select(data_ppt, starts_with("ipip_"))
 ipip6[grepl("_R", names(ipip6))] <- 8 - ipip6[grepl("_R", names(ipip6))]
 
@@ -90,8 +88,6 @@ data_ppt$IPIP6_SD <- rowMeans(SD_per_dim(ipip6, c("Extraversion", "Conscientious
 ### PID-5
 
 ```{r}
-#| code-fold: false
-
 pid5 <- select(data_ppt, starts_with("pid_"))
 
 data_ppt$PID5_Disinhibition <- rowMeans(pid5[grepl("Dis", names(pid5))])
@@ -463,19 +459,19 @@ p_edu
 ### Ethnicity
 
 ```{r p_ethnicity}
-ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |> 
-  ggplot(aes(x, y, fill = group)) + 
-  ggwaffle::geom_waffle() + 
-  coord_equal() + 
-  scale_fill_flat_d() + 
-  ggwaffle::theme_waffle() +
-  labs(title = "Self-reported Ethnicity", subtitle = "Each square represents a participant", fill="")  +
-  theme(
-    plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
-    plot.subtitle = element_text(size = rel(1.2)),
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank()
-  )
+# ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |> 
+#   ggplot(aes(x, y, fill = group)) + 
+#   ggwaffle::geom_waffle() + 
+#   coord_equal() + 
+#   scale_fill_flat_d() + 
+#   ggwaffle::theme_waffle() +
+#   labs(title = "Self-reported Ethnicity", subtitle = "Each square represents a participant", fill="")  +
+#   theme(
+#     plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
+#     plot.subtitle = element_text(size = rel(1.2)),
+#     axis.title.x = element_blank(),
+#     axis.title.y = element_blank()
+#   )
 ```
 
 ### Summary
