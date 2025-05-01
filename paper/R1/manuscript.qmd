@@ -207,7 +207,7 @@ Participant’s raw data files (containing identifiers) **are** automatically st
 The preprocessing and analysis scripts, as well as the anonymized data, will be available directly on GitHub, ensuring the transparency and reproducibility of all the analysis steps.
 
 Participants will be presented with a consent form followed by demographic questions (gender, education level, age, and ethnicity). 
-**Although these variables are not directly analyzed in the current study, they will be used to provide to provide a detailed and thorough description of the sample and maximizing data reusability.** 
+**Although these variables are not directly analyzed in the current study, they will be used to provide a detailed and thorough description of the sample and maximizing data reusability.** 
 **Participants will then be administered the PCS and the Illusion Game task (IG) in a counterbalanced order.**
 
 ### Phenomenological Control Scale (PCS)
@@ -257,20 +257,20 @@ These questionnaires are included as a way of providing a break between the two 
 
 ## Data Analysis
 
-The PCS will contain several manipulation check indices to identify problematic participants. 
-**The phenomenological control task consists of various auditory and visual exercises.**
-**At the start of the task, participants first hear someone say "hello." They are then asked to choose from several options, including "Hello," "Goodbye," "How are you," and "Thank you".**
-**Any participant who selects an option other than the correct one will be considered inattentive**
-**In another exercise, participants receive the following instruction: “Open your eyes. You will see only two balls on the screen…just two balls”.**
-**However, three differently coloured balls are actually displayed.**
-**If participants select the option "no balls were shown", it indicates they failed to pay attention to both the auditory instructions and the visual stimuli.**
-**Lastly, in another exercise, participants are asked to press the spacebar six times.**
-**If they press it fewer than five times within the allotted time, it suggests a lack of attentiveness to the auditory instructions.**
-**Participants will be excluded if they fail at least one of these checks.**
-**Lastly, reliability of the PCS will be assessed by computing Cronbach's alpha [@cronbach1951coefficient].** 
-
+**The phenomenological control task will include several manipulation check indices to identify problematic participants.** 
+**The task consists of various auditory and visual exercises; at the outset, participants hear a voice say “hello” and are asked to select the corresponding phrase from multiple options (e.g., “Hello,” “Goodbye,” “How are you,” “Thank you”).** 
+**Selecting an incorrect response indicates inattention to auditory stimuli.** 
+**In a subsequent exercise, participants are instructed: “Open your eyes. You will see only two balls on the screen… just two balls”.** 
+**However, three differently coloured balls are displayed.** 
+**If a participant selects the response “no balls were shown,” it suggests they failed to attend to both the auditory instruction and the visual stimuli.** 
+**In another task, participants are instructed to press the spacebar six times.** 
+**Pressing it fewer than five times within the allotted time indicates a failure to follow the auditory instructions.** 
+**Participants who fail any one of these manipulation checks will be excluded from further analysis.** 
+**Finally, reliability of the PCS will be assessed by computing Cronbach's alpha [@cronbach1951coefficient].** 
+ 
 **To assess whether the illusions functioned as expected, stimuli will be categorized into three groups: Strong Illusion Strength & Incongruent, Mild Illusion Strength & Incongruent, and Congruent.**
 **Two Bayesian t-tests will be conducted to assess differences in IES between the Congruent and Mild conditions, and between the Mild and Strong conditions.**
+**The IES is calculated by dividing the average correct RTs by the proportion of correct responses.**
 **Significant differences in these comparisons will provide evidence that the illusions functioned as intended.**
 
 **The two outcome measures—error rate and IES—will be computed for each illusion and for each illusion strength group: Strong Illusion Strength & Incongruent, Mild Illusion Strength & Incongruent, and Congruent.**
