@@ -51,6 +51,30 @@ The initial sample consisted of `r report::report_participants(data_ppt, age="Ag
 
 ## Score Computation
 
+### PCS scale score
+
+**Note:** Mean subjective scale responses for item 4 (Taste) and item 10 (Post-session suggestion) are each generated from the combination of two responses which require processing prior to generating an overall subjective score. 
+The subjective score for item 4 is the mean of the responses to the (a)‘sour’ and (b)‘sweet’ sub-scales for the taste suggestion. 
+The subjective score for item 10 is the geometric mean (the square root of the product) of he responses to the (a) ‘urge’ and (b) ‘amnesia’ sub-scales for the post-session suggestion. 
+
+```{r}
+data_ppt$pcs_tastescore <- rowMeans(data_ppt[grepl("taste", names(data_ppt))])
+data_ppt$pcs_postsessionsuggetsion <- sqrt(data_ppt$pcs_urgepress * data_ppt$pcs_memorypress)
+data_ppt$pcs <- rowMeans(data_ppt[, c("pcs_handslow", "pcs_mosquito", "pcs_magnetichands", "pcs_armrigidity", "pcs_tastescore", "pcs_postsessionsuggetsion", "pcs_armimmobile", "pcs_music", "pcs_negativehallucination", "pcs_amnesia")], na.rm = TRUE)
+data_ppt$pcs_SD <- sd(data_ppt$pcs, na.rm = TRUE)
+
+```
+
+### PCS Reliability
+
+```{r}
+
+pcs_rel <- data_ppt |>
+  select("pcs_handslow", "pcs_mosquito", "pcs_magnetichands", "pcs_armrigidity", "pcs_tastescore", "pcs_postsessionsuggetsion", "pcs_armimmobile", "pcs_music", "pcs_negativehallucination", "pcs_amnesia") |>
+  psych::alpha()
+
+```
+
 ### IPIP6
 
 
