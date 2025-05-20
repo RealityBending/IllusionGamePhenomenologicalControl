@@ -1,5 +1,5 @@
 ---
-title: "Illusion Game & PCS"
+title: "Illusion Sensitivity and Phenomenological Control"
 subtitle: "Analysis"
 date: "`r Sys.Date()`"
 editor: source

@@ -1,5 +1,5 @@
 ---
-title: "Illusion Game & PCS"
+title: "Illusion Sensitivity and Phenomenological Control"
 subtitle: "Preprocessing"
 date: "`r Sys.Date()`"
 editor: source
@@ -53,15 +53,6 @@ The initial sample consisted of `r report::report_participants(data_ppt, age="Ag
 
 ### IPIP6
 
-```{r}
-SD_per_dim <- function(x, dims="") {
-  m <- matrix(nrow=nrow(x), ncol=0)
-  for(s in dims) {
-    m <- cbind(m, sapply(as.data.frame(t(x[grepl(s, names(x))])), sd))
-  }
-  m
-}
-```
 
 ```{r}
 ipip6 <- select(data_ppt, starts_with("ipip_"))
@@ -73,16 +64,6 @@ data_ppt$IPIP6_Neuroticism <- rowMeans(ipip6[grepl("neuro", names(ipip6))])
 data_ppt$IPIP6_Openness <- rowMeans(ipip6[grepl("open", names(ipip6))])
 data_ppt$IPIP6_HonestyHumility <- rowMeans(ipip6[grepl("honhum", names(ipip6))])
 data_ppt$IPIP6_Agreeableness <- rowMeans(ipip6[grepl("agr", names(ipip6))])
-data_ppt$IPIP6_SD <- rowMeans(SD_per_dim(ipip6, c("Extraversion", "Conscientiousness", "Neuroticism", "Openness", "HonestyHumility", "Agreeableness")))
-
-
-# data_ppt$IPIP6_Extraversion <- rowMeans(ipip6[grepl("Ext", names(ipip6))])
-# data_ppt$IPIP6_Conscientiousness <- rowMeans(ipip6[grepl("Cons", names(ipip6))])
-# data_ppt$IPIP6_Neuroticism <- rowMeans(ipip6[grepl("Neuro", names(ipip6))])
-# data_ppt$IPIP6_Openness <- rowMeans(ipip6[grepl("Ppen", names(ipip6))])
-# data_ppt$IPIP6_HonestyHumility <- rowMeans(ipip6[grepl("HonHum", names(ipip6))])
-# data_ppt$IPIP6_Agreeableness <- rowMeans(ipip6[grepl("Agr", names(ipip6))])
-# data_ppt$IPIP6_SD <- rowMeans(SD_per_dim(ipip6, c("Extraversion", "Conscientiousness", "Neuroticism", "Openness", "HonestyHumility", "Agreeableness")))
 ```
 
 ### PID-5
@@ -95,8 +76,6 @@ data_ppt$PID5_Detachment <- rowMeans(pid5[grepl("Det", names(pid5))])
 data_ppt$PID5_NegativeAffect <- rowMeans(pid5[grepl("NegAff", names(pid5))])
 data_ppt$PID5_Antagonism <- rowMeans(pid5[grepl("Ant", names(pid5))])
 data_ppt$PID5_Psychoticism <- rowMeans(pid5[grepl("Psy", names(pid5))])
-data_ppt$PID5_SD <- rowMeans(SD_per_dim(pid5, c("Disinhibition", "Detachment", "NegativeAffect",
-                                             "Antagonism", "Psychoticism")))
 ```
 
 ### Experiment Duration
