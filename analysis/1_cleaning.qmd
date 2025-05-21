@@ -11,7 +11,7 @@ format:
     self-contained: false
     toc: true
 execute: 
-  cache: true
+  cache: false
 ---
 
 # Data Preparation
@@ -31,78 +31,28 @@ library(patchwork)
 data_ppt <- read.csv("../data/rawdata_participants.csv")
 
 
-# path_ig <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv")
-path_ig <- read.csv("../data/rawdata_illusion.csv")
-
-
-data_ig <- path_ig |>
-  group_by(Illusion_Type) |> 
-  mutate(Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
-         Task_Difficulty = abs(Illusion_Difference),
-         Condition_Illusion = datawizard::categorize(
-           Illusion_Strength, split="quantile", n_groups=4,
-           labels=c("Congruent - Strong", "Congruent - Mild", "Incongruent - Mild", "Incongruent - Strong")),
-         Condition_Difficulty = datawizard::categorize(Task_Difficulty, split="quantile", n_groups=2, labels=c("Hard", "Easy"))) |> 
-  ungroup()
-
+# read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv")
+data_ig <- read.csv("../data/rawdata_illusion.csv") |>
+  mutate(
+    Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
+    Task_Difficulty = abs(Illusion_Difference),
+    Condition_Illusion = case_when(
+        Illusion_Effect == "Congruent" ~ "Congruent",
+        Illusion_Effect == "Incongruent" & Illusion_Strength <= median(Illusion_Strength[Illusion_Effect == "Incongruent"], na.rm = TRUE) ~ "Mild",
+        Illusion_Effect == "Incongruent" & Illusion_Strength > median(Illusion_Strength[Illusion_Effect == "Incongruent"], na.rm = TRUE) ~ "Strong"),
+    Condition_Difficulty = datawizard::categorize(
+      Task_Difficulty, 
+      split = "quantile", 
+      n_groups = 2, 
+      labels = c("Hard", "Easy")),
+    .by = "Illusion_Type"
+  )
 ```
 
 The initial sample consisted of `r report::report_participants(data_ppt, age="Age", gender="Gender", education="Education")`, for a total trial number of `r nrow(data_ppt)`.
 
-## Score Computation
 
-### PCS scale score
-
-**Note:** Mean subjective scale responses for item 4 (Taste) and item 10 (Post-session suggestion) are each generated from the combination of two responses which require processing prior to generating an overall subjective score. 
-The subjective score for item 4 is the mean of the responses to the (a)‘sour’ and (b)‘sweet’ sub-scales for the taste suggestion. 
-The subjective score for item 10 is the geometric mean (the square root of the product) of he responses to the (a) ‘urge’ and (b) ‘amnesia’ sub-scales for the post-session suggestion. 
-
-```{r}
-data_ppt$pcs_tastescore <- rowMeans(data_ppt[grepl("taste", names(data_ppt))])
-data_ppt$pcs_postsessionsuggetsion <- sqrt(data_ppt$pcs_urgepress * data_ppt$pcs_memorypress)
-data_ppt$pcs <- rowMeans(data_ppt[, c("pcs_handslow", "pcs_mosquito", "pcs_magnetichands", "pcs_armrigidity", "pcs_tastescore", "pcs_postsessionsuggetsion", "pcs_armimmobile", "pcs_music", "pcs_negativehallucination", "pcs_amnesia")], na.rm = TRUE)
-data_ppt$pcs_SD <- sd(data_ppt$pcs, na.rm = TRUE)
-
-```
-
-### PCS Reliability
-
-```{r}
-
-pcs_rel <- data_ppt |>
-  select("pcs_handslow", "pcs_mosquito", "pcs_magnetichands", "pcs_armrigidity", "pcs_tastescore", "pcs_postsessionsuggetsion", "pcs_armimmobile", "pcs_music", "pcs_negativehallucination", "pcs_amnesia") |>
-  psych::alpha()
-
-```
-
-### IPIP6
-
-
-```{r}
-ipip6 <- select(data_ppt, starts_with("ipip_"))
-ipip6[grepl("_R", names(ipip6))] <- 8 - ipip6[grepl("_R", names(ipip6))]
-
-data_ppt$IPIP6_Extraversion <- rowMeans(ipip6[grepl("ext", names(ipip6))])
-data_ppt$IPIP6_Conscientiousness <- rowMeans(ipip6[grepl("cons", names(ipip6))])
-data_ppt$IPIP6_Neuroticism <- rowMeans(ipip6[grepl("neuro", names(ipip6))])
-data_ppt$IPIP6_Openness <- rowMeans(ipip6[grepl("open", names(ipip6))])
-data_ppt$IPIP6_HonestyHumility <- rowMeans(ipip6[grepl("honhum", names(ipip6))])
-data_ppt$IPIP6_Agreeableness <- rowMeans(ipip6[grepl("agr", names(ipip6))])
-```
-
-### PID-5
-
-```{r}
-pid5 <- select(data_ppt, starts_with("pid_"))
-
-data_ppt$PID5_Disinhibition <- rowMeans(pid5[grepl("Dis", names(pid5))])
-data_ppt$PID5_Detachment <- rowMeans(pid5[grepl("Det", names(pid5))])
-data_ppt$PID5_NegativeAffect <- rowMeans(pid5[grepl("NegAff", names(pid5))])
-data_ppt$PID5_Antagonism <- rowMeans(pid5[grepl("Ant", names(pid5))])
-data_ppt$PID5_Psychoticism <- rowMeans(pid5[grepl("Psy", names(pid5))])
-```
-
-### Experiment Duration
+## Experiment Duration
 
 The experiment's median duration is `r insight::format_value(median(data_ppt$Experiment_Duration))` min (`r insight::format_ci(bayestestR::hdi(data_ppt$Experiment_Duration, ci=0.5))`).
 
@@ -128,6 +78,36 @@ data_ppt |>
   ggside::theme_ggside_void() +
   theme(ggside.panel.scale = .3, 
         axis.text.y = element_blank()) 
+```
+
+
+## Personality Questionnaires Computation
+
+### IPIP6
+
+
+```{r}
+ipip6 <- select(data_ppt, starts_with("ipip_"))
+ipip6[grepl("_R", names(ipip6))] <- 8 - ipip6[grepl("_R", names(ipip6))]
+
+data_ppt$IPIP6_Extraversion <- rowMeans(ipip6[grepl("Ext", names(ipip6))])
+data_ppt$IPIP6_Conscientiousness <- rowMeans(ipip6[grepl("Cons", names(ipip6))])
+data_ppt$IPIP6_Neuroticism <- rowMeans(ipip6[grepl("Neuro", names(ipip6))])
+data_ppt$IPIP6_Openness <- rowMeans(ipip6[grepl("Open", names(ipip6))])
+data_ppt$IPIP6_HonestyHumility <- rowMeans(ipip6[grepl("HonHum", names(ipip6))])
+data_ppt$IPIP6_Agreeableness <- rowMeans(ipip6[grepl("Agr", names(ipip6))])
+```
+
+### PID-5
+
+```{r}
+pid5 <- select(data_ppt, starts_with("pid_"))
+
+data_ppt$PID5_Disinhibition <- rowMeans(pid5[grepl("Dis", names(pid5))])
+data_ppt$PID5_Detachment <- rowMeans(pid5[grepl("Det", names(pid5))])
+data_ppt$PID5_NegativeAffect <- rowMeans(pid5[grepl("NegAff", names(pid5))])
+data_ppt$PID5_Antagonism <- rowMeans(pid5[grepl("Ant", names(pid5))])
+data_ppt$PID5_Psychoticism <- rowMeans(pid5[grepl("Psy", names(pid5))])
 ```
 
 
@@ -174,18 +154,9 @@ We discarded `r length(outliers_full)` participants (entirely) and `r length(out
 ```
 
 
-
-```{r}
-data_outliers <- df |>
-  mutate(Outlier = ifelse(RT >= 10, TRUE, FALSE)) |>
-  group_by(Participant) |>
-  mutate(Outlier = ifelse(RT < 0.150 | standardize(RT, robust = TRUE) > 4, TRUE, Outlier)) |>
-  ungroup()
-```
-
 ## Illusion Game Trials
 
-The removal of individual trials will also be performed (RT < 0.2 s or > 5 s; Thériault et al., 2024) to mitigate the risk of confounding effects driven by extreme speed or accuracy strategies.
+We removed individual extreme trials (RT < 0.2 s or > 5 s; Thériault et al., 2024) to mitigate the risk of confounding effects driven by extreme speed or accuracy strategies.
 
 ```{r}
 data_ig <- filter(data_ig, RT > 0.2 & RT < 5)
@@ -195,69 +166,34 @@ data_ig <- filter(data_ig, RT > 0.2 & RT < 5)
 ## PCS
 
 ```{r}
-
-# outliers$Hello <- data_ppt |>
-#   dplyr::filter(pcs_hello != "Hello")
-# 
-# outliers$Hello <- outliers$Hello$Participant
-
+outliers_pcs1 <- data_ppt[data_ppt$pcs_hello != "Hello", "Participant"]
+outliers_pcs2 <- data_ppt[data_ppt$pcs_noballs == TRUE, "Participant"]
+outliers_pcs3 <- data_ppt[data_ppt$pcs_press < 5, "Participant"]
+outliers_pcs <- unique(c(outliers_pcs1, outliers_pcs2, outliers_pcs3))
 ```
 
-We removed `r length(outliers$Hello)` (`r insight::format_percent(length(outliers$Hello) / nrow(data_ppt))`) participants that did not reported hearing "Hello" at the beggining of the experiment.
-
-```{r}
-# remove after more pilots
-# outliers$Balls <- data_ppt |>
-#   dplyr::filter(pcs_noballs == TRUE) # remove after more pilots
-# 
-# # outliers$balls <- data_ppt |>
-# #   dplyr::filter(pcs_noballs == "TRUE")
-# 
-# outliers$Balls <- outliers$Balls$Participant
-```
-
-We removed `r length(outliers$Balls)` (`r insight::format_percent(length(outliers$Balls) / nrow(data_ppt))`) participants that responded that no balls were presented in the screen. 
+We removed `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_pcs) / nrow(data_ppt))`) participants that either did not reported hearing "Hello" at the beginning of the experiment, responded that no balls were presented in the screen, or pressed less than 5 times when asked to do so.
 
 
 ```{r}
-
-# outliers$Press <- data_ppt |>
-#   dplyr::filter(pcs_press < 5)
-# 
-# outliers$Press <- outliers$Press$Participant
+# data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
+# data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
 ```
 
-We removed `r length(outliers$Press)` (`r insight::format_percent(length(outliers$Press) / nrow(data_ppt))`) participants that responded that no balls were presented in the screen.
 
-
-```{r}
-data_ppt <- filter(data_ppt, !Participant %in% outliers$Hello)
-data_ppt <- filter(data_ppt, !Participant %in% outliers$Balls)
-data_ppt <- filter(data_ppt, !Participant %in% outliers$Press)
-
-data_ig <- filter(data_ig, !Participant %in% outliers$Hello)
-data_ig <- filter(data_ig, !Participant %in% outliers$Balls)
-data_ig <- filter(data_ig, !Participant %in% outliers$Press)
-```
 
 # Final Sample
 
-```{r}
-# data_ppt<- filter(data_ppt, !Participant %in% outliers)
-# data_ig <- filter(data_ig, Participant %in% data_ppt$Participant)
-```
 
-### Age
+The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`.
+
+## Age
 
 ```{r}
-p_age <- estimate_density(data_ppt$Age) |>
-  normalize(select = y) |>
-  mutate(y = y * 86) |>  # To match the binwidth
-  ggplot(aes(x = x)) +
-  geom_histogram(data=data_ppt, aes(x = Age, fill=Gender), bins=28) +
-  # geom_line(aes(y = y), color = "orange", linewidth=2) +
+p_age <- data_ppt |>  # To match the binwidth
+  ggplot(aes(x = data_ppt)) +
+  geom_histogram(aes(x = Age, fill=Gender), bins=28) +
   geom_vline(xintercept = mean(data_ppt$Age), color = "red", linewidth=1.5) +
-  # geom_label(data = data.frame(x = mean(df$Age) * 1.15, y = 0.95 * 75), aes(y = y), color = "red", label = paste0("Mean = ", format_value(mean(df$Age)))) +
   scale_fill_manual(values = c("Male"= "#64B5F6", "Female"= "#F06292", "Other"="orange")) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
@@ -273,7 +209,7 @@ p_age <- estimate_density(data_ppt$Age) |>
 p_age
 ```
 
-### Education
+## Education
 
 ```{r}
 p_edu <- data_ppt |>
@@ -294,7 +230,7 @@ p_edu <- data_ppt |>
 p_edu
 ```
 
-### Ethnicity
+## Ethnicity
 
 ```{r p_ethnicity}
 # ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |> 
@@ -312,16 +248,13 @@ p_edu
 #   )
 ```
 
-### Summary
 
-The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`.
-
-## Save
+# Save
 
 ```{r}
 #| code-fold: false
 
 write.csv(data_ppt, "../data/data_participants.csv", row.names = FALSE)
-write.csv(data_ig, "../data/data_IllusionGame.csv", row.names = FALSE)
+write.csv(data_ig, "../data/data_illusion.csv", row.names = FALSE)
 ```
 
