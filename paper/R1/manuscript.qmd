@@ -257,39 +257,45 @@ These questionnaires are included as a way of providing a break between the two 
 
 ## Data Analysis
 
-**The phenomenological control task will include several manipulation check indices to identify problematic participants.** 
-**The task consists of various auditory and visual exercises; at the outset, participants hear a voice say “hello” and are asked to select the corresponding phrase from multiple options (e.g., “Hello,” “Goodbye,” “How are you,” “Thank you”).** 
-**Selecting an incorrect response indicates inattention to auditory stimuli.** 
+**The phenomenological control scale will include several attention checks to identify problematic participants.** 
+**The task consists of various auditory and visual exercises; at the outset, participants hear a voice say “hello” and are asked to select the corresponding phrase from multiple options (e.g., “Hello,” “Goodbye,” “How are you,” “Thank you”).**
+**Selecting an incorrect response indicates inattention to auditory stimuli.**
 **In a subsequent exercise, participants are instructed: “Open your eyes. You will see only two balls on the screen… just two balls”.** 
-**However, three differently coloured balls are displayed.** 
-**If a participant selects the response “no balls were shown,” it suggests they failed to attend to both the auditory instruction and the visual stimuli.** 
-**In another task, participants are instructed to press the spacebar six times.** 
+**However, three differently coloured balls are displayed.**
+**If a participant selects the response “no balls were shown,” it suggests they failed to attend to both the auditory instruction and the visual stimuli.**
+**In another task, participants are instructed to press the spacebar six times.**
 **Pressing it fewer than five times within the allotted time indicates a failure to follow the auditory instructions.** 
-**Participants who fail any one of these manipulation checks will be excluded from further analysis.** 
-**Finally, reliability of the PCS will be assessed by computing Cronbach's alpha [@cronbach1951coefficient].** 
- 
-**To assess whether the illusions functioned as expected, stimuli will be categorized into three groups: Strong Illusion Strength & Incongruent, Mild Illusion Strength & Incongruent, and Congruent.**
-**Two Bayesian t-tests will be conducted to assess differences in IES between the Congruent and Mild conditions, and between the Mild and Strong conditions.**
-**The IES is calculated by dividing the average correct RTs by the proportion of correct responses.**
-**Significant differences in these comparisons will provide evidence that the illusions functioned as intended.**
+**Participants who fail any one of these will be excluded from further analysis.**
+**Finally, the reliability of the PCS will be assessed by computing Cronbach's alpha of its items [@cronbach1951coefficient].**
 
-**The two outcome measures—error rate and IES—will be computed for each illusion and for each illusion strength group: Strong Illusion Strength & Incongruent, Mild Illusion Strength & Incongruent, and Congruent.**
-**Correlation will be computed between the mild and strong groups for each illusion and outcomes separately.**
-**If these correlations are high [*r* > .50, @cohen2013statistical], the mild and strong illusion strength groups will be collapsed and the outcomes will be recomputed across all trials, otherwise they will be treated as separate in subsequent analyses.**
+Outliers in the Illusion Game will be identified based on participants’ performance. 
+**Specifically, any participant exhibiting an error rate greater than 45% for any illusion type will be considered to be responding at chance level (i.e., randomly) and flagged accordingly**. 
+**If this level of performance occurs in the first block, the entire participant will be excluded from analysis, as it suggests a failure to properly engage with the task.** 
+**However, if the elevated error rate is observed only in the second block, this will be interpreted as a loss of engagement or motivation (e.g., boredom due to task repetition).** 
+**In such cases, only the second block will be discarded, allowing for estimation of illusion sensitivity based on the valid data from the first block, albeit with reduced precision.** 
+**To mitigate the risk of confounding effects driven by extreme speed or accuracy strategies, participants whose RTs are significantly slower than the group average [RT > 4 SD above the mean, based on @makowski2023] will be excluded from the analysis.** 
+After removing problematic participants and trials, the outcome measures (PC and VI sensitivity scores) will be computed.
 
-**Reliability analyses will then be conducted on all resulting indices.** **First, split-half reliability, to assess internal consistency, will be computed by correlating two equal subsets of individual scores, with high correlations expected (*r* > .5).**
-**Second, inter-illusion reliability will be evaluated using Cronbach’s alpha across the three illusions.**
+**To assess whether the illusions functioned as expected, stimuli will be categorized into three groups: Strong Illusion Strength & Incongruent, Mild Illusion Strength & Incongruent, and Congruent.** 
+**The two outcome measures—error rate and IES—will be computed separately for each illusion and each illusion strength group.** 
+**To evaluate differences between these conditions, two Bayesian t-tests will be conducted: one comparing the Congruent and Mild conditions, and the other comparing the Mild and Strong conditions.** 
+**Significant differences in either IES or error rate across these comparisons will be taken as evidence that the illusions operated as intended.**
 
-Illusion Game outliers will be flagged based on their RT distributions, following the same procedure as in [@makowski2023]. 
-**If the RT is collapsed to the left (i.e., has \> 1/3 of ultra-fast responses - typically \< 200 ms) in the first set, the entire participant will be discarded (suggesting that they did not properly do the task), but if only the second set is bad, then only the second set will be discarded (as the illusion sensitivity can still be estimated, albeit with less precision).** 
-In addition, the removal of individual trials will also be performed [RT \< 200 ms or \> 3 SD; following @theriault2024].
-**To mitigate the risk of confounding effects driven by extreme speed or accuracy strategies, participants whose RTs are significantly slower than the group average [RT > 4 SD above the mean, based on @makowski2023] will be excluded from the analysis.**
+**Next, to determine whether the Mild and Strong Illusion Strength groups can be collapsed for further analysis, Bayesian correlations will be computed between them for each illusion and outcome measure.** 
+**If these correlations are sufficiently high [r > .50, @cohen2013statistical], the groups will be collapsed and outcomes recomputed across all relevant trials  (i.e., by averaging across these groups).** 
+**If not, the groups will be analysed separately.** 
+**This step is necessary because reaction time may not have a linear relationship with illusion strength [@makowski2023], and collapsing the data without this check may obscure meaningful differences.**
+**Finally, reliability analyses will be conducted on all resulting indices, with Cronbach’s alpha used to evaluate internal consistency across the three illusion types.**
 
-After removing problematic participants and trials, the outcome measures (PC and VI sensitivity scores) will be computed and the Bayesian correlation (with medium prior on the coefficient, i.e., r-scale parameter set to 1/3) will be computed [using the *BayesFactor* package, @BayesFactor].
-**This shifted beta prior, as recommended by @morey2018baysefactor, offers a balanced approach to estimating effect sizes, without placing undue weight on larger effect sizes or artificially inflating evidence for the null hypothesis.**
-Following @lush2022, we expect to collect evidence against (BF10 \<= 1/3) a relationship between PCS and VI sensitivity. 
-**Additionally, Bayesian correlations will be computed using the BayesFactor package, employing a medium prior on the coefficient (r-scale parameter set to 1/3) to assess relationships between maladaptive trait facets and illusion sensitivity scores.**
-**Based on prior research (Makowski et al., 2023), we expect to find evidence (BF10 ≥ 3) supporting a relationship between the psychoticism facet of the PID-5 and illusion sensitivity.**
+**Bayesian correlations are then computed between PCS and illusion sensitivity scores - with the resulting IES and error rate indices.** 
+Following @lush2022, we expect to collect evidence against (BF10 <= 1/3) a relationship between PCS and VI sensitivity. 
+**Additionally, Bayesian correlations will be computed between maladaptive trait facets and illusion sensitivity scores.** 
+**Based on prior research [@makowski2023], we expect to find evidence (BF10 ≥ 3) supporting a relationship between the psychoticism facet of the PID-5 and illusion sensitivity.** 
+
+All Bayesian analyses will be conducted using the BayesFactor package [@BayesFactor]. 
+**For correlations, a medium shifted beta prior will be applied (r-scale parameter set to  1/3), as recommended by @morey2018baysefactor, providing a balanced approach to estimating effect sizes, without placing undue weight on larger effect sizes or artificially inflating evidence for the null hypothesis.**
+**For t-tests, the ttestBF function will be used with a medium Cauchy prior on the standardised effect size (r-scale = √2⁄2), corresponding to the default for independent samples.**
+
 Data analysis will be carried out using R, using *tidyverse* [@tidyverse] and *easystats* [@easystats; @parameters; @correlation; @bayestestR; @datawizard]. 
 The analysis script and additional information are available at **https://osf.io/da3u6/?view_only=247d4efa1afe456aa07662732946d4e6** [Note this link will be replaced with the GitHub page of the current project upon completion of the review process to ensure continued anonymisation].
 
