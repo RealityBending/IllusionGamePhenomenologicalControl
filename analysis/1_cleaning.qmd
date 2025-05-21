@@ -26,27 +26,25 @@ library(ggside)
 library(easystats)
 library(patchwork)
 
-# data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")
-
 data_ppt <- read.csv("../data/rawdata_participants.csv")
 
-
-# read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv")
 data_ig <- read.csv("../data/rawdata_illusion.csv") |>
-  mutate(
-    Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
-    Task_Difficulty = abs(Illusion_Difference),
-    Condition_Illusion = case_when(
-        Illusion_Effect == "Congruent" ~ "Congruent",
-        Illusion_Effect == "Incongruent" & Illusion_Strength <= median(Illusion_Strength[Illusion_Effect == "Incongruent"], na.rm = TRUE) ~ "Mild",
-        Illusion_Effect == "Incongruent" & Illusion_Strength > median(Illusion_Strength[Illusion_Effect == "Incongruent"], na.rm = TRUE) ~ "Strong"),
-    Condition_Difficulty = datawizard::categorize(
-      Task_Difficulty, 
-      split = "quantile", 
-      n_groups = 2, 
-      labels = c("Hard", "Easy")),
-    .by = "Illusion_Type"
-  )
+    mutate(
+        Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
+        Task_Difficulty = abs(Illusion_Difference),
+        Condition_Illusion = case_when(
+            Illusion_Effect == "Congruent" ~ "Congruent",
+            Illusion_Effect == "Incongruent" & Illusion_Strength <= median(Illusion_Strength[Illusion_Effect == "Incongruent"], na.rm = TRUE) ~ "Mild",
+            Illusion_Effect == "Incongruent" & Illusion_Strength > median(Illusion_Strength[Illusion_Effect == "Incongruent"], na.rm = TRUE) ~ "Strong"
+        ),
+        Condition_Difficulty = datawizard::categorize(
+            Task_Difficulty,
+            split = "quantile",
+            n_groups = 2,
+            labels = c("Hard", "Easy")
+        ),
+        .by = "Illusion_Type"
+    )
 ```
 
 The initial sample consisted of `r report::report_participants(data_ppt, age="Age", gender="Gender", education="Education")`, for a total trial number of `r nrow(data_ppt)`.
@@ -58,26 +56,30 @@ The experiment's median duration is `r insight::format_value(median(data_ppt$Exp
 
 ```{r}
 data_ppt |>
-  mutate(Participant = fct_reorder(Participant, Experiment_Duration),
-         Category = ifelse(Experiment_Duration > 50, "extra", "ok"),
-         Duration = ifelse(Experiment_Duration > 50, 50, Experiment_Duration)) |>
-  ggplot(aes(y = Participant, x = Duration)) +
-  geom_point(aes(color = Category, shape = Category)) +
-  geom_vline(xintercept = median(data_ppt$Experiment_Duration), color = "red", linetype = "dashed") +
-  scale_shape_manual(values = c("extra" = 3, ok = 19)) +
-  scale_color_manual(values = c("extra" = "red", ok = "black")) +
-  guides(color = "none", shape = "none") +
-  ggside::geom_xsidedensity(fill = "grey", color=NA) +
-  ggside::scale_xsidey_continuous(expand = c(0, 0)) +
-  labs(
-    title = "Experiment Completion Time",
-    x = "Duration (in minutes)",
-    y = "Participants"
-  )  +
-  see::theme_modern() +
-  ggside::theme_ggside_void() +
-  theme(ggside.panel.scale = .3, 
-        axis.text.y = element_blank()) 
+    mutate(
+        Participant = fct_reorder(Participant, Experiment_Duration),
+        Category = ifelse(Experiment_Duration > 50, "extra", "ok"),
+        Duration = ifelse(Experiment_Duration > 50, 50, Experiment_Duration)
+    ) |>
+    ggplot(aes(y = Participant, x = Duration)) +
+    geom_point(aes(color = Category, shape = Category)) +
+    geom_vline(xintercept = median(data_ppt$Experiment_Duration), color = "red", linetype = "dashed") +
+    scale_shape_manual(values = c("extra" = 3, ok = 19)) +
+    scale_color_manual(values = c("extra" = "red", ok = "black")) +
+    guides(color = "none", shape = "none") +
+    ggside::geom_xsidedensity(fill = "grey", color = NA) +
+    ggside::scale_xsidey_continuous(expand = c(0, 0)) +
+    labs(
+        title = "Experiment Completion Time",
+        x = "Duration (in minutes)",
+        y = "Participants"
+    ) +
+    see::theme_modern() +
+    ggside::theme_ggside_void() +
+    theme(
+        ggside.panel.scale = .3,
+        axis.text.y = element_blank()
+    )
 ```
 
 
@@ -121,26 +123,28 @@ We removed participants with an error rate > 45% (suggesting chance-level, i.e.,
 #| message: false
 
 data_outliers <- data_ig |>
-  summarize(p_Error = sum(Error) / n(),
-            z_RT = mean(RT),
-            .by = c("Participant", "Illusion_Type", "Block")) |> 
-  mutate(z_RT = as.numeric(standardize(z_RT)), .by = c("Illusion_Type", "Block")) |>
-  arrange(desc(p_Error))
+    summarize(
+        p_Error = sum(Error) / n(),
+        z_RT = mean(RT),
+        .by = c("Participant", "Illusion_Type", "Block")
+    ) |>
+    mutate(z_RT = as.numeric(standardize(z_RT)), .by = c("Illusion_Type", "Block")) |>
+    arrange(desc(p_Error))
 
 outliers <- filter(data_outliers, p_Error > 0.45 | z_RT > 4)
 outliers_full <- unique(filter(outliers, Block == "A")$Participant)
 outliers_half <- unique(filter(outliers, Block == "B")$Participant)
 outliers_half <- outliers_half[!(outliers_half %in% outliers_full)]
-  
-p1 <- data_outliers |> 
-  ggplot(aes(x = p_Error)) +
-  geom_density(aes(color=Illusion_Type)) +
-  geom_vline(xintercept = 0.45, linetype = "dashed", color="red") 
 
-p2 <- data_outliers |> 
-  ggplot(aes(x = z_RT)) +
-  geom_density(aes(color=Illusion_Type)) +
-  geom_vline(xintercept = 4, linetype = "dashed", color="red")
+p1 <- data_outliers |>
+    ggplot(aes(x = p_Error)) +
+    geom_density(aes(color = Illusion_Type)) +
+    geom_vline(xintercept = 0.45, linetype = "dashed", color = "red")
+
+p2 <- data_outliers |>
+    ggplot(aes(x = z_RT)) +
+    geom_density(aes(color = Illusion_Type)) +
+    geom_vline(xintercept = 4, linetype = "dashed", color = "red")
 
 p1 / p2
 ```
@@ -148,8 +152,8 @@ p1 / p2
 We discarded `r length(outliers_full)` participants (entirely) and `r length(outliers_half)` participant's second blocks based on error rate.
 
 ```{r}
-# data_ig <- data_ig |> 
-#   filter(!Participant %in% outliers) |> 
+# data_ig <- data_ig |>
+#   filter(!Participant %in% outliers) |>
 #   filter(!((Block == "B") & (Participant %in% outliers_half)))
 ```
 
@@ -190,22 +194,22 @@ The final sample includes `r report::report_participants(data_ppt, age="Age", se
 ## Age
 
 ```{r}
-p_age <- data_ppt |>  # To match the binwidth
-  ggplot(aes(x = data_ppt)) +
-  geom_histogram(aes(x = Age, fill=Gender), bins=28) +
-  geom_vline(xintercept = mean(data_ppt$Age), color = "red", linewidth=1.5) +
-  scale_fill_manual(values = c("Male"= "#64B5F6", "Female"= "#F06292", "Other"="orange")) +
-  scale_x_continuous(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0)) +
-  labs(title = "Age", y = "Number of Participants", color = NULL, subtitle = "Distribution of participants' age") +
-  theme_modern(axis.title.space = 10) +
-  theme(
-    plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
-    plot.subtitle = element_text(size = rel(1.2), vjust = 7),
-    axis.text.y = element_text(size = rel(1.1)),
-    axis.text.x = element_text(size = rel(1.1)),
-    axis.title.x = element_blank()
-  )
+p_age <- data_ppt |> # To match the binwidth
+    ggplot(aes(x = data_ppt)) +
+    geom_histogram(aes(x = Age, fill = Gender), bins = 28) +
+    geom_vline(xintercept = mean(data_ppt$Age), color = "red", linewidth = 1.5) +
+    scale_fill_manual(values = c("Male" = "#64B5F6", "Female" = "#F06292", "Other" = "orange")) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    labs(title = "Age", y = "Number of Participants", color = NULL, subtitle = "Distribution of participants' age") +
+    theme_modern(axis.title.space = 10) +
+    theme(
+        plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
+        plot.subtitle = element_text(size = rel(1.2), vjust = 7),
+        axis.text.y = element_text(size = rel(1.1)),
+        axis.text.x = element_text(size = rel(1.1)),
+        axis.title.x = element_blank()
+    )
 p_age
 ```
 
@@ -213,31 +217,31 @@ p_age
 
 ```{r}
 p_edu <- data_ppt |>
-  mutate(Education = fct_relevel(Education, "Other", "Elementary school", "High school", "Bachelor", "Master", "Doctorate")) |>
-  ggplot(aes(x = Education)) +
-  geom_bar(aes(fill = Education)) +
-  scale_y_continuous(expand = c(0, 0), breaks= scales::pretty_breaks()) +
-  scale_fill_viridis_d(guide = "none") +
-  labs(title = "Education", y = "Number of Participants", subtitle = "Participants per achieved education level") +
-  theme_modern(axis.title.space = 15) +
-  theme(
-    plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
-    plot.subtitle = element_text(size = rel(1.2), vjust = 7),
-    axis.text.y = element_text(size = rel(1.1)),
-    axis.text.x = element_text(size = rel(1.1)),
-    axis.title.x = element_blank()
-  )
+    mutate(Education = fct_relevel(Education, "Other", "Elementary school", "High school", "Bachelor", "Master", "Doctorate")) |>
+    ggplot(aes(x = Education)) +
+    geom_bar(aes(fill = Education)) +
+    scale_y_continuous(expand = c(0, 0), breaks = scales::pretty_breaks()) +
+    scale_fill_viridis_d(guide = "none") +
+    labs(title = "Education", y = "Number of Participants", subtitle = "Participants per achieved education level") +
+    theme_modern(axis.title.space = 15) +
+    theme(
+        plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
+        plot.subtitle = element_text(size = rel(1.2), vjust = 7),
+        axis.text.y = element_text(size = rel(1.1)),
+        axis.text.x = element_text(size = rel(1.1)),
+        axis.title.x = element_blank()
+    )
 p_edu
 ```
 
 ## Ethnicity
 
 ```{r p_ethnicity}
-# ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |> 
-#   ggplot(aes(x, y, fill = group)) + 
-#   ggwaffle::geom_waffle() + 
-#   coord_equal() + 
-#   scale_fill_flat_d() + 
+# ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |>
+#   ggplot(aes(x, y, fill = group)) +
+#   ggwaffle::geom_waffle() +
+#   coord_equal() +
+#   scale_fill_flat_d() +
 #   ggwaffle::theme_waffle() +
 #   labs(title = "Self-reported Ethnicity", subtitle = "Each square represents a participant", fill="")  +
 #   theme(

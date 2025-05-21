@@ -27,16 +27,14 @@ library(patchwork)
 library(psych)
 
 
-# data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")
-
 data_ppt <- read.csv("../data/data_participants.csv")
 
 data_ig <- read.csv("../data/data_illusion.csv") |>
-  mutate(
-    Block = as.factor(Block),
-    Illusion_Effect = fct_relevel(as.factor(Illusion_Effect), "Incongruent", "Congruent"),
-    Response_Correct = as.factor(Response_Correct)
-  ) 
+    mutate(
+        Block = as.factor(Block),
+        Illusion_Effect = fct_relevel(as.factor(Illusion_Effect), "Incongruent", "Congruent"),
+        Response_Correct = as.factor(Response_Correct)
+    )
 
 ```
 
@@ -62,34 +60,43 @@ data_ppt$pcs_postsessionsuggetsion <- sqrt(data_ppt$pcs_urgepress * data_ppt$pcs
 
 ```{r}
 ig_scores <- data_ig |>
-  summarize(ErrorRate = sum(Error) / n(),
-            IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
-            .by = c("Participant", "Illusion_Type", "Condition_Illusion", "Condition_Difficulty")) |> 
-  pivot_wider(names_from = c("Illusion_Type", "Condition_Illusion", "Condition_Difficulty"), 
-              values_from = c("ErrorRate", "IES")) 
+    summarize(
+        ErrorRate = sum(Error) / n(),
+        IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
+        .by = c("Participant", "Illusion_Type", "Condition_Illusion", "Condition_Difficulty")
+    ) |>
+    pivot_wider(
+        names_from = c("Illusion_Type", "Condition_Illusion", "Condition_Difficulty"),
+        values_from = c("ErrorRate", "IES")
+    )
 ```
 
 ```{r}
 corrs <- data.frame()
-for(outcome in c("ErrorRate", "IES")) {
-  for(ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
-    for(cond in c("Congruent", "Mild", "Strong")) {
-      corrs <- correlation::correlation(
-        select(ig_scores, select=paste0(outcome, "_", ill_type, "_", cond, "_Easy")),
-        select(ig_scores, select=paste0(outcome, "_", ill_type, "_", cond, "_Hard"))) |> 
-        mutate(Outcome = outcome) |> 
-        rbind(corrs)
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+        for (cond in c("Congruent", "Mild", "Strong")) {
+            corrs <- correlation::correlation(
+                select(ig_scores, select = paste0(outcome, "_", ill_type, "_", cond, "_Easy")),
+                select(ig_scores, select = paste0(outcome, "_", ill_type, "_", cond, "_Hard"))
+            ) |>
+                mutate(Outcome = outcome) |>
+                rbind(corrs)
+        }
     }
-  }
 }
 
 # IF correlations > 0.5:
 ig_scores <- data_ig |>
-  summarize(ErrorRate = sum(Error) / n(),
-            IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
-            .by = c("Participant", "Illusion_Type", "Condition_Illusion")) |> 
-  pivot_wider(names_from = c("Illusion_Type", "Condition_Illusion"), 
-              values_from = c("ErrorRate", "IES")) 
+    summarize(
+        ErrorRate = sum(Error) / n(),
+        IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
+        .by = c("Participant", "Illusion_Type", "Condition_Illusion")
+    ) |>
+    pivot_wider(
+        names_from = c("Illusion_Type", "Condition_Illusion"),
+        values_from = c("ErrorRate", "IES")
+    )
 ```
 
 
@@ -99,31 +106,31 @@ Significant differences between the Congruent and Mild and the Mild and Strong g
 
 ```{r}
 ttests <- data.frame()
-for(outcome in c("ErrorRate", "IES")) {
-  for(ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
-    for(cond in c("Congruent", "Mild")) {
-      # Add loop for Hard and Easy if need be
-      x1 <- ig_scores[[paste0(outcome, "_", ill_type, "_", cond)]]
-      if(cond == "Congruent") {
-        x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Mild")]]
-      } else {
-        x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Strong")]]
-      }
-      ttests <- BayesFactor::ttestBF(x = x1, y = x2, paired = TRUE) |> 
-        parameters::parameters() |> 
-        mutate(
-          Outcome = outcome,
-          Illusion_Type = ill_type,
-          Condition_Illusion = cond
-        ) |> 
-        rbind(ttests)
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+        for (cond in c("Congruent", "Mild")) {
+            # Add loop for Hard and Easy if need be
+            x1 <- ig_scores[[paste0(outcome, "_", ill_type, "_", cond)]]
+            if (cond == "Congruent") {
+                x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Mild")]]
+            } else {
+                x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Strong")]]
+            }
+            ttests <- BayesFactor::ttestBF(x = x1, y = x2, paired = TRUE) |>
+                parameters::parameters() |>
+                mutate(
+                    Outcome = outcome,
+                    Illusion_Type = ill_type,
+                    Condition_Illusion = cond
+                ) |>
+                rbind(ttests)
+        }
     }
-  }
 }
 
-ttests |> 
-  select(Illusion_Type, Condition_Illusion, Outcome, Median, BF) |> 
-  arrange(Illusion_Type, Condition_Illusion, Outcome)
+ttests |>
+    select(Illusion_Type, Condition_Illusion, Outcome, Median, BF) |>
+    arrange(Illusion_Type, Condition_Illusion, Outcome)
 ```
 
 
@@ -134,7 +141,7 @@ ttests |>
 
 ```{r}
 data_ppt[, pcs_items] |>
-  psych::alpha()
+    psych::alpha()
 
 data_ppt$PCS_Score <- rowMeans(data_ppt[, pcs_items], na.rm = TRUE)
 ```
@@ -147,32 +154,32 @@ data_ppt$PCS_Score <- rowMeans(data_ppt[, pcs_items], na.rm = TRUE)
 
 ```{r}
 ig_scores |>
-  select(matches("ErrorRate_.*_Mild.*")) |>
-  psych::alpha()
+    select(matches("ErrorRate_.*_Mild.*")) |>
+    psych::alpha()
 ```
 
 #### Error Rate - Strong 
 
 ```{r}
 ig_scores |>
-  select(matches("ErrorRate_.*_Strong.*")) |>
-  psych::alpha()
+    select(matches("ErrorRate_.*_Strong.*")) |>
+    psych::alpha()
 ```
 
 #### IES - Mild
 
 ```{r}
 ig_scores |>
-  select(matches("IES_.*_Mild.*")) |>
-  psych::alpha()
+    select(matches("IES_.*_Mild.*")) |>
+    psych::alpha()
 ```
 
 #### IES - Strong
 
 ```{r}
 ig_scores |>
-  select(matches("IES_.*_Strong.*")) |>
-  psych::alpha()
+    select(matches("IES_.*_Strong.*")) |>
+    psych::alpha()
 ```
 
 :::
@@ -186,15 +193,15 @@ ig_scores |>
 features <- merge(ig_scores, data_ppt[c("Participant", "PCS_Score", "PID5_Psychoticism")])
 
 r <- correlation::correlation(
-  select(features, -PCS_Score, -PID5_Psychoticism),
-  select(features, PCS_Score),
-  bayesian = TRUE
+    select(features, -PCS_Score, -PID5_Psychoticism),
+    select(features, PCS_Score),
+    bayesian = TRUE
 )
 
-r |> 
-  format_table() |> 
-  select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |> 
-  gt::gt() 
+r |>
+    format_table() |>
+    select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
+    gt::gt()
 ```
 
 ## Illusion Sensitivity vs. Psychoticism 
@@ -202,13 +209,13 @@ r |>
 
 ```{r}
 r <- correlation::correlation(
-  select(features, -PCS_Score, -PID5_Psychoticism),
-  select(features, PID5_Psychoticism),
-  bayesian = TRUE
+    select(features, -PCS_Score, -PID5_Psychoticism),
+    select(features, PID5_Psychoticism),
+    bayesian = TRUE
 )
 
-r |> 
-  format_table() |> 
-  select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |> 
-  gt::gt()
+r |>
+    format_table() |>
+    select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
+    gt::gt()
 ```
