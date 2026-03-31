@@ -1,7 +1,7 @@
 library(jsonlite)
 library(progress)
 
-path <- "path"
+path <- "C:/Users/olive/Box/IllusionGamePCS-Test/"
 
 # JsPsych experiment ------------------------------------------------------
 
@@ -218,5 +218,5 @@ alldata_ig$Participant <- correspondance[alldata_ig$Participant]
 
 # Save --------------------------------------------------------------------
 
-write.csv(alldata_sub, "../data/rawdata_participants.csv", row.names = FALSE)
-write.csv(alldata_ig, "../data/rawdata_illusion.csv", row.names = FALSE)
+write.csv(alldata_sub, "C:/Users/olive/Documents/IllusionGamePCS/Data/rawdata_participants.csv", row.names = FALSE)
+write.csv(alldata_ig, "C:/Users/olive/Documents/IllusionGamePCS/Data/rawdata_illusion.csv", row.names = FALSE)

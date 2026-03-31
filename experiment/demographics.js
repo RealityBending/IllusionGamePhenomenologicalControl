@@ -110,7 +110,7 @@ var demographics_waitdatasaving = {
 }
 
 var demographics_endscreen = function (
-    link = "https://realitybending.github.io/IllusionGameSuggestibility/experiment/experimenter1.html"
+    //link = "https://realitybending.github.io/IllusionGameSuggestibility/experiment/experimenter1.html"
 ) {
     return {
         type: jsPsychHtmlButtonResponse,
@@ -120,14 +120,9 @@ var demographics_endscreen = function (
                 "<h1>Thank you for participating</h1>" +
                 "<p>It means a lot to us. We know participating in scientific experiments can be long and not always the most fun, so we really do appreciate your help in helping us understand how the Human brain works.</p>" +
                 "<h2>Information</h2>" +
-                "<p align='left'>The purpose of this study was for us to understand how Humans perceive visual illusions, and whether this relates to personality traits. Hence, this study included the Illusion Game, which measures how people's vision is biased by illusions, as well as various questionnaires that might be related.</p>" +
-                "<p align='left'>If you have any questions about the project, please contact <i>D.Makowski@sussex.ac.uk</i>, and check-out the <b><a href='https://realitybending.github.io/'>Reality Bending Lab</a></b> for more information about our research team.</p>" +
-                "<p align='left'>Don't hesitate to share the study by sending this link:</p>" +
-                "<p><b><a href='" +
-                link +
-                "'>" +
-                link +
-                "<a/></b></p><br>"
+                "<p align='center'>The purpose of this study was for us to understand how Humans perceive visual illusions, and whether this relates to personality traits. Hence, this study included the Illusion Game, which measures how people's vision is biased by illusions, as well as various questionnaires that might be related.</p>" +
+                "<p align='center'>If you have any questions about the project, please contact <i>D.Makowski@sussex.ac.uk</i>, and check-out the <b><a href='https://realitybending.github.io/'>Reality Bending Lab</a></b> for more information about our research team.</p>" +
+                "</a></b></p><br>"
 
             if (
                 jsPsych.data.get().filter({ screen: "browser_info" }).values()[0]["prolific_id"] !=
@@ -136,7 +131,7 @@ var demographics_endscreen = function (
                 text +=
                     "<br><p><b>You will now be redirected to Prolific. Please do not close this tab.</b></p>"
             } else {
-                text += "<br><p><b>You can safely close the tab now.</b></p>"
+                text += "<p><b>Prolific Completion Code: <a href='https://app.prolific.com/submissions/complete?cc=CG44T3T2'>CG44T3T2</a></b></p>"
             }
                 
             return text
