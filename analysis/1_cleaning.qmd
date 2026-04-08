@@ -26,9 +26,9 @@ library(ggside)
 library(easystats)
 library(patchwork)
 
-data_ppt <- read.csv("../data/rawdata_participants.csv")
+data_ppt <- read.csv("C:/Users/olive/Documents/IllusionGamePCS/Data/rawdata_participants.csv")
 
-data_ig <- read.csv("../data/rawdata_illusion.csv") |>
+data_ig <- read.csv("C:/Users/olive/Documents/IllusionGamePCS/Data/rawdata_illusion.csv") |>
     mutate(
         Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
         Task_Difficulty = abs(Illusion_Difference),
@@ -180,18 +180,21 @@ We removed `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_
 
 
 ```{r}
-# data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
-# data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
+data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
+data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
 ```
 
 
 
 # Final Sample
 
+::: {.panel-tabset}
 
-The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`.
+### Summary
 
-## Age
+The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`, for a total trial number of `r nrow(df)`.
+
+## Age and Gender
 
 ```{r}
 p_age <- data_ppt |> # To match the binwidth
@@ -217,7 +220,7 @@ p_age
 
 ```{r}
 p_edu <- data_ppt |>
-    mutate(Education = fct_relevel(Education, "Other", "Elementary school", "High school", "Bachelor", "Master", "Doctorate")) |>
+    mutate(Education = fct_relevel(Education, "Other", "Elementary school", "High school", "Bachelor", "Master", "Doctorate")) |> # Other value needs fixing due to custom responses
     ggplot(aes(x = Education)) +
     geom_bar(aes(fill = Education)) +
     scale_y_continuous(expand = c(0, 0), breaks = scales::pretty_breaks()) +
@@ -237,28 +240,39 @@ p_edu
 ## Ethnicity
 
 ```{r p_ethnicity}
-# ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |>
-#   ggplot(aes(x, y, fill = group)) +
-#   ggwaffle::geom_waffle() +
-#   coord_equal() +
-#   scale_fill_flat_d() +
-#   ggwaffle::theme_waffle() +
-#   labs(title = "Self-reported Ethnicity", subtitle = "Each square represents a participant", fill="")  +
-#   theme(
-#     plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
-#     plot.subtitle = element_text(size = rel(1.2)),
-#     axis.title.x = element_blank(),
-#     axis.title.y = element_blank()
-#   )
+#| warning: false
+#| error: false
+
+p_eth <- data_ppt |>
+  mutate(Ethnicity = ifelse(is.na(Ethnicity), "Prefer not to answer", Ethnicity)) |>
+  mutate(Freq = format_percent(n() / nrow(data_ppt), digits=1), .by=Ethnicity) |> 
+  mutate(Ethnicity = fct_infreq(paste0(Ethnicity, " (", Freq, ")"))) |> 
+  ggplot(aes(x = "", fill = Ethnicity)) +
+  geom_bar() +
+  coord_polar("y") +
+  see::scale_fill_social_d() +
+  labs(title = "Ethnicity", subtitle = "Self-declared ethnicity") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = rel(1.2))
+  ) 
+    
+p_eth
 ```
 
+:::
 
 # Save
 
 ```{r}
 #| code-fold: false
 
-write.csv(data_ppt, "../data/data_participants.csv", row.names = FALSE)
-write.csv(data_ig, "../data/data_illusion.csv", row.names = FALSE)
+write.csv(data_ppt, "C:/Users/olive/Documents/IllusionGamePCS/Data/data_participants.csv", row.names = FALSE)
+write.csv(data_ig, "C:/Users/olive/Documents/IllusionGamePCS/Data/data_illusion.csv", row.names = FALSE)
 ```
 

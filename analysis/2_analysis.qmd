@@ -27,9 +27,9 @@ library(patchwork)
 library(psych)
 
 
-data_ppt <- read.csv("../data/data_participants.csv")
+data_ppt <- read.csv("C:/Users/olive/Documents/IllusionGamePCS/Data/data_participants.csv")
 
-data_ig <- read.csv("../data/data_illusion.csv") |>
+data_ig <- read.csv("C:/Users/olive/Documents/IllusionGamePCS/Data/data_illusion.csv") |>
     mutate(
         Block = as.factor(Block),
         Illusion_Effect = fct_relevel(as.factor(Illusion_Effect), "Incongruent", "Congruent"),
