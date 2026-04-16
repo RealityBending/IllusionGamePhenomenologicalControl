@@ -45,7 +45,7 @@ data_ig <- read.csv("../data/data_illusion.csv") |>
 
 Mean subjective scale responses for item 4 (Taste) and item 10 (Post-session suggestion) are each generated from the combination of two responses which require processing prior to generating an overall subjective score. 
 The subjective score for item 4 is the mean of the responses to the (a)‘sour’ and (b)‘sweet’ sub-scales for the taste suggestion. 
-The subjective score for item 10 is the geometric mean (the square root of the product) of he responses to the (a) ‘urge’ and (b) ‘amnesia’ sub-scales for the post-session suggestion. 
+The subjective score for item 10 is the geometric mean (the square root of the product) of the responses to the (a) ‘urge’ and (b) ‘amnesia’ sub-scales for the post-session suggestion. 
 
 ```{r}
 pcs_items <- c("pcs_handslow", "pcs_mosquito", "pcs_magnetichands", "pcs_armrigidity", "pcs_tastescore", "pcs_postsessionsuggetsion", "pcs_armimmobile", "pcs_music", "pcs_negativehallucination", "pcs_amnesia")
@@ -192,7 +192,7 @@ ig_scores |>
 ```{r}
 features <- merge(ig_scores, data_ppt[c("Participant", "PCS_Score", "PID5_Psychoticism")])
 
-r <- correlation::correlation(
+r_pcs <- correlation::correlation(
     select(features, -PCS_Score, -PID5_Psychoticism),
     select(features, PCS_Score),
     bayesian = TRUE
@@ -201,14 +201,15 @@ r <- correlation::correlation(
 r |>
     format_table() |>
     select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
-    gt::gt()
+    gt::gt() 
+
 ```
 
 ## Illusion Sensitivity vs. Psychoticism 
 
 
 ```{r}
-r <- correlation::correlation(
+r_psy <- correlation::correlation(
     select(features, -PCS_Score, -PID5_Psychoticism),
     select(features, PID5_Psychoticism),
     bayesian = TRUE
@@ -218,4 +219,53 @@ r |>
     format_table() |>
     select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
     gt::gt()
+
+
 ```
+
+## Figures
+
+```{r}
+
+df_r_pcs <- r_pcs |>
+  separate(Parameter1, into = c("Measure", "Illusion", "Condition"), sep = "_") |>
+  mutate(Measure = recode(Measure, "ErrorRate" = "Error rate","IES" = "IES"),
+         Illusion = recode(Illusion, "MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal"),
+         Condition = factor(Condition, levels = c("Congruent", "Mild", "Strong"))) 
+
+
+r_pcs <- ggplot(df_r_pcs, aes(x = rho, y = Illusion, color = Condition)) +
+  geom_point(position = position_dodge(width = 0.5)) +
+  geom_errorbarh(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), height = 0.2) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  facet_wrap(~ Measure) +
+  labs(x = "Correlation with PCS scores ", y = "Illusion", color = "Condition") +
+  theme_minimal() +
+   theme(axis.title.x = element_text(face = "bold"),
+          axis.text.y = element_text(size = 10, face = "bold"),
+         axis.title.y = element_blank())
+
+
+df_r_psy <- r_psy |>
+  separate(Parameter1, into = c("Measure", "Illusion", "Condition"), sep = "_") |>
+  mutate(Measure = recode(Measure, "ErrorRate" = "Error rate","IES" = "IES"),
+         Illusion = recode(Illusion, "MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal"),
+         Condition = factor(Condition, levels = c("Congruent", "Mild", "Strong"))) 
+
+
+r_psy<-  ggplot(df_r_psy, aes(x = rho, y = Illusion, color = Condition)) +
+  geom_point(position = position_dodge(width = 0.5)) +
+  geom_errorbarh(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), height = 0.2) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  facet_wrap(~ Measure) +
+  labs(x = "Correlation with Psychoticism (PID-5) scores ", color = "Condition") +
+  theme_minimal() +
+  theme( axis.title.y = element_blank(),
+         axis.text.y  = element_blank(),
+         axis.title.x = element_text(face = "bold"))
+
+
+patchwork::wrap_plots(r_pcs + r_psy, guides="collect")
+
+```
+
