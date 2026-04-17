@@ -27,9 +27,9 @@ library(patchwork)
 library(psych)
 
 
-data_ppt <- read.csv("C:/Users/olive/Documents/IllusionGamePCS/Data/data_participants.csv")
+data_ppt <- read.csv("../Data/data_participants.csv")
 
-data_ig <- read.csv("C:/Users/olive/Documents/IllusionGamePCS/Data/data_illusion.csv") |>
+data_ig <- read.csv("../Data/data_illusion.csv") |>
     mutate(
         Block = as.factor(Block),
         Illusion_Effect = fct_relevel(as.factor(Illusion_Effect), "Incongruent", "Congruent"),
@@ -85,6 +85,7 @@ for (outcome in c("ErrorRate", "IES")) {
         }
     }
 }
+arrange(corrs, desc(r))
 
 # IF correlations > 0.5:
 ig_scores <- data_ig |>
@@ -198,7 +199,8 @@ r_pcs <- correlation::correlation(
     bayesian = TRUE
 )
 
-r |>
+r_pcs |>
+    arrange(desc(BF)) |> 
     format_table() |>
     select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
     gt::gt() 
@@ -215,12 +217,11 @@ r_psy <- correlation::correlation(
     bayesian = TRUE
 )
 
-r |>
+r_psy |>
+    arrange(desc(BF)) |> 
     format_table() |>
     select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
     gt::gt()
-
-
 ```
 
 ## Figures
@@ -234,9 +235,10 @@ df_r_pcs <- r_pcs |>
          Condition = factor(Condition, levels = c("Congruent", "Mild", "Strong"))) 
 
 
-r_pcs <- ggplot(df_r_pcs, aes(x = rho, y = Illusion, color = Condition)) +
+
+p_pcs <- ggplot(df_r_pcs, aes(x = rho, y = Illusion, color = Condition)) +
   geom_point(position = position_dodge(width = 0.5)) +
-  geom_errorbarh(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), height = 0.2) +
+  geom_errorbar(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), height = 0.2) +
   geom_vline(xintercept = 0, linetype = "dashed") +
   facet_wrap(~ Measure) +
   labs(x = "Correlation with PCS scores ", y = "Illusion", color = "Condition") +
@@ -253,7 +255,7 @@ df_r_psy <- r_psy |>
          Condition = factor(Condition, levels = c("Congruent", "Mild", "Strong"))) 
 
 
-r_psy<-  ggplot(df_r_psy, aes(x = rho, y = Illusion, color = Condition)) +
+p_psy<-  ggplot(df_r_psy, aes(x = rho, y = Illusion, color = Condition)) +
   geom_point(position = position_dodge(width = 0.5)) +
   geom_errorbarh(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), height = 0.2) +
   geom_vline(xintercept = 0, linetype = "dashed") +
@@ -265,7 +267,7 @@ r_psy<-  ggplot(df_r_psy, aes(x = rho, y = Illusion, color = Condition)) +
          axis.title.x = element_text(face = "bold"))
 
 
-patchwork::wrap_plots(r_pcs + r_psy, guides="collect")
+patchwork::wrap_plots(p_pcs + p_psy, guides="collect")
 
 ```
 
