@@ -77,8 +77,8 @@ for (outcome in c("ErrorRate", "IES")) {
     for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
         for (cond in c("Congruent", "Mild", "Strong")) {
             corrs <- correlation::correlation(
-                select(ig_scores, select = paste0(outcome, "_", ill_type, "_", cond, "_Easy")),
-                select(ig_scores, select = paste0(outcome, "_", ill_type, "_", cond, "_Hard"))
+                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Easy")],
+                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Hard")]
             ) |>
                 mutate(Outcome = outcome) |>
                 rbind(corrs)
