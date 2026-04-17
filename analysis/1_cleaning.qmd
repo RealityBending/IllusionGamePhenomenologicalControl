@@ -1,6 +1,6 @@
 ---
 title: "Illusion Sensitivity and Phenomenological Control"
-subtitle: "Preprocessing"
+subtitle: "Cleaning"
 date: "`r Sys.Date()`"
 editor: source
 editor_options: 
@@ -8,7 +8,7 @@ editor_options:
 format:
   html:
     code-fold: true
-    self-contained: false
+    self-contained: true
     toc: true
 execute: 
   cache: false
@@ -26,9 +26,9 @@ library(ggside)
 library(easystats)
 library(patchwork)
 
-data_ppt <- read.csv("../data/rawdata_participants.csv")
+data_ppt <- read.csv("C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/rawdata_participants.csv")
 
-data_ig <- read.csv("../data/rawdata_illusion.csv") |>
+data_ig <- read.csv("C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/rawdata_illusion.csv") |>
     mutate(
         Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
         Task_Difficulty = abs(Illusion_Difference),
@@ -47,7 +47,7 @@ data_ig <- read.csv("../data/rawdata_illusion.csv") |>
     )
 ```
 
-The initial sample consisted of `r report::report_participants(data_ppt, age="Age", gender="Gender", education="Education")`, for a total trial number of `r nrow(data_ppt)`.
+The initial sample consisted of `r report::report_participants(data_ppt, age="Age", gender="Gender", education="Education")`, for a total trial number of `r nrow(data_ig)`.
 
 
 ## Experiment Duration
@@ -152,20 +152,64 @@ p1 / p2
 We discarded `r length(outliers_full)` participants (entirely) and `r length(outliers_half)` participant's second blocks based on error rate.
 
 ```{r}
-# data_ig <- data_ig |>
-#   filter(!Participant %in% outliers) |>
-#   filter(!((Block == "B") & (Participant %in% outliers_half)))
+data_ig <- data_ig |>
+   filter(!Participant %in% outliers_full) |>
+   filter(!((Block == "B") & (Participant %in% outliers_half)))
 ```
 
+```{r}
+data_ppt <- filter(data_ppt, !Participant %in% outliers_full)
+data_ig <- filter(data_ig, Participant %in% data_ppt$Participant)
+```
+
+::: {.panel-tabset}
+
+### IG Exclusions Table
+
+```{r}
+ig_ex_tib <- bind_rows(
+  tibble(Participant = outliers_full, "Extent of Exclusion" = "Participant-level"),
+  tibble(Participant = outliers_half, "Extent of Exclusion" = "Block-level")
+)
+
+ig_ex_tib |> 
+  knitr::kable(caption = "Exclusions From Illusion Game") |> 
+  kableExtra::scroll_box(height = "300px") |> 
+  kableExtra::kable_styling()
+```
+
+### IG Exclusions Graph
+
+```{r}
+ig_ex_bar <- ig_ex_tib |> 
+  ggplot(aes(x = `Extent of Exclusion`, fill = `Extent of Exclusion`)) +
+  geom_bar(width = 0.6) +
+  scale_x_discrete(labels = scales::label_wrap(15)) +
+  scale_y_continuous(breaks = seq(0, 10, by = 2)) +
+  labs(
+    title = "Exclusions From Illusion Game",
+    x = "Extent of Exclusion",
+    y = "Count",
+  ) +
+  theme_minimal() +
+  guides(fill = "none")
+
+ig_ex_bar
+```
+
+:::
 
 ## Illusion Game Trials
 
 We removed individual extreme trials (RT < 0.2 s or > 5 s; Thériault et al., 2024) to mitigate the risk of confounding effects driven by extreme speed or accuracy strategies.
 
 ```{r}
+n_before <- nrow(data_ig)
 data_ig <- filter(data_ig, RT > 0.2 & RT < 5)
+n_removed <- n_before - nrow(data_ig)
 ```
 
+This removed `r n_removed` trials (`r round(n_removed / n_before * 100, 2)`% of total).
 
 ## PCS
 
@@ -176,22 +220,61 @@ outliers_pcs3 <- data_ppt[data_ppt$pcs_press < 5, "Participant"]
 outliers_pcs <- unique(c(outliers_pcs1, outliers_pcs2, outliers_pcs3))
 ```
 
-We removed `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_pcs) / nrow(data_ppt))`) participants that either did not reported hearing "Hello" at the beginning of the experiment, responded that no balls were presented in the screen, or pressed less than 5 times when asked to do so.
+We removed `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_pcs) / nrow(data_ppt))`) participants that either did not report hearing "Hello" at the beginning of the experiment, responded that no balls were presented on the screen, or pressed the space bar fewer than 5 times when asked to do so.
 
 
 ```{r}
-# data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
-# data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
+data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
+data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
 ```
 
+::: {.panel-tabset}
 
+### PCS Exclusions Table
+
+```{r}
+pcs_ex_tib <- bind_rows(
+  tibble(Participant = outliers_pcs1, Reason = "Failed 'Hello' check"),
+  tibble(Participant = outliers_pcs2, Reason = "Reported no balls"),
+  tibble(Participant = outliers_pcs3, Reason = "Pressed space bar < 5 times")
+)
+
+pcs_ex_tib |> 
+  knitr::kable(caption = "Exclusions From Phenomenological Control Scale") |> 
+  kableExtra::scroll_box(height = "300px") |> 
+  kableExtra::kable_styling()
+```
+
+### PCS Exclusions Graph
+
+```{r}
+pcs_ex_bar <- pcs_ex_tib |> 
+  ggplot(aes(x = Reason, fill = Reason)) +
+  geom_bar() +
+  scale_x_discrete(labels = scales::label_wrap(17)) +
+  scale_y_continuous(limits = c(0, 115)) +
+    labs(
+    title = "Exclusions From Phenomenological Control Scale",
+    x = "Reason for Exclusion",
+    y = "Count",
+  ) +
+  theme_minimal() +
+  guides(fill = "none")
+
+pcs_ex_bar
+```
+
+:::
 
 # Final Sample
 
+::: {.panel-tabset}
 
-The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`.
+### Summary
 
-## Age
+The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`, for a total trial number of `r nrow(data_ig)`.
+
+### Age and Gender
 
 ```{r}
 p_age <- data_ppt |> # To match the binwidth
@@ -213,13 +296,14 @@ p_age <- data_ppt |> # To match the binwidth
 p_age
 ```
 
-## Education
+### Education
 
 ```{r}
 p_edu <- data_ppt |>
     mutate(Education = fct_relevel(Education, "Other", "Elementary school", "High school", "Bachelor", "Master", "Doctorate")) |>
     ggplot(aes(x = Education)) +
     geom_bar(aes(fill = Education)) +
+    scale_x_discrete(labels = scales::label_wrap(10)) +
     scale_y_continuous(expand = c(0, 0), breaks = scales::pretty_breaks()) +
     scale_fill_viridis_d(guide = "none") +
     labs(title = "Education", y = "Number of Participants", subtitle = "Participants per achieved education level") +
@@ -234,31 +318,42 @@ p_edu <- data_ppt |>
 p_edu
 ```
 
-## Ethnicity
+### Ethnicity
 
 ```{r p_ethnicity}
-# ggwaffle::waffle_iron(data_ppt, ggwaffle::aes_d(group = Ethnicity), rows=10) |>
-#   ggplot(aes(x, y, fill = group)) +
-#   ggwaffle::geom_waffle() +
-#   coord_equal() +
-#   scale_fill_flat_d() +
-#   ggwaffle::theme_waffle() +
-#   labs(title = "Self-reported Ethnicity", subtitle = "Each square represents a participant", fill="")  +
-#   theme(
-#     plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
-#     plot.subtitle = element_text(size = rel(1.2)),
-#     axis.title.x = element_blank(),
-#     axis.title.y = element_blank()
-#   )
+#| warning: false
+#| error: false
+
+p_eth <- data_ppt |>
+  mutate(Ethnicity = ifelse(is.na(Ethnicity), "Prefer not to answer", Ethnicity)) |>
+  mutate(Freq = format_percent(n() / nrow(data_ppt), digits=1), .by=Ethnicity) |> 
+  mutate(Ethnicity = fct_infreq(paste0(Ethnicity, " (", Freq, ")"))) |> 
+  ggplot(aes(x = "", fill = Ethnicity)) +
+  geom_bar() +
+  coord_polar("y") +
+  see::scale_fill_social_d() +
+  labs(title = "Ethnicity", subtitle = "Self-declared ethnicity") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = rel(1.2))
+  ) 
+    
+p_eth
 ```
 
+:::
 
 # Save
 
 ```{r}
 #| code-fold: false
 
-write.csv(data_ppt, "../data/data_participants.csv", row.names = FALSE)
-write.csv(data_ig, "../data/data_illusion.csv", row.names = FALSE)
+write.csv(data_ppt, "C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/data_participants.csv", row.names = FALSE)
+write.csv(data_ig, "C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/data_illusion.csv", row.names = FALSE)
 ```
 

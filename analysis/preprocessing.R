@@ -1,17 +1,29 @@
 library(jsonlite)
 library(progress)
 
-path <- "C:/Users/olive/Box/IllusionGamePCS-Test/"
+path <- "C:/Users/olive/Documents/IllusionGamePCS/All_Files/"
 
 # JsPsych experiment ------------------------------------------------------
 
 files <- list.files(path, pattern = "*.csv")
+
+exclude <- c("mbbcu2dr56.csv", "tnr9kq0qja.csv", "z9650zj48m.csv", "ryqwk2oej3.csv", "f58m6eyq4d.csv", "0088anwhg8.csv",
+"e009aw569j.csv", "u60zt6vjog.csv", "hudq7g7a72.csv", "txnz2ec6b7.csv", "0ttdnfavu6.csv", "g0co45m0at.csv", 
+"89rbwd20y7.csv", "57rfumnb3a.csv", "m77ycrvape.csv", "fzfm2mza95.csv", "l2q70dnoab.csv", #error with pcs_pss_r 
+"daybz3ju15.csv", "rk9bodpbte.csv", "qcsu1bx514.csv", "h2v66ccnwk.csv", "hpgpd74sau.csv", #error with pcs_pss_r 
+"2kntmptgg8.csv")
+files <- files[!files %in% exclude]
 
 # Progress bar
 progbar <- progress_bar$new(total = length(files))
 
 alldata_sub <- data.frame()
 alldata_ig <- data.frame()
+
+NA_JSON <- function(x) {
+  if (length(x) == 0 || !nzchar(trimws(x))) return(NA_character_)
+  tryCatch(jsonlite::fromJSON(x), error = function(e) NA_character_)
+}
 
 for (file in files) {
   progbar$tick()
@@ -111,10 +123,10 @@ for (file in files) {
   }
 
   # PCS write up
-  data_ppt$pcs_amnesia_w <- jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_amnesia_w", "response"])
+  data_ppt$pcs_amnesia_w <- NA_JSON(rawdata[rawdata$screen == "pcs_amnesia_w", "response"])
   data_ppt$pcs_amnesia_w <- trimws(data_ppt$pcs_amnesia_w)
   data_ppt$pcs_amnesia_w <- gsub("\n", "", data_ppt$pcs_amnesia_w)
-  data_ppt$pcs_remember_w <- jsonlite::fromJSON(rawdata[rawdata$screen == "pcs_remember_w", "response"])
+  data_ppt$pcs_remember_w <- NA_JSON(rawdata[rawdata$screen == "pcs_remember_w", "response"])
   data_ppt$pcs_remember_w <- trimws(data_ppt$pcs_remember_w)
   data_ppt$pcs_remember_w <- gsub("\n", "", data_ppt$pcs_remember_w)
 
