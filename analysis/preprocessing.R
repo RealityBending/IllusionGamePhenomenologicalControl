@@ -1,18 +1,11 @@
 library(jsonlite)
 library(progress)
 
-path <- "C:/Users/olive/Documents/IllusionGamePCS/All_Files/"
+path <- "C:/Users/olive/Box/IllusionGamePCS/"
 
 # JsPsych experiment ------------------------------------------------------
 
 files <- list.files(path, pattern = "*.csv")
-
-exclude <- c("mbbcu2dr56.csv", "tnr9kq0qja.csv", "z9650zj48m.csv", "ryqwk2oej3.csv", "f58m6eyq4d.csv", "0088anwhg8.csv",
-"e009aw569j.csv", "u60zt6vjog.csv", "hudq7g7a72.csv", "txnz2ec6b7.csv", "0ttdnfavu6.csv", "g0co45m0at.csv", 
-"89rbwd20y7.csv", "57rfumnb3a.csv", "m77ycrvape.csv", "fzfm2mza95.csv", "l2q70dnoab.csv", #error with pcs_pss_r 
-"daybz3ju15.csv", "rk9bodpbte.csv", "qcsu1bx514.csv", "h2v66ccnwk.csv", "hpgpd74sau.csv", #error with pcs_pss_r 
-"2kntmptgg8.csv")
-files <- files[!files %in% exclude]
 
 # Progress bar
 progbar <- progress_bar$new(total = length(files))
@@ -29,9 +22,14 @@ for (file in files) {
   progbar$tick()
   rawdata <- read.csv(paste0(path, "/", file))
 
-
   # Initialize participant-level data
   dat <- rawdata[rawdata$screen == "browser_info", ]
+  
+  prolific_id <- if ("prolific_id" %in% colnames(dat)) dat$prolific_id else NA
+  pss_response <- rawdata$response[rawdata$screen == "pcs_pss_r"]
+  
+  if (is.na(prolific_id)) next
+  if (!nzchar(trimws(pss_response))) next
 
   data_ppt <- data.frame(
     Participant = sub("\\.csv$", "", file),
@@ -45,11 +43,8 @@ for (file in files) {
     Screen_Width = dat$screen_width,
     Screen_Height = dat$screen_height
   )
-
-
-  if ("prolific_id" %in% colnames(dat)) {
-    data_ppt$Prolific_ID <- dat$prolific_id
-  }
+  
+  data_ppt$Prolific_ID <- prolific_id
 
   # Demographics
   demog <- jsonlite::fromJSON(rawdata[rawdata$screen == "demographic_questions", ]$response)
@@ -57,6 +52,9 @@ for (file in files) {
   # Education
   demog$Education <- ifelse(demog$Education == "other", demog$`Education-Comment`, demog$Education)
   demog$`Education-Comment` <- NULL
+  
+  education <- c("Elementary school", "High school", "Bachelor", "Master", "Doctorate")
+  demog$Education <- ifelse(demog$Education %in% education, demog$Education, "Other")
 
   # Discipline
   demog$Discipline <- ifelse(!is.null(demog$Discipline), demog$Discipline, NA)
@@ -70,7 +68,10 @@ for (file in files) {
   demog$Ethnicity <- ifelse(!is.null(demog$Ethnicity), demog$Ethnicity, NA)
   demog$Ethnicity <- ifelse(demog$Ethnicity == "other", demog$`Ethnicity-Comment`, demog$Ethnicity)
   demog$`Ethnicity-Comment` <- NULL
-
+  
+  ethnicity <- c("White", "Black", "South Asian", "East Asian", "Mixed", "Prefer not to say", "Other")
+  demog$Ethnicity <- ifelse(demog$Ethnicity %in% ethnicity, demog$Ethnicity, "Other")
+  
   demog <- as.data.frame(demog)
   data_ppt <- cbind(data_ppt, demog)
 
@@ -230,5 +231,5 @@ alldata_ig$Participant <- correspondance[alldata_ig$Participant]
 
 # Save --------------------------------------------------------------------
 
-write.csv(alldata_sub, "C:/Users/olive/Documents/IllusionGamePCS/Data/rawdata_participants.csv", row.names = FALSE)
-write.csv(alldata_ig, "C:/Users/olive/Documents/IllusionGamePCS/Data/rawdata_illusion.csv", row.names = FALSE)
+write.csv(alldata_sub, "C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/rawdata_participants.csv", row.names = FALSE)
+write.csv(alldata_ig, "C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/rawdata_illusion.csv", row.names = FALSE)
