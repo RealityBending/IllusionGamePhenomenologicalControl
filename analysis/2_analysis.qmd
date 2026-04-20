@@ -226,48 +226,42 @@ r_psy |>
 
 ## Figures
 
-```{r}
+```{r fig1}
+#| fig-width: 8
+#| fig-height: 6
 
-df_r_pcs <- r_pcs |>
+p <- rbind(mutate(r_pcs, Outcome = "Phenomenological Control"), 
+           mutate(r_psy, Outcome = "Psychoticism")) |>
   separate(Parameter1, into = c("Measure", "Illusion", "Condition"), sep = "_") |>
-  mutate(Measure = recode(Measure, "ErrorRate" = "Error rate","IES" = "IES"),
+  mutate(Measure = recode(Measure, "ErrorRate" = "Error rate","IES" = "Inverse Efficiency Score (IES)"),
          Illusion = recode(Illusion, "MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal"),
-         Condition = factor(Condition, levels = c("Congruent", "Mild", "Strong"))) 
-
-
-
-p_pcs <- ggplot(df_r_pcs, aes(x = rho, y = Illusion, color = Condition)) +
-  geom_point(position = position_dodge(width = 0.5)) +
-  geom_errorbar(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), height = 0.2) +
+         Condition = factor(Condition, levels = c("Congruent", "Mild", "Strong"))) |>
+  ggplot(aes(x = rho, y = Illusion, color = Condition)) +
+  annotate("rect", xmin = -0.1, xmax = 0.1, ymin = -Inf, ymax = Inf, fill = "red", alpha = 0.1) +
+  annotate("rect", xmin = 0.1, xmax = Inf, ymin = -Inf, ymax = Inf, fill = "lightgreen", alpha = 0.1) +
+  annotate("rect", xmin = -Inf, xmax = -0.1, ymin = -Inf, ymax = Inf, fill = "lightgreen", alpha = 0.1) +
   geom_vline(xintercept = 0, linetype = "dashed") +
-  facet_wrap(~ Measure) +
-  labs(x = "Correlation with PCS scores ", y = "Illusion", color = "Condition") +
+  geom_point(position = position_dodge(width = 0.5), size = 3) +
+  geom_linerange(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), linewidth = 1) +
+  # geom_label(aes(label = format_bf(BF, stars=TRUE, protect_ratio=F)), 
+  #           position = position_dodge(width = 0.5), hjust = 0.5, size = 2, vjust=1) +
+  geom_text(aes(x=0, label = format_bf(BF, stars=TRUE, protect_ratio=F)), 
+            position = position_dodge(width = 0.5), hjust = 0.5, size = 2, vjust=-0.5, show.legend = FALSE) +
+  scale_color_manual(values = c("Congruent" = "#2196F3", "Mild" = "darkorange", "Strong" = "red"),
+                     breaks = c("Strong", "Mild", "Congruent")) +
+  scale_x_continuous(limits = c(-0.35, 0.35), breaks = c(-0.3, seq(-0.2, 0.2, by = 0.1), 0.3),
+                     labels = c("- .30", "- .20", "- .10", "0", ".10", ".20", ".30")) +
+  facet_grid(Measure ~ Outcome) +
+  labs(x = "Correlation", y = "Illusion", color = "Condition",
+       title = "Correlation between Illusion Sensitivity and Dispositional Traits") +
   theme_minimal() +
-   theme(axis.title.x = element_text(face = "bold"),
-          axis.text.y = element_text(size = 10, face = "bold"),
-         axis.title.y = element_blank())
-
-
-df_r_psy <- r_psy |>
-  separate(Parameter1, into = c("Measure", "Illusion", "Condition"), sep = "_") |>
-  mutate(Measure = recode(Measure, "ErrorRate" = "Error rate","IES" = "IES"),
-         Illusion = recode(Illusion, "MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal"),
-         Condition = factor(Condition, levels = c("Congruent", "Mild", "Strong"))) 
-
-
-p_psy<-  ggplot(df_r_psy, aes(x = rho, y = Illusion, color = Condition)) +
-  geom_point(position = position_dodge(width = 0.5)) +
-  geom_errorbarh(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), height = 0.2) +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  facet_wrap(~ Measure) +
-  labs(x = "Correlation with Psychoticism (PID-5) scores ", color = "Condition") +
-  theme_minimal() +
-  theme( axis.title.y = element_blank(),
-         axis.text.y  = element_blank(),
-         axis.title.x = element_text(face = "bold"))
-
-
-patchwork::wrap_plots(p_pcs + p_psy, guides="collect")
-
+   theme(axis.text.y = element_text(size = 10, face = "bold"),
+         axis.title.y = element_blank(),
+         axis.title.x = element_blank(),
+         legend.title = element_text(size = 12),
+         strip.text.x = element_text(size = 11, face = "bold"),
+         strip.text.y = element_text(size = 10, face = "italic"),
+         plot.title = element_text(size = 14, face = "bold", hjust = 0.5))
+p
 ```
 
