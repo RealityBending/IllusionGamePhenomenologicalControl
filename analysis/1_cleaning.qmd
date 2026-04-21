@@ -185,7 +185,7 @@ ig_ex_bar <- ig_ex_tib |>
   ggplot(aes(x = `Extent of Exclusion`, fill = `Extent of Exclusion`)) +
   geom_bar(width = 0.6) +
   scale_x_discrete(labels = scales::label_wrap(15)) +
-  scale_y_continuous(breaks = seq(0, 10, by = 2)) +
+  scale_y_continuous(breaks = scales::pretty_breaks()) +
   labs(
     title = "Exclusions From Illusion Game",
     x = "Extent of Exclusion",
@@ -210,61 +210,6 @@ n_removed <- n_before - nrow(data_ig)
 ```
 
 This removed `r n_removed` trials (`r round(n_removed / n_before * 100, 2)`% of total).
-
-## PCS
-
-```{r}
-outliers_pcs1 <- data_ppt[data_ppt$pcs_hello != "Hello", "Participant"]
-outliers_pcs2 <- data_ppt[data_ppt$pcs_noballs == TRUE, "Participant"]
-outliers_pcs3 <- data_ppt[data_ppt$pcs_press < 5, "Participant"]
-outliers_pcs <- unique(c(outliers_pcs1, outliers_pcs2, outliers_pcs3))
-```
-
-We removed `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_pcs) / nrow(data_ppt))`) participants that either did not report hearing "Hello" at the beginning of the experiment, responded that no balls were presented on the screen, or pressed the space bar fewer than 5 times when asked to do so.
-
-
-```{r}
-data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
-data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
-```
-
-::: {.panel-tabset}
-
-### PCS Exclusions Table
-
-```{r}
-pcs_ex_tib <- bind_rows(
-  tibble(Participant = outliers_pcs1, Reason = "Failed 'Hello' check"),
-  tibble(Participant = outliers_pcs2, Reason = "Reported no balls"),
-  tibble(Participant = outliers_pcs3, Reason = "Pressed space bar < 5 times")
-)
-
-pcs_ex_tib |> 
-  knitr::kable(caption = "Exclusions From Phenomenological Control Scale") |> 
-  kableExtra::scroll_box(height = "300px") |> 
-  kableExtra::kable_styling()
-```
-
-### PCS Exclusions Graph
-
-```{r}
-pcs_ex_bar <- pcs_ex_tib |> 
-  ggplot(aes(x = Reason, fill = Reason)) +
-  geom_bar() +
-  scale_x_discrete(labels = scales::label_wrap(17)) +
-  scale_y_continuous(limits = c(0, 115)) +
-    labs(
-    title = "Exclusions From Phenomenological Control Scale",
-    x = "Reason for Exclusion",
-    y = "Count",
-  ) +
-  theme_minimal() +
-  guides(fill = "none")
-
-pcs_ex_bar
-```
-
-:::
 
 # Final Sample
 

@@ -384,7 +384,3 @@ p <- rbind(mutate(r_pcs, Outcome = "Phenomenological Control"),
          plot.title = element_text(size = 14, face = "bold", hjust = 0.5))
 p
 ```
-
-```{r}
-plot(correlation::cor_test(features, "ErrorRate_Ebbinghaus_Strong", "PCS_Score"))
-```
