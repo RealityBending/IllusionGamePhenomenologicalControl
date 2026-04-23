@@ -115,6 +115,60 @@ data_ppt$PID5_Psychoticism <- rowMeans(pid5[grepl("Psy", names(pid5))])
 
 # Exclusion
 
+## PCS 
+
+```{r}
+outliers_pcs1 <- data_ppt[data_ppt$pcs_hello != "Hello", "Participant"]
+outliers_pcs2 <- data_ppt[data_ppt$pcs_noballs == TRUE, "Participant"]
+outliers_pcs3 <- data_ppt[data_ppt$pcs_press < 5, "Participant"] # get PP count
+outliers_pcs <- unique(c(outliers_pcs1, outliers_pcs2))
+```
+
+Departing from our preregistered analysis, here we will not include the third attention check, in which participants were told to press the space bar upon seeing the words "PLEASE WAIT" on the screen. This is because a significant proportion (`r length(outliers_pcs3)` (`r insight::format_percent(length(outliers_pcs3) / nrow(data_ppt))`)) of participants were excluded. 
+
+Thus, we will only remove `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_pcs) / nrow(data_ppt))`) participants that either did not report hearing "Hello" at the beginning of the experiment, or responded that no balls were presented on the screen.
+
+```{r}
+data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
+data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
+```
+
+::: {.panel-tabset}
+
+### PCS Exclusions Table
+
+```{r}
+pcs_ex_tib <- bind_rows(
+  tibble(Participant = outliers_pcs1, Reason = "Failed 'Hello' check"),
+  tibble(Participant = outliers_pcs2, Reason = "Reported no balls"),
+)
+
+pcs_ex_tib |> 
+  knitr::kable(caption = "Exclusions From Phenomenological Control Scale") |> 
+  kableExtra::scroll_box(height = "300px") |> 
+  kableExtra::kable_styling()
+```
+
+### PCS Exclusions Graph
+
+```{r}
+pcs_ex_bar <- pcs_ex_tib |> 
+  ggplot(aes(x = Reason, fill = Reason)) +
+  geom_bar() +
+  scale_y_continuous(breaks = scales::pretty_breaks()) +
+    labs(
+    title = "Exclusions From Phenomenological Control Scale",
+    x = "Reason for Exclusion",
+    y = "Count",
+  ) +
+  theme_minimal() +
+  guides(fill = "none")
+
+pcs_ex_bar
+```
+
+:::
+
 ## Illusion Game Participants
 
 We removed participants with an error rate > 45% (suggesting chance-level, i.e., random, responding) for any of the illusion types. Outliers detected in the first block will be discarded entirely (suggesting that they did not properly do the task), but if only the second set is bad, then only the second set will be discarded (suggesting that they got "bored" when having to re-do the task), as the illusion sensitivity can still be estimated, albeit with less precision. Additionally, participants whose RTs are significantly slower than the group average (possibly indicative of a different strategy) were also excluded from the analysis (RT > 4 SD above the mean).
