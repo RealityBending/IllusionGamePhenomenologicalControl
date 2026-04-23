@@ -298,7 +298,7 @@ p_eth
 ```{r}
 #| code-fold: false
 
-write.csv(data_ppt, "C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/data_participants.csv", row.names = FALSE)
-write.csv(data_ig, "C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/data_illusion.csv", row.names = FALSE)
+write.csv(data_ppt, "../data/data_participants.csv", row.names = FALSE)
+write.csv(data_ig, "../data/data_illusion.csv", row.names = FALSE)
 ```
 
