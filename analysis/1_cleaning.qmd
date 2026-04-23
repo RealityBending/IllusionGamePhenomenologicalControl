@@ -26,9 +26,9 @@ library(ggside)
 library(easystats)
 library(patchwork)
 
-data_ppt <- read.csv("C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/rawdata_participants.csv")
+data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")
 
-data_ig <- read.csv("C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/rawdata_illusion.csv") |>
+data_ig <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv") |>
     mutate(
         Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
         Task_Difficulty = abs(Illusion_Difference),
