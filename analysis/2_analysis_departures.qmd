@@ -27,9 +27,9 @@ library(patchwork)
 library(psych)
 
 
-data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/data_participants.csv")
+data_ppt <- read.csv("../data/data_participants.csv")
 
-data_ig <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/data_illusion.csv") |>
+data_ig <- read.csv("../data/data_illusion.csv") |>
     mutate(
         Block = as.factor(Block),
         Illusion_Effect = fct_relevel(as.factor(Illusion_Effect), "Incongruent", "Congruent"),
@@ -70,10 +70,11 @@ ig_scores <- data_ig |>
         names_from = c("Illusion_Type", "Condition_Illusion", "Condition_Difficulty"),
         values_from = c("ErrorRate", "IES")
     )
+
+
 ```
 
-
-#### Registered
+#### Mild vs. Strong
 
 ```{r}
 corrs <- data.frame()
@@ -90,23 +91,11 @@ for (outcome in c("ErrorRate", "IES")) {
         }
     }
 }
-arrange(corrs, desc(outcome))
-
-# # IF correlations > 0.5:
-# ig_scores <- data_ig |>
-#     summarize(
-#         ErrorRate = sum(Error) / n(),
-#         IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
-#         .by = c("Participant", "Illusion_Type", "Condition_Illusion")
-#     ) |>
-#     pivot_wider(
-#         names_from = c("Illusion_Type", "Condition_Illusion"),
-#         values_from = c("ErrorRate", "IES")
-#     )
+arrange(corrs, desc(r))
 ```
 
+#### Easy vs. Hard
 
-#### Not registered 
 
 ```{r}
 corrs_2 <- data.frame()
@@ -122,61 +111,122 @@ for (outcome in c("ErrorRate", "IES")) {
         }
     }
 }
-arrange(corrs_2, desc(outcome))
-
-# # IF correlations > 0.5:
-# ig_scores <- data_ig |>
-#     summarize(
-#         ErrorRate = sum(Error) / n(),
-#         IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
-#         .by = c("Participant", "Illusion_Type", "Condition_Illusion")
-#     ) |>
-#     pivot_wider(
-#         names_from = c("Illusion_Type", "Condition_Illusion"),
-#         values_from = c("ErrorRate", "IES")
-#     )
+arrange(corrs_2, desc(r))
 ```
+
+
+#### Final Indices
+
+```{r}
+ig_scores_incongruent <- data_ig |>
+    filter(Condition_Illusion != "Congruent") |>
+    summarize(
+        ErrorRate = sum(Error) / n(),
+        IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
+        .by = c("Participant", "Illusion_Type", "Condition_Difficulty")
+    ) |>
+    pivot_wider(
+        names_from = c("Illusion_Type", "Condition_Difficulty"),
+        values_from = c("ErrorRate", "IES")
+    )
+names(ig_scores_incongruent) <- str_replace_all(names(ig_scores_incongruent), "_Hard", "_Incongruent_Hard")
+names(ig_scores_incongruent) <- str_replace_all(names(ig_scores_incongruent), "_Easy", "_Incongruent_Easy")
+ig_scores <- full_join(ig_scores, ig_scores_incongruent, by = "Participant")
+
+
+ig_scores_general <- data_ig |>
+    summarize(
+        ErrorRate = sum(Error) / n(),
+        IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
+        .by = c("Participant", "Illusion_Type", "Condition_Illusion")
+    ) |>
+    pivot_wider(
+        names_from = c("Illusion_Type", "Condition_Illusion"),
+        values_from = c("ErrorRate", "IES")
+    ) |> 
+  data_addsuffix(select=-Participant, pattern = "_General")
+names(ig_scores_general)
+ig_scores <- full_join(ig_scores, ig_scores_general, by = "Participant")
+
+
+ig_scores_incongruent_general <- data_ig |>
+    filter(Condition_Illusion != "Congruent") |>
+    summarize(
+        ErrorRate = sum(Error) / n(),
+        IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
+        .by = c("Participant", "Illusion_Type")
+    ) |>
+    pivot_wider(
+        names_from = c("Illusion_Type"),
+        values_from = c("ErrorRate", "IES")
+    ) |> 
+   data_addsuffix(select=-Participant, pattern = "_Incongruent_General")
+
+ig_scores <- full_join(ig_scores, ig_scores_incongruent_general, by = "Participant")
+```
+
+
 
 
 #### Outlier Removal
 
-```{r}
-#vars <- names(ig_scores)[names(ig_scores) != "Participant"]
-
-#cis <- data.frame()
-#for(var in vars){
-#  bounds <- bayestestR::hdi(ig_scores[[var]], ci = 0.99)
-#  print(paste0(var, ": 95% HDI [", bounds$CI_low, ", ", #bounds$CI_high, "]"))
-  
-#  ig_scores[[var]] <- ifelse(ig_scores[[var]] > bounds$CI_high, #NA, ig_scores[[var]])
-#}
-
-#gt::gt(cis)
-```
 
 ```{r}
 vars <- names(ig_scores)[names(ig_scores) != "Participant"]
+vars <- vars[str_detect(vars, "ErrorRate")]
+vars <- vars[str_detect(vars, "General")]
+vars <- vars[str_detect(vars, "Congruent|Incongruent")]
 
+outliers <- list("MullerLyer" = c(), "Ebbinghaus" = c(), "VerticalHorizontal" = c())
 ps <- list()
 cis <- data.frame()
 for(var in vars){
-  bounds <- bayestestR::hdi(ig_scores[[var]], ci = 0.95)
+    
+  bounds <- bayestestR::hdi(ig_scores[[var]], ci = 0.975)
   cis <- rbind(cis, data.frame(variable = var, CI_low = bounds$CI_low, CI_high = bounds$CI_high))
-  
+
   # Make plot
   ps[[var]] <- ggplot(ig_scores, aes(x = !!as.name(var))) +
-    geom_histogram(bins = 20) +
+    geom_histogram(binwidth = 0.02) +
     geom_vline(xintercept = bounds$CI_low, color = "red") +
     geom_vline(xintercept = bounds$CI_high, color = "red") +
-    ggtitle(paste("95% HDI for", var)) 
+    coord_cartesian(xlim = c(0, 1))  +
+    ggtitle(paste("95% HDI for", var))  
   
-  # Assuming we only want to remove above the top bound
-  ig_scores[[var]] <- ifelse(ig_scores[[var]] > bounds$CI_high, NA, ig_scores[[var]])
+  illu <- str_split_fixed(var, "_", 4)[,2]
+  flagged_ppts <- ig_scores$Participant[(ig_scores[[var]] > bounds$CI_high) | (ig_scores[[var]] < bounds$CI_low) |  is.na(ig_scores[[var]])]
+  # print(length(flagged_ppts))
+  outliers[[illu]] <- unique(c(outliers[[illu]], flagged_ppts))
 }
 
 wrap_plots(ps)
 gt::gt(cis)
+
+for(illu in names(outliers)) {
+  print(paste0("Outliers for ", illu, ": ", length(outliers[[illu]]), " (",
+               format_percent(length(outliers[[illu]]) / nrow(ig_scores)), ")", collapse = ", "))
+  ig_scores[ig_scores$Participant %in% outliers[[illu]], str_detect(names(ig_scores), illu)] <- NA
+}
 ```
+
+
+
+#### Correlation
+
+
+```{r}
+#| fig-width: 15
+#| fig-height: 15
+
+correlation::correlation(select(ig_scores, -Participant), redundant=TRUE) |> 
+  cor_sort() |> 
+  ggplot(aes(Parameter1, Parameter2, fill = r)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
 
 
 #### Manipulation Check
@@ -188,11 +238,11 @@ ttests <- data.frame()
 for (outcome in c("ErrorRate", "IES")) {
     for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
         for (cond in c("Congruent", "Mild")) {
-            x1 <- ig_scores[[paste0(outcome, "_", ill_type, "_", cond)]]
+            x1 <- ig_scores[[paste0(outcome, "_", ill_type, "_", cond, "_General")]]
             if (cond == "Congruent") {
-                x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Mild")]]
+                x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Mild_General")]]
             } else {
-                x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Strong")]]
+                x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Strong_General")]]
             }
 
             complete <- complete.cases(x1, x2)
@@ -226,6 +276,9 @@ ttests |>
 
 ### PCS
 
+::: {.panel-tabset}
+
+#### All
 
 ```{r}
 data_ppt[, pcs_items] |>
@@ -233,6 +286,17 @@ data_ppt[, pcs_items] |>
 
 data_ppt$PCS_Score <- rowMeans(data_ppt[, pcs_items], na.rm = TRUE)
 ```
+
+#### PCS3 Excluded
+
+```{r}
+data_ppt[data_ppt$PCS_Outlier_Press == F, pcs_items] |>
+    psych::alpha()
+```
+
+
+:::
+
 
 ### Illusion Game
 
@@ -242,7 +306,7 @@ data_ppt$PCS_Score <- rowMeans(data_ppt[, pcs_items], na.rm = TRUE)
 
 ```{r}
 ig_scores |>
-    select(matches("ErrorRate_.*_Mild.*")) |>
+    select(matches("ErrorRate_.*_Mild.*_General")) |>
     psych::alpha()
 ```
 
@@ -250,7 +314,7 @@ ig_scores |>
 
 ```{r}
 ig_scores |>
-    select(matches("ErrorRate_.*_Strong.*")) |>
+    select(matches("ErrorRate_.*_Strong.*_General")) |>
     psych::alpha()
 ```
 
@@ -258,7 +322,7 @@ ig_scores |>
 
 ```{r}
 ig_scores |>
-    select(matches("IES_.*_Mild.*")) |>
+    select(matches("IES_.*_Mild.*_General")) |>
     psych::alpha()
 ```
 
@@ -266,69 +330,59 @@ ig_scores |>
 
 ```{r}
 ig_scores |>
-    select(matches("IES_.*_Strong.*")) |>
+    select(matches("IES_.*_Strong.*_General")) |>
     psych::alpha()
 ```
 
 :::
 
 
-## Illusion Sensitivity vs. PCS 
+## Correlations
 
+::: {.panel-tabset}
 
-```{r}
-features <- merge(ig_scores, data_ppt[c("Participant", "PCS_Score", "PID5_Psychoticism")])
-
-r_pcs <- correlation::correlation(
-    select(features, -PCS_Score, -PID5_Psychoticism),
-    select(features, PCS_Score),
-    bayesian = TRUE
-)
-
-r_pcs |>
-    arrange(desc(BF)) |> 
-    format_table() |>
-    select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
-    gt::gt() |>
-    gt::data_color(
-      columns = BF,
-      fn = function(bf) dplyr::case_when(
-        bf >= 10   ~ "green",
-        bf >= 3    ~ "lightgreen",
-        bf <= 1/10  ~ "red",
-        bf <= 1/3   ~ "#ffabab",
-        TRUE       ~ "white"
-      )
-    )
-
-```
-
-## Illusion Sensitivity vs. Psychoticism 
-
+#### All
 
 ```{r}
-r_psy <- correlation::correlation(
-    select(features, -PCS_Score, -PID5_Psychoticism),
-    select(features, PID5_Psychoticism),
-    bayesian = TRUE
-)
+make_cor <- function(data) {
+  features <- merge(ig_scores, data[c("Participant", "PCS_Score", "PID5_Psychoticism")])
 
-r_psy |>
-    arrange(desc(BF)) |> 
-    format_table() |>
-    select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
-    gt::gt() |>
-    gt::data_color(
-      columns = BF,
-      fn = function(bf) dplyr::case_when(
-        bf >= 10   ~ "green",
-        bf >= 3    ~ "lightgreen",
-        bf <= 1/10  ~ "red",
-        bf <= 1/3   ~ "#ffabab",
-        TRUE       ~ "white"
+  rez <- correlation::correlation(
+      select(features, -PCS_Score, -PID5_Psychoticism),
+      select(features, PCS_Score, PID5_Psychoticism),
+      bayesian = TRUE
+  )
+  
+  rez |>
+    # as.data.frame()
+      arrange(desc(BF)) |> 
+      format_table() |>
+      mutate(BF = as.numeric(BF)) |> 
+      select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
+      gt::gt() |>
+      gt::data_color(
+        columns = BF,
+        fn = function(bf) dplyr::case_when(
+          bf >= 10   ~ "green",
+          bf >= 3    ~ "lightgreen",
+          bf <= 1/10  ~ "red",
+          bf <= 1/3   ~ "#ffabab",
+          .default       = "white"
+        )
       )
-    )
+}
+
+make_cor(data=data_ppt)
 ```
+
+#### PCS3 Excluded
+
+```{r}
+make_cor(data=data_ppt[data_ppt$PCS_Outlier_Press == F, ])
+```
+
+
+:::
 
 ## Figures
 
@@ -336,9 +390,10 @@ r_psy |>
 #| fig-width: 8
 #| fig-height: 6
 
-p <- rbind(mutate(r_pcs, Outcome = "Phenomenological Control"), 
-           mutate(r_psy, Outcome = "Psychoticism")) |>
-  separate(Parameter1, into = c("Measure", "Illusion", "Condition"), sep = "_") |>
+p <- rez |> 
+  mutate(Outcome = ifelse(Parameter2 == "PCS_Score", "Phenomenological Control",  "Psychoticism")) |>
+  separate(Parameter1, into = c("Measure", "Illusion", "Condition", "Difficulty"), sep = "_") |>
+  filter(Difficulty == "General") |>
   mutate(Measure = recode(Measure, "ErrorRate" = "Error rate","IES" = "Inverse Efficiency Score (IES)"),
          Illusion = recode(Illusion, "MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal"),
          Condition = factor(Condition, levels = c("Congruent", "Mild", "Strong"))) |>

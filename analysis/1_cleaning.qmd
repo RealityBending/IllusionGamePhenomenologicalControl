@@ -129,6 +129,7 @@ Departing from our preregistered analysis, here we will not include the third at
 Thus, we will only remove `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_pcs) / nrow(data_ppt))`) participants that either did not report hearing "Hello" at the beginning of the experiment, or responded that no balls were presented on the screen.
 
 ```{r}
+data_ppt$PCS_Outlier_Press <- ifelse(data_ppt$Participant %in% outliers_pcs3, TRUE, FALSE)
 data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
 data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
 ```
