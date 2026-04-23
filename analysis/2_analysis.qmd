@@ -112,6 +112,10 @@ data_ppt$pcs_postsessionsuggetsion <- sqrt(data_ppt$pcs_urgepress * data_ppt$pcs
 
 ### Illusion Game
 
+::: {.panel-tabset}
+
+#### Outcomes
+
 ```{r}
 ig_scores <- data_ig |>
     summarize(
@@ -124,6 +128,12 @@ ig_scores <- data_ig |>
         values_from = c("ErrorRate", "IES")
     )
 ```
+
+```{r}
+
+```
+
+:::
 
 ```{r}
 corrs <- data.frame()
@@ -154,12 +164,52 @@ ig_scores <- data_ig |>
     )
 ```
 
+```{r}
+# collapse across Mild and Strong (Incongruent) conditions
+
+ig_scores_collapsed <- data_ig |>
+    mutate(
+        Condition_Illusion = if_else(
+            Condition_Illusion %in% c("Mild", "Strong"), 
+            "Incongruent", 
+            Condition_Illusion
+        )
+    ) |>
+    summarize(
+        ErrorRate = sum(Error) / n(),
+        IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
+        .by = c("Participant", "Illusion_Type", "Condition_Illusion")
+    ) |>
+    pivot_wider(
+        names_from = c("Illusion_Type", "Condition_Illusion"),
+        values_from = c("ErrorRate", "IES")
+    )
+
+
+corrs_collapsed <- data.frame()
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+        corrs_collapsed <- correlation::correlation(
+            ig_scores_collapsed[paste0(outcome, "_", ill_type, "_Congruent")],
+            ig_scores_collapsed[paste0(outcome, "_", ill_type, "_Incongruent")]
+        ) |>
+            mutate(Outcome = outcome, Illusion_Type = ill_type) |>
+            rbind(corrs_collapsed)
+    }
+}
+arrange(corrs_collapsed, desc(r))
+```
+
 
 #### Outlier Removal
 
+::: {.panel-tabset}
+
+#### Outcomes
+
 ```{r}
-#| fig-width: 12
-#| fig-height: 8
+#| fig-width: 20
+#| fig-height: 14
 
 
 vars <- names(ig_scores)[names(ig_scores) != "Participant"]
@@ -168,19 +218,31 @@ ps <- list()
 cis <- data.frame()
 for(var in vars){
   bounds <- bayestestR::hdi(ig_scores[[var]], ci = 0.975)
-  cis <- rbind(cis, data.frame(variable = var, CI_low = bounds$CI_low, CI_high = bounds$CI_high))
+  cis <- rbind(cis, data.frame(Outcome = var, CI_low = bounds$CI_low, CI_high = bounds$CI_high))
   
   # Make plot
   binwidth <- ifelse(str_detect(var, "ErrorRate"), 0.02, 0.1)
   xlim <- if(str_detect(var, "ErrorRate")) { c(0, 1) } else { c(0, NA) }
   col <- ifelse(str_detect(var, "ErrorRate"), "darkorange", "darkred")
   
-  ps[[var]] <- ggplot(ig_scores, aes(x = !!as.name(var))) +
-    geom_histogram(binwidth = binwidth, fill=col) +
-    geom_vline(xintercept = bounds$CI_low, color = "red") +
-    geom_vline(xintercept = bounds$CI_high, color = "red") +
-    ggtitle(paste("97.5% HDI [", bounds$CI_low, ", ", bounds$CI_high, "] for ", var, sep = ""))  +
-    coord_cartesian(xlim = xlim) 
+n_above <- sum(ig_scores[[var]] > bounds$CI_high, na.rm = TRUE)
+pct_above <- format_percent(n_above / nrow(ig_scores))
+  
+ps[[var]] <- ggplot(ig_scores, aes(x = !!as.name(var))) +
+  geom_histogram(binwidth = binwidth, fill = col) +
+  geom_vline(xintercept = bounds$CI_low, color = "red") +
+  geom_vline(xintercept = bounds$CI_high, color = "red") +
+  ggtitle(
+    paste0("HDI [", round(bounds$CI_low, 2), ", ", round(bounds$CI_high, 2), "]"),
+    subtitle = paste0("Removed: n = ", n_above, " (", pct_above, ")")
+  ) +
+  coord_cartesian(xlim = xlim) +
+  theme(
+    plot.title = element_text(size = 8),
+    plot.subtitle = element_text(size = 7),
+    axis.title = element_text(size = 7),
+    axis.text = element_text(size = 6)
+  )
   
   # Assuming we only want to remove above the top bound
   ig_scores[[var]] <- ifelse(ig_scores[[var]] > bounds$CI_high, NA, ig_scores[[var]])
@@ -190,10 +252,62 @@ wrap_plots(ps)
 gt::gt(cis)
 ```
 
+#### Outcomes Collapsed
+
+```{r}
+#| fig-width: 20
+#| fig-height: 14
+
+
+vars <- names(ig_scores_collapsed)[names(ig_scores_collapsed) != "Participant"]
+
+ps <- list()
+cis <- data.frame()
+for(var in vars){
+  bounds <- bayestestR::hdi(ig_scores_collapsed[[var]], ci = 0.975)
+  cis <- rbind(cis, data.frame(Outcome = var, CI_low = bounds$CI_low, CI_high = bounds$CI_high))
+  
+  # Make plot
+  binwidth <- ifelse(str_detect(var, "ErrorRate"), 0.02, 0.1)
+  xlim <- if(str_detect(var, "ErrorRate")) { c(0, 1) } else { c(0, NA) }
+  col <- ifelse(str_detect(var, "ErrorRate"), "darkorange", "darkred")
+  
+n_above <- sum(ig_scores_collapsed[[var]] > bounds$CI_high, na.rm = TRUE)
+pct_above <- format_percent(n_above / nrow(ig_scores_collapsed))
+  
+ps[[var]] <- ggplot(ig_scores_collapsed, aes(x = !!as.name(var))) +
+  geom_histogram(binwidth = binwidth, fill = col) +
+  geom_vline(xintercept = bounds$CI_low, color = "red") +
+  geom_vline(xintercept = bounds$CI_high, color = "red") +
+  ggtitle(
+    paste0("HDI [", round(bounds$CI_low, 2), ", ", round(bounds$CI_high, 2), "]"),
+    subtitle = paste0("Removed: n = ", n_above, " (", pct_above, ")")
+  ) +
+  coord_cartesian(xlim = xlim) +
+  theme(
+    plot.title = element_text(size = 8),
+    plot.subtitle = element_text(size = 7),
+    axis.title = element_text(size = 7),
+    axis.text = element_text(size = 6)
+  )
+  
+  # Assuming we only want to remove above the top bound
+  ig_scores_collapsed[[var]] <- ifelse(ig_scores_collapsed[[var]] > bounds$CI_high, NA, ig_scores_collapsed[[var]])
+}
+
+wrap_plots(ps)
+gt::gt(cis)
+```
+
+:::
 
 #### Manipulation Check
 
-Significant differences between the Congruent and Mild and the Mild and Strong groups are taken as evidence that illusions functioned as intended. 
+Significant differences between the Congruent and Mild and the Mild and Strong groups are taken as evidence that illusions functioned as intended.
+
+::: {.panel-tabset}
+
+#### Outcomes
 
 ```{r}
 ttests <- data.frame()
@@ -236,6 +350,41 @@ ttests |>
     arrange(Illusion_Type, Condition_Illusion, Outcome)
 ```
 
+#### Outcomes Collapsed
+
+```{r}
+ttests_collapsed <- data.frame()
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+
+        x1 <- ig_scores_collapsed[[paste0(outcome, "_", ill_type, "_Congruent")]]
+        x2 <- ig_scores_collapsed[[paste0(outcome, "_", ill_type, "_Incongruent")]]
+
+        complete <- complete.cases(x1, x2)
+        x1 <- x1[complete]
+        x2 <- x2[complete]
+
+        if (length(x1) < 2) {
+            message(paste("Skipping:", outcome, ill_type, "- not enough observations"))
+            next
+        }
+
+        ttests_collapsed <- BayesFactor::ttestBF(x = x1, y = x2, paired = TRUE) |>
+            parameters::parameters() |>
+            mutate(
+                Outcome = outcome,
+                Illusion_Type = ill_type
+            ) |>
+            rbind(ttests_collapsed)
+    }
+}
+
+ttests_collapsed |>
+    select(Illusion_Type, Outcome, Median, BF) |>
+    arrange(Illusion_Type, Outcome)
+```
+
+:::
 
 ## Reliability
 
@@ -385,3 +534,4 @@ p <- rbind(mutate(r_pcs, Outcome = "Phenomenological Control"),
          plot.title = element_text(size = 14, face = "bold", hjust = 0.5))
 p
 ```
+
