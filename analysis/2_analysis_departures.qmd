@@ -27,9 +27,9 @@ library(patchwork)
 library(psych)
 
 
-data_ppt <- read.csv("C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/data_participants.csv")
+data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/data_participants.csv")
 
-data_ig <- read.csv("C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/data_illusion.csv") |>
+data_ig <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/data_illusion.csv") |>
     mutate(
         Block = as.factor(Block),
         Illusion_Effect = fct_relevel(as.factor(Illusion_Effect), "Incongruent", "Congruent"),
@@ -38,57 +38,7 @@ data_ig <- read.csv("C:/Users/olive/Documents/University/Year 3 (Placement Year)
 
 ```
 
-## PCS Exclusion
 
-```{r}
-outliers_pcs1 <- data_ppt[data_ppt$pcs_hello != "Hello", "Participant"]
-outliers_pcs2 <- data_ppt[data_ppt$pcs_noballs == TRUE, "Participant"]
-outliers_pcs3 <- data_ppt[data_ppt$pcs_press < 5, "Participant"] # get PP count
-outliers_pcs <- unique(c(outliers_pcs1, outliers_pcs2))
-```
-
-Departing from our preregistered analysis, here we will not include the third attention check, in which participants were told to press the space bar upon seeing the words "PLEASE WAIT" on the screen. This is because a significant proportion (`r length(outliers_pcs3)` (`r insight::format_percent(length(outliers_pcs3) / nrow(data_ppt))`)) of participants were excluded. Thus, we will only remove `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_pcs) / nrow(data_ppt))`) participants that either did not report hearing "Hello" at the beginning of the experiment, or responded that no balls were presented on the screen.
-
-```{r}
-data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
-data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
-```
-
-::: {.panel-tabset}
-
-### PCS Exclusions Table
-
-```{r}
-pcs_ex_tib <- bind_rows(
-  tibble(Participant = outliers_pcs1, Reason = "Failed 'Hello' check"),
-  tibble(Participant = outliers_pcs2, Reason = "Reported no balls"),
-)
-
-pcs_ex_tib |> 
-  knitr::kable(caption = "Exclusions From Phenomenological Control Scale") |> 
-  kableExtra::scroll_box(height = "300px") |> 
-  kableExtra::kable_styling()
-```
-
-### PCS Exclusions Graph
-
-```{r}
-pcs_ex_bar <- pcs_ex_tib |> 
-  ggplot(aes(x = Reason, fill = Reason)) +
-  geom_bar() +
-  scale_y_continuous(breaks = scales::pretty_breaks()) +
-    labs(
-    title = "Exclusions From Phenomenological Control Scale",
-    x = "Reason for Exclusion",
-    y = "Count",
-  ) +
-  theme_minimal() +
-  guides(fill = "none")
-
-pcs_ex_bar
-```
-
-:::
 
 ## Score Computation
 
@@ -122,33 +72,69 @@ ig_scores <- data_ig |>
     )
 ```
 
+
+#### Registered
+
 ```{r}
 corrs <- data.frame()
 for (outcome in c("ErrorRate", "IES")) {
     for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
-        for (cond in c("Congruent", "Mild", "Strong")) {
-            corrs <- correlation::correlation(
-                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Easy")],
-                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Hard")]
+       for (dif in c("Easy", "Hard")) {
+  
+         corrs <- correlation::correlation(
+                ig_scores[paste0(outcome, "_", ill_type,"_Mild", "_", dif )],
+                ig_scores[paste0(outcome, "_", ill_type, "_Strong", "_", dif )]
             ) |>
                 mutate(Outcome = outcome) |>
                 rbind(corrs)
         }
     }
 }
-arrange(corrs, desc(r))
+arrange(corrs, desc(outcome))
 
-# IF correlations > 0.5:
-ig_scores <- data_ig |>
-    summarize(
-        ErrorRate = sum(Error) / n(),
-        IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
-        .by = c("Participant", "Illusion_Type", "Condition_Illusion")
-    ) |>
-    pivot_wider(
-        names_from = c("Illusion_Type", "Condition_Illusion"),
-        values_from = c("ErrorRate", "IES")
-    )
+# # IF correlations > 0.5:
+# ig_scores <- data_ig |>
+#     summarize(
+#         ErrorRate = sum(Error) / n(),
+#         IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
+#         .by = c("Participant", "Illusion_Type", "Condition_Illusion")
+#     ) |>
+#     pivot_wider(
+#         names_from = c("Illusion_Type", "Condition_Illusion"),
+#         values_from = c("ErrorRate", "IES")
+#     )
+```
+
+
+#### Not registered 
+
+```{r}
+corrs_2 <- data.frame()
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+        for (cond in c("Congruent", "Mild", "Strong")) {
+            corrs_2 <- correlation::correlation(
+                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Easy")],
+                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Hard")]
+            ) |>
+                mutate(Outcome = outcome) |>
+                rbind(corrs_2)
+        }
+    }
+}
+arrange(corrs_2, desc(outcome))
+
+# # IF correlations > 0.5:
+# ig_scores <- data_ig |>
+#     summarize(
+#         ErrorRate = sum(Error) / n(),
+#         IES = mean(RT[Response_Correct == "true"] / mean(Response_Correct == "true")),
+#         .by = c("Participant", "Illusion_Type", "Condition_Illusion")
+#     ) |>
+#     pivot_wider(
+#         names_from = c("Illusion_Type", "Condition_Illusion"),
+#         values_from = c("ErrorRate", "IES")
+#     )
 ```
 
 

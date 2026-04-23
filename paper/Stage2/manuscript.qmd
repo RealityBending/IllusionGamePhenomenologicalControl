@@ -1,0 +1,356 @@
+---
+title: "Testing the Relationship between Phenomenological Control related to Illusion Sensitivity"
+# If blank, the running header is the title in upper case.
+shorttitle: "Illusion Sensitivity and Phenomenological Control"
+# Set names and affiliations.
+# It is nice to specify everyone's orcid, if possible.
+# There can be only one corresponding author, but declaring one is optional.
+author:
+  - name: Dominique Makowski
+    corresponding: true
+    orcid: 0000-0001-5375-9967
+    email: D.Makowski@sussex.ac.uk
+    url: https://realitybending.github.io/
+    # Roles are optional. 
+    # Select from the CRediT: Contributor Roles Taxonomy https://credit.niso.org/
+    # conceptualization, data curation, formal Analysis, funding acquisition, investigation, 
+    # methodology, project administration, resources, software, supervision, validation, 
+    # visualization, writing, editing
+    roles:
+      - Conceptualization
+      - Data curation
+      - formal Analysis
+      - Funding acquisition
+      - Investigation
+      - Methodology
+      - Project administration
+      - Resources
+      - Software
+      - Supervision
+      - Validation
+      - Visualization
+      - Writing – original draft
+      - Writing – review & editing
+    affiliations:
+      - id: id1
+        name: "University of Sussex"
+        # group: Clinical Psychology Program
+        department: School of Psychology
+        # address: 1234 Capital St.
+        # city: Albany
+        # region: NY
+        # postal-code: 12084-1234
+  - name: Ana Neves
+    orcid: 0009-0006-0020-7599
+    roles:
+      - Project administration
+      - Data curation
+      - Formal Analysis
+      - Investigation
+      - Visualization
+      - Writing – original draft
+      - Writing – review & editing
+    affiliations: 
+      - ref: id1
+  # - name: Zoltan Dienes
+  #   orcid: 0000-0001-7454-3161
+  #   roles:
+  #     - Supervision
+  #     - Writing – review & editing
+  #   affiliations: 
+  #     - ref: id1
+author-note:
+  status-changes: 
+    # Example: [Author name] is now at [affiliation].
+    affiliation-change: ~
+    # Example: [Author name] is deceased.
+    deceased: ~
+  # Disclosures condensed to one paragraph, but you can start a field with two line breaks to break them up: \n\nNew Paragraph
+  disclosures:
+    # Example: This study was registered at X (Identifier Y).
+    study-registration: ~
+    # Acknowledge and cite data/materials to be shared.
+    data-sharing: ~
+    # Example: This article is based on the dissertation completed by [citation].  
+    related-report: ~
+    # Example: [Author name] has been a paid consultant for Corporation X, which funded this study.
+    conflict-of-interest: ~
+    # Example: This study was supported by Grant [Grant Number] from [Funding Source].
+    financial-support: ~
+    # Example: The authors are grateful to [Person] for [Reason].
+    gratitude: ~
+    # Example. Because the authors are equal contributors, order of authorship was determined by a fair coin toss.
+    authorship-agreements: ~
+abstract: "
+Visual illusions highlight how easily our conscious experience can be altered with respect to perceptual reality. Despite sharing in-principle mechanisms with phenomenological control, i.e., the ability to alter our perceptual experience to match task demands or expectations, research tying the two remains scarce. This study aims to replicate and expand Lush et al. (2022) reporting an absence of correlation between phenomenological control (measured using the Phenomenological Control Scale) and illusion sensitivity to different illusion types. *[N participants were recruited in an online study. Results will be added in the final version of the manuscript]*.
+"
+# Put as many keywords at you like, separated by commmas (e.g., [reliability, validity, generalizability])
+keywords: [illusion sensitivity, visual illusions, phenomenological control, suggestibility, hypnotizability]
+# If true, tables and figures are mingled with the text instead of listed at the end of the document.
+floatsintext: true
+# Numbered lines (.pdf and .docx only)
+numbered-lines: true
+# File with references
+bibliography: bibliography.bib
+# Suppress title page
+suppress-title-page: false
+# Masks references that appear in the masked-citations list
+mask: false
+# Language options. See https://quarto.org/docs/authoring/language.html
+lang: en
+language:
+  citation-last-author-separator: "and"
+  citation-masked-author: "Masked Citation"
+  citation-masked-date: "n.d."
+  citation-masked-title: "Masked Title"
+  title-block-author-note: "Author Note"
+  title-block-correspondence-note: "Correspondence concerning this article should be addressed to"
+  title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; https://credit.niso.org/) as follows:"
+  references-meta-analysis:
+format:
+  apaquarto-docx: default
+  apaquarto-html: default
+  apaquarto-pdf:
+    # Can be jou (journal), man (manuscript), stu (student), or doc (document)
+    documentmode: man
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(conflicted)
+library(tidyverse)
+library(flextable)
+library(ftExtra)
+library(officer)
+library(knitr)
+
+conflicts_prefer(dplyr::filter, .quiet = TRUE)
+conflicts_prefer(flextable::separate_header, .quiet = TRUE)
+```
+
+Visual Illusions are an interesting type of stimuli highlighting the ease with which our phenomenological conscious experience can become dissociated from physical reality. 
+Their robust and reliable effect makes them useful stimuli to explore how perception is constructed and shaped, and several theoretical models have been put forth to explain how they work. 
+In particular, illusions have been reframed using a predictive coding account of perception [e.g., @notredame2014; @nour2015perception] in which the brain optimally combines, using some flavour of Bayesian inference, perceptual inputs with prior knowledge to make sense of ambiguous environments [@friston2010].
+
+Such computational model(s) propose to conceptualize illusions as stimuli providing weak or conflicting sensory evidence [@sundareswara2008; @gershman2012] that bias perception toward prior knowledge. 
+In other words, the weight of priors, in the form of perceptual knowledge about the world (e.g., internalized rules of perspective) is amplified when the sensory input is confusing. 
+For instance, in the Müller-Lyer illusion, we "compute" the two (actually identical) lines as being of different lengths because the line flanked with converging fins is misinterpreted as being further away [@notredame2014]. 
+In this context, measuring sensitivity to illusion can be operationalized as indexing the parameters of the Bayesian inference process (e.g., prior precision).
+
+These accounts also provide a compelling framework to explain existing findings reporting interindividual variability in the sensitivity to illusions. 
+Indeed, several studies suggest a potential link with psychopathology, in particular schizophrenia [@costa2023] and autism [@gori2016], in which the reported lower sensitivity to illusions has been attributed to a diminished influence of top-down processes such as prior knowledge [@mitchell2010] and a greater emphasis on (i.e., precision of) sensory information [@palmer2017]. 
+Evidence beyond psychopathology also suggests variability in the general population, potentially correlated with personality traits such as agreeableness and honest-humility [@makowski2023], as well as cognitive abilities [@shoshina2014].
+
+However, the exact nature of this interindividual variability and its potential origin remains unclear. 
+The somewhat mixed evidence in the literature regarding its generalizability and strength could be related to the variety of the paradigms used and the type of processes being mobilised [@makowski2021]. 
+Indeed, traditional methods frequently focus on participant's experience by prompting them to assess the difference between two identical targets, estimate the target's physical properties, or adjust the targets to match a reference stimulus [@todorovic2020]. 
+Relying on metacognitive judgments about one's subjective experiences adds an additional layer to the measure that might not be desired when attempting to measure illusion sensitivity. 
+Moreover, paradigms often face challenges in diversifying the illusory effects (i.e., using multiple stimuli to experimentally manipulate the strength of the illusion) and the illusion types (i.e., using various illusions, such as Müller-Lyer, Ebbinghaus, Delboeuf which might rely on a different admixture of mechanisms), hindering the potential of obtaining a comprehensive, valid, and reliable measure of illusion sensitivity.
+
+The "Illusion Game" paradigm [@makowski2023] has been recently developed to measure illusion sensitivity to various illusion types through its behavioural impact (on response time and error rate) in a perceptual decision task (where participants have to respond as fast as possible; e.g., "which of the left or right circles is bigger"). 
+The stimuli for different classical illusions are created using the *Pyllusion* software [@makowski2021], which allows researchers to modulate the strength of the illusion as a continuous dimension, independently from the difficulty of the perceptual task. 
+This paradigm, inspired by psychophysics, lends itself to the computational modelling of illusion sensitivity through its interference effect —an effect that disrupts an individual's ability to accurately discriminate between perceptual stimuli.
+This approach aims to bypass some of the metacognitive processes involved in other paradigms, offering a more direct and objective measure of how illusions influence perceptual judgment.
+
+Interestingly, the fact that inter-individual variability in illusion sensitivity seems to persist in this task suggests that it is not solely explained by metacognitive ability differences, and gives rise to the following question: is the variability in illusion sensitivity related to low-level perceptual processes (e.g., baseline precision of perceptual priors), or rather to the ability to actively control and "resist" the illusion in order to achieve the task at hand (higher-level modulation of the perceptual inference parameters). 
+If the latter is true, then illusion sensitivity measured in contexts with strong task-demand characteristics, e.g., in paradigms where participants' performance is explicitly or implicitly assessed (i.e., where there is an incentive to downplay the illusion effect) might correlate with one's ability to alter one's subjective experience following suggestions - a mechanism referred to as "phenomenological control".
+
+The idea that we are endowed with the potential to unconsciously alter our subjective experience and distort reality - even momentarily - to meet the goals at hand is not novel. 
+While this phenomenon has been historically often studied under the label of "hypnotisability" - the tendency to alter our conscious experience to match external demands [@lush2021], the term "phenomenological control" (PC) has been recently introduced to disconnect this concept from the potentially negative associations with hypnosis and the misconception that a hypnotic context is necessary for responding to imaginative suggestions [@dienes2022].
+
+To encourage the empirical exploration of our ability and tendency to alter our phenomenological experience and further accelerate investigations away from the hypnotic context, @lush2021 adapted the Sussex-Waterloo Scale of Hypnotisability [SWASH, @lush2018] by removing all its references to hypnosis, to measure trait phenomenological control. 
+This newly developed phenomenological control scale (PCS) consists of 10 imaginative suggestions followed by subjective ratings for each suggestion and has demonstrated validity in online experiments [@lush2022].
+
+Interestingly, @lush2022 did test for a relationship between PC and illusion sensitivity using the Müller-Lyer illusion (in which the arrangement of the arrowheads flanking two lines makes them appear as having different lengths), and reported evidence in favour of an absence of correlation between the two measures. 
+This finding was interpreted as indicative of the cognitive impenetrability of illusions, implying that the effect is driven by low-level processes and therefore not influenced by top-down mechanisms such as PC. 
+Note that both prior-knowledge and phenomenological control are considered top-down processes, but the cognitive impenetrability hypothesis suggests that the processes at stake for the illusions happen at a lower- encapsulated- level (in the form of *perceptual* priors).
+
+The goal of this study is thus to replicate the results from @lush2022 pointing to an absence of a relationship between phenomenological control and illusion sensitivity, by generalising them to a different illusion paradigm that encompasses other illusion types.
+Additionally, we will explore the relationship between psychoticism, as a proxy for schizophrenia, and illusion sensitivity to assess the potential impact of lower-level effects—such as weak priors observed in individuals with schizophrenia [@costa2023]—on sensitivity to illusions.**
+**These analyses may offer evidence clarifying whether inter-individual variability in illusion sensitivity is driven by lower-level perceptual mechanisms or higher-level cognitive processes (@tbl-DesignTable).
+
+```{r}
+#| tbl-cap: "Study Design Table"
+#| label: tbl-DesignTable
+
+question <- c("Question", "Hypothesis", "Sampling Plan", "Analysis Plan", "Rationale for Deciding the Sensitivity of the Test", "Interpretation Given Different Outcomes", "Theory That Could Be Shown Wrong by the Outcomes")
+answer <- c("Is there a correlation between trait phenomenological control (PC) and visual illusion (VI) sensitivity? Additionally, is there a relationship between VI sensitivity and the psychoticism facet of the PID-5, as a proxy for schizophrenia-related traits?", "In line with Lush et al. (2022), we hypothesise that there will be evidence supporting the absence of a relationship between PC and VI sensitivity. Based on Makowski et al. (2023) and prior work on weak priors in schizophrenia, we hypothesise that higher psychoticism scores will be negatively associated with VI sensitivity.", "The goal is to recruit around 500 adult English speakers using Prolific. This sample size is based on the ones used in Lush et al., 2021 and Lush et al., 2022 that we aim at replicate.", "Bayesian correlations will be conducted using the BayesFactor::correlationBF() function, with a medium prior (r-scale = 1/3), separately for: 1) PC scores and VI sensitivity (error rate and IES), across all three illusion types; and 2) Psychoticism facet scores from the PID-5 and VI sensitivity scores, across all three illusion types.", "For the PC–VI sensitivity relationship, we will interpret BF₁₀ ≤ 1/3 as evidence against a relationship, in line with Lush et al. (2022). For the psychoticism–VI sensitivity relationship, BF₁₀ > 3 will be interpreted as evidence supporting a relationship, following findings by Makowski et al. (2023).", "If there is no evidence for a PC–VI relationship across all three illusions, it would support the hypothesis that VI sensitivity is independent from PC. If a negative association is found between psychoticism and VI sensitivity, it may suggest a low-level perceptual basis for inter-individual differences in illusion sensitivity.", "The cognitive impenetrability of visual illusions, which posits that illusion sensitivity is driven solely by low-level processes and is not influenced by top-down mechanisms such as phenomenological control. Conversely, a lack of association with psychoticism would challenge the view that low-level perceptual alterations underlie illusion sensitivity in non-clinical populations.")
+
+# join variables to create dataframe
+study_design_df <- data.frame(question, answer)
+
+## study design table
+study_design_table <- flextable::flextable(study_design_df)
+study_design_table <- set_table_properties(study_design_table, width = 1, layout = "autofit")
+# study_design_table <- set_caption(study_design_table, caption = "Study Design Table")
+study_design_table <- delete_part(x = study_design_table, part = "header")
+study_design_table <- bold(study_design_table, j = "question", bold = TRUE, part = "body")
+study_design_table <- theme_apa(study_design_table)
+
+study_design_table
+```
+
+# Methods
+
+## Participants
+
+This study recruited 500 adult native English speakers via Prolific (www.prolific.com
+), all of whom completed the study on a desktop device. Participants were be first presented with an explanatory statement and the consent form, and could proceed by pressing a button to confirm they have read and understood the information. This study has been approved by the ethics board of the School of Psychology of the University of Sussex (ER/ASF25/5).
+
+## Procedure
+
+The experiment’s setup follows of the born-open principle [@deleeuw2023]. 
+The online experiment, implemented entirely using JsPsych [@de2015jspsych], has its code stored on GitHub and will leverage the power of the platform to host the experiment for free. 
+Participant’s raw data files (containing identifiers) are automatically stored in a private OSF repository. 
+The preprocessing and analysis scripts, as well as the anonymized data, will be available directly on GitHub, ensuring the transparency and reproducibility of all the analysis steps.
+
+Participants will be presented with a consent form followed by demographic questions (gender, education level, age, and ethnicity). 
+Although these variables are not directly analyzed in the current study, they will be used to provide a detailed and thorough description of the sample and maximizing data reusability.** 
+**Participants will then be administered the PCS and the Illusion Game task (IG) in a counterbalanced order.
+
+### Phenomenological Control Scale (PCS)
+
+Participants will be asked to put on their headphones and await further auditory instructions. 
+The PCS procedure starts with a recorded introduction explaining that a series of tests will be applied to evaluate how experiences can be created through imagination. 
+This will be followed by 10 suggestions in a fixed order [see @lush2021], such as "now extend your arms ahead of you, with palms facing each other, hands about a foot apart" and "as you sit comfortably in your chair with your eyes closed, a picture of two balls will be displayed on the computer screen". 
+Once the 10 suggestions are completed, participants will be asked to rate their subjective experiences and response to each suggestion on a 6-points Likert scale (from 0-5).
+Phenomenological control will be indexed by averaging the scores from the 10 scales.
+
+### Illusion Game
+
+The task is an adaptation of the one used in @makowski2023 to make it shorter, in which participants must make perceptual judgments (e.g., "which red line is the longer") as quickly and accurately as possible. It includes 3 illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal (see @fig-illusionexample). In the original Illusion Game, 10 visual illusions were presented in two sets, following a practice trial, and separated by two short questionnaires.**
+Participants completed a total of 1,340 trials, with the experiment lasting approximately 55 minutes.
+In the current procedure, only three illusions are used, selected based on the original study's findings that these illusions most strongly contribute to illusion sensitivity.
+
+```{r}
+#| warning: false
+#| label: fig-illusionexample
+#| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
+#| out-width: "100%"
+#| fig-cap: "The study involved three visual illusions, in which participants were instructed to respond as quickly as possible without making errors. Each illusion included two manipulated parameters: strength (e.g., the angle of the outward- or inward-pointing arrow-like fins in the Müller-Lyer illusion) and difficulty (e.g., the difference in line lengths in the Müller-Lyer illusion)."
+
+knitr::include_graphics("img/IllusionTable.jpg")
+```
+
+The procedure encompasses 2 sets of 80 trials for each illusion type, preceded by a practice trial for each illusion. 
+Each set will include, in a random order, the 3 blocks of illusion types, in which trials are separated by a fixation cross, temporally (uniformly sampled duration of 500 - 1000s) and spatially jittered (around the centre of the screen in a radius of a 1 cm) to attenuate its potential usefulness as a reference point. 
+After each illusion type block, an arbitrary score is presented (computed as a scaled Inverse Efficiency Score) as a gamification mechanism to increase motivation to perform to the best of one's abilities. 
+To mitigate for the potential variability in the speed/accuracy trade-off, the instructions emphasize with equal weight to be fast and to avoid errors.
+
+For each illusion type, two continuous dimensions are orthogonally manipulated namely task difficulty and illusion strength, so that each trial corresponds to a unique combination, providing an objectively correct answer for each trial.
+The use of these manipulations allows concise, standardised reporting of illusion parameters and ensures our stimuli are fully reproducible [see @makowski2021].
+
+Task difficulty corresponds to the difficulty of the perceptual decision (e.g., if the task is to select the longest red line, task difficulty corresponds to how the lines are objectively different). 
+Illusion strength corresponds to the degree to which the illusion elements (e.g., the black arrow lines in Müller-Lyer) are interfering with the aforementioned task. 
+Note that the illusion effect can be either “incongruent”, making the task more difficult by biasing perceptual decisions toward the incorrect response or “congruent”, making the task easier by biasing decisions toward the correct response (e.g., in the Müller-Lyer illusion, if the outwards-facing arrowheads are placed on the longer line, identifying which line is the longest becomes easier).
+Participants respond with a key arrow (left vs. right; or up vs. down), and their reaction time (RT) and accuracy are recorded.
+
+Visual illusion sensitivity will be measured as the average error rate in the incongruent condition, and separately for the 3 illusion types. 
+Although the error rate is arguably a crude score, which does not take into account the effect of varying illusion strength, the interaction with task difficulty and the possible adjustments in response strategy (speed-accuracy trade off), it is also the most simple and easy to reproduce, hence its usage as our primary outcome for the current registered report.
+As a secondary exploratory outcome, the Inverse Efficiency Score [IES, @townsend2014methods] will also be computed. This metric incorporates both speed and accuracy by dividing the mean reaction time of correct responses by the proportion of correct responses, separately for each illusion.
+
+The two sets of 3 illusion blocks will be separated by 2 short questionnaires acting as a break, namely the IPIP-6 [@sibley2011mini], measuring 6 personality traits with 24 analogue scales items, and the PID-5 [@krueger2011], measuring 5 maladaptive personality traits with 25 Likert scales items. 
+These questionnaires are included as a way of providing a break between the two cognitively taxing blocks and maintain paradigmatic consistency with previous studies [@makowski2023].
+Additionally, the psychoticism subscale of the PID-5 will be used to examine the correlation between maladaptive traits and illusion sensitivity, evaluating the existence of the link proposed in previous studies [@costa2023].
+
+## Data Analysis
+
+The phenomenological control scale will include several attention checks to identify problematic participants.
+The task consists of various auditory and visual exercises; at the outset, participants hear a voice say “hello” and are asked to select the corresponding phrase from multiple options (e.g., “Hello,” “Goodbye,” “How are you,” “Thank you”).
+Selecting an incorrect response indicates inattention to auditory stimuli.
+In a subsequent exercise, participants are instructed: “Open your eyes. You will see only two balls on the screen… just two balls”.
+However, three differently coloured balls are displayed.
+If a participant selects the response “no balls were shown,” it suggests they failed to attend to both the auditory instruction and the visual stimuli.
+In another task, participants are instructed to press the spacebar six times.
+Pressing it fewer than five times within the allotted time indicates a failure to follow the auditory instructions.
+Participants who fail any one of these will be excluded from further analysis.
+Finally, the reliability of the PCS will be assessed by computing Cronbach's alpha of its items [@cronbach1951coefficient].
+
+Outliers in the Illusion Game will be identified based on participants’ performance. 
+Specifically, any participant exhibiting an error rate greater than 45% for any illusion type will be considered to be responding at chance level (i.e., randomly) and flagged accordingly. 
+If this level of performance occurs in the first block, the entire participant will be excluded from analysis, as it suggests a failure to properly engage with the task.
+However, if the elevated error rate is observed only in the second block, this will be interpreted as a loss of engagement or motivation (e.g., boredom due to task repetition).
+In such cases, only the second block will be discarded, allowing for estimation of illusion sensitivity based on the valid data from the first block, albeit with reduced precision. 
+To mitigate the risk of confounding effects driven by extreme speed or accuracy strategies, participants whose RTs are significantly slower than the group average [RT > 4 SD above the mean, based on @makowski2023] will be excluded from the analysis.
+After removing problematic participants and trials, the outcome measures (PC and VI sensitivity scores) will be computed.
+
+To assess whether the illusions functioned as expected, stimuli will be categorized into three groups: Strong Illusion Strength & Incongruent, Mild Illusion Strength & Incongruent, and Congruent. 
+The two outcome measures—error rate and IES—will be computed separately for each illusion and each illusion strength group.
+To evaluate differences between these conditions, two Bayesian t-tests will be conducted: one comparing the Congruent and Mild conditions, and the other comparing the Mild and Strong conditions.
+Significant differences in either IES or error rate across these comparisons will be taken as evidence that the illusions operated as intended.
+
+Next, to determine whether the Mild and Strong Illusion Strength groups can be collapsed for further analysis, Bayesian correlations will be computed between them for each illusion and outcome measure.
+If these correlations are sufficiently high [r > .50, @cohen2013statistical], the groups will be collapsed and outcomes recomputed across all relevant trials  (i.e., by averaging across these groups).
+If not, the groups will be analysed separately.
+This step is necessary because reaction time may not have a linear relationship with illusion strength [@makowski2023], and collapsing the data without this check may obscure meaningful differences.
+Finally, reliability analyses will be conducted on all resulting indices, with Cronbach’s alpha used to evaluate internal consistency across the three illusion types.
+
+Bayesian correlations are then computed between PCS and illusion sensitivity scores - with the resulting IES and error rate indices. 
+Following @lush2022, we expect to collect evidence against (BF10 <= 1/3) a relationship between PCS and VI sensitivity. 
+Additionally, Bayesian correlations will be computed between maladaptive trait facets and illusion sensitivity scores. 
+Based on prior research [@makowski2023], we expect to find evidence (BF10 ≥ 3) supporting a relationship between the psychoticism facet of the PID-5 and illusion sensitivity. 
+
+All Bayesian analyses will be conducted using the BayesFactor package [@BayesFactor]. 
+For correlations, a medium shifted beta prior will be applied (r-scale parameter set to  1/3), as recommended by @morey2018baysefactor, providing a balanced approach to estimating effect sizes, without placing undue weight on larger effect sizes or artificially inflating evidence for the null hypothesis.
+For t-tests, the ttestBF function will be used with a medium Cauchy prior on the standardised effect size (r-scale = √2⁄2), corresponding to the default for independent samples.
+
+Data analysis will be carried out using R, using *tidyverse* [@tidyverse] and *easystats* [@easystats; @parameters; @correlation; @bayestestR; @datawizard]. 
+The analysis script and additional information are available at **https://osf.io/da3u6/?view_only=247d4efa1afe456aa07662732946d4e6** [Note this link will be replaced with the GitHub page of the current project upon completion of the review process to ensure continued anonymisation].
+
+# Results
+
+## Data exclusion
+
+The initial sample consisted of The initial sample consisted of 496 participants (Mean age = 38.5, SD = 13.1, range: [18, 73]; Gender: 49.6% women, 49.6% men, 0.81% non-binary; Education: Bachelor, 49.40%; Doctorate, 2.82%; Elementary school, 0.20%; High school, 27.62%; Master, 18.15%; Other, 1.81%), for a total trial number of 238080.
+
+To ensure data quality, the registered protocol included three attention checks within the phenomenological control scale task. However, one of these checks  (i.e., instructing participants to press the space bar six times) led to the exclusion of 176 participants (36.74%), which was disproportionately high relative to the other two attention checks (17 participants; 3.55% combined).  Notably, only 7 participants failed more than one attention check, suggesting that the spacebar task may not have been a valid indicator of inattention. Accordingly, we deviated from the preregistered analysis by excluding this attention check from the final exclusion criteria. 
+
+For the Illusion Game, preregistered performance-based and RT exclusion criteria were applied to identify participants responding at chance level and those exhibiting atypically slow response patterns. Furthermore, participants with mean RTs exceeding 4 standard deviations above the group mean were excluded, as this may reflect atypical task strategies. Based on the preregistered criteria, 17 participants were fully excluded and 16 participants had their second block removed. 
+
+In addition to the preregistered protocol, trial-level exclusions were introduced to remove extreme response times [< 0.2 s or > 5 s; @theriault2024]. At the trial level, extreme RTs were removed (n = 739; 0.33% of trials) to minimise the influence of implausibly fast or slow responses.
+
+Additionally, given HDI...
+
+The final sample therefore comprised 460 participants (M_age = 38.7, SD = 13.1, range = 18–73). The sample was 48.5% women, 50.7% men, and 0.87% non-binary. Educational attainment was distributed as follows: Bachelor’s degree (48.26%), Master’s degree (18.26%), Doctorate (2.61%), high school (28.70%), elementary school (0.22%), and other (1.96%).
+
+## Manipulation checks
+
+Bayesian paired-samples t-test revealed extreme evidence for differences between Congruent and Mild conditions, as well between Mild and Strong conditions, across all illusion types and both outcomes (all BF₁₀s > 10⁸²). Overall, performance systematically decreased as illusion strength increased across all illusion types and outcome measures. 
+
+For the Ebbinghaus illusion, there was strong evidence for lower Error Rates and IES in the Congruent relative to Mild condition (Error Rate: median difference = −0.12, BF₁₀ = 4.19 × 10¹¹⁷; IES: median difference = −0.22, BF₁₀ = 8.52 × 10⁸⁴), as well as lower performance in the Mild relative to Strong condition (Error Rate: median difference = −0.24, BF₁₀ = 3.87 × 10¹⁶⁸; IES: median difference = −0.58, BF₁₀ = 3.82 × 10⁸²).
+
+For the Müller-Lyer illusion, results showed similarly extreme evidence for condition differences, with lower scores in Congruent relative to Mild (Error Rate: median difference = −0.24, BF₁₀ = 2.08 × 10²⁴⁴; IES: median difference = −0.44, BF₁₀ = 4.16 × 10²⁰⁴), and in Mild relative to Strong (Error Rate: median difference = −0.37, BF₁₀ = 9.12 × 10²⁷⁸; IES: median difference = −1.60, BF₁₀ = 1.83 × 10¹⁵⁰).
+
+For the Vertical–Horizontal illusion, there was again extreme evidence for differences between conditions, with lower Error Rates and IES in Congruent relative to Mild (Error Rate: median difference = −0.16, BF₁₀ = 4.97 × 10¹³⁵; IES: median difference = −0.34, BF₁₀ = 3.05 × 10¹⁴⁶), and in Mild relative to Strong (Error Rate: median difference = −0.33, BF₁₀ = 1.36 × 10²¹⁰; IES: median difference = −1.18, BF₁₀ = 1.34 × 10¹⁰⁰).
+
+Bayesian correlations were conducted to assess the relationship between performance in the Mild and Strong illusion conditions, separately by illusion type, difficulty level (Easy, Hard), and outcome (Error Rate, IES). All correlations were positive and statistically significant (ps < .001), indicating consistent individual differences across illusion strength. However, not all correlations met the preregistered threshold for collapsing conditions (r > .50).
+
+For Error Rate, correlations exceeded the threshold for the Ebbinghaus (Easy: r = .52, 95% CI [.45, .58]; Hard: r = .63, 95% CI [.57, .68]) and Vertical–Horizontal illusions (Easy: r = .64, 95% CI [.58, .69]; Hard: r = .58, 95% CI [.52, .64]). In contrast, correlations for the Müller–Lyer illusion were below the threshold (Easy: r = .41, 95% CI [.33, .48]; Hard: r = .48, 95% CI [.41, .55]).
+
+For IES, fewer correlations met the threshold. Only the Ebbinghaus illusion in both conditions (Easy: r = .59, 95% CI [.52, .64]; Hard: r = .56, 95% CI [.49, .62]) and the Müller–Lyer illusion in the Easy condition (r = .53, 95% CI [.46, .59]) exceeded r > .50. All other correlations fell below the threshold (Müller–Lyer Hard: r = .33, 95% CI [.23, .43]; Vertical–Horizontal Easy: r = .37, 95% CI [.29, .45]; Hard: r = .40, 95% CI [.32, .48]).
+
+Overall, because the preregistered criterion (r > .50) was not consistently met across illusion types, outcomes, and difficulty levels, the Mild and Strong conditions were not collapsed and were analysed separately.
+
+
+
+# Discussion
+
+*This section will be completed after data is collected.*
+
+# Data Availability
+
+All the study materials, experiment, data, and analysis is available on GitHub. [For the review process the pcs materials, the illusion game, and the analyses scripts can be accessed here: **https://osf.io/da3u6/?view_only=247d4efa1afe456aa07662732946d4e6**. Note this link will be replaced with the GitHub page of the current project upon completion of the review process to ensure continued anonymisation]. 
+
+# Acknowledgments
+
+We would like to thank An Shu Te for her help in setting up the project, Ryan Scott for his help in implementing the phenomenological control scale, and Zoltan Dienes for his input, feedback and guidance.
+
+\pagebreak
+
+# References
+
+<!-- References will auto-populate in the refs div below -->
+
+::: {#refs}
+:::
