@@ -1,7 +1,9 @@
 library(jsonlite)
 library(progress)
 
-path <- "C:/Users/olive/Box/IllusionGamePCS/"
+
+path <- 
+
 
 # JsPsych experiment ------------------------------------------------------
 
@@ -31,6 +33,7 @@ for (file in files) {
   if (is.na(prolific_id)) next
   if (!nzchar(trimws(pss_response))) next
 
+
   data_ppt <- data.frame(
     Participant = sub("\\.csv$", "", file),
     Recruitment = dat$researcher,
@@ -43,7 +46,7 @@ for (file in files) {
     Screen_Width = dat$screen_width,
     Screen_Height = dat$screen_height
   )
-  
+
   data_ppt$Prolific_ID <- prolific_id
 
   # Demographics
@@ -231,5 +234,5 @@ alldata_ig$Participant <- correspondance[alldata_ig$Participant]
 
 # Save --------------------------------------------------------------------
 
-write.csv(alldata_sub, "C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/rawdata_participants.csv", row.names = FALSE)
-write.csv(alldata_ig, "C:/Users/olive/Documents/University/Year 3 (Placement Year)/REBEL/IllusionGamePhenomenologicalControl/Data/rawdata_illusion.csv", row.names = FALSE)
+write.csv(alldata_sub, "../data/rawdata_participants.csv", row.names = FALSE)
+write.csv(alldata_ig, "../data/rawdata_illusion.csv", row.names = FALSE)
