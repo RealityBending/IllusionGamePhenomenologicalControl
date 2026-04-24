@@ -39,7 +39,6 @@ data_ig <- read.csv("../data/data_illusion.csv") |>
 ```
 
 
-
 ## Score Computation
 
 ### PCS
@@ -165,7 +164,42 @@ ig_scores_incongruent_general <- data_ig |>
 ig_scores <- full_join(ig_scores, ig_scores_incongruent_general, by = "Participant")
 ```
 
+##### Mild vs strong collapsed across easy and hard
 
+```{r}
+corrs_3 <- data.frame()
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+            corrs_3 <- correlation::correlation(
+                ig_scores[paste0(outcome, "_", ill_type, "_Mild_General")],
+                ig_scores[paste0(outcome, "_", ill_type, "_Strong_General")]
+            ) |>
+                mutate(Outcome = outcome) |>
+                rbind(corrs_3)
+        }
+}
+arrange(corrs_3, desc(r))
+```
+
+
+
+##### All General 
+```{r}
+
+corrs_4 <- data.frame()
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+      corrs_4 <- correlation::correlation(
+                ig_scores[paste0(outcome, "_", ill_type, "_Congruent_General")],
+                ig_scores[paste0(outcome, "_", ill_type, "_Incongruent_General")]
+            ) |>
+                mutate(Outcome = outcome) |>
+                rbind(corrs_4)
+    }
+}
+arrange(corrs_4, desc(r))
+
+```
 
 
 #### Outlier Removal
@@ -225,7 +259,10 @@ correlation::correlation(select(ig_scores, -Participant), redundant=TRUE) |>
   scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
 ```
+
 
 
 
@@ -268,7 +305,9 @@ for (outcome in c("ErrorRate", "IES")) {
 
 ttests |>
     select(Illusion_Type, Condition_Illusion, Outcome, Median, BF) |>
-    arrange(Illusion_Type, Condition_Illusion, Outcome)
+    arrange(Illusion_Type, Condition_Illusion, Outcome) 
+
+
 ```
 
 
@@ -344,35 +383,54 @@ ig_scores |>
 #### All
 
 ```{r}
+
+for (illu in names(outliers)) {
+  cols <- str_detect(names(ig_scores), illu)
+  n_valid <- sum(
+    rowSums(!is.na(ig_scores[, cols])) > 0
+  )
+  print( paste0("Final N for ", illu, ": ", n_valid, " (",format_percent(n_valid / nrow(ig_scores)), ")"))
+}
+```
+
+The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`, for a total trial number of `r nrow(data_ig)`.
+
+
+```{r}
 make_cor <- function(data) {
   features <- merge(ig_scores, data[c("Participant", "PCS_Score", "PID5_Psychoticism")])
-
+  
   rez <- correlation::correlation(
-      select(features, -PCS_Score, -PID5_Psychoticism),
-      select(features, PCS_Score, PID5_Psychoticism),
-      bayesian = TRUE
+    dplyr::select(features, -PCS_Score, -PID5_Psychoticism),
+    dplyr::select(features, PCS_Score, PID5_Psychoticism),
+    bayesian = TRUE
   )
   
-  rez |>
-    # as.data.frame()
-      arrange(desc(BF)) |> 
-      format_table() |>
-      mutate(BF = as.numeric(BF)) |> 
-      select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
-      gt::gt() |>
-      gt::data_color(
-        columns = BF,
-        fn = function(bf) dplyr::case_when(
-          bf >= 10   ~ "green",
-          bf >= 3    ~ "lightgreen",
-          bf <= 1/10  ~ "red",
-          bf <= 1/3   ~ "#ffabab",
-          .default       = "white"
-        )
+  table <- rez |>
+    dplyr::arrange(desc(BF)) |> 
+    format_table() |>
+    dplyr::mutate(BF = as.numeric(BF)) |> 
+    dplyr::select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
+    gt::gt() |>
+    gt::data_color(
+      columns = BF,
+      fn = function(bf) dplyr::case_when(
+        bf >= 10   ~ "green",
+        bf >= 3    ~ "lightgreen",
+        bf <= 1/10 ~ "red",
+        bf <= 1/3  ~ "#ffabab",
+        .default   = "white"
       )
+    )
+  
+  assign("features", features, envir = .GlobalEnv)
+  assign("rez", rez, envir = .GlobalEnv)
+  
+  table
 }
 
-make_cor(data=data_ppt)
+make_cor(data=data_ppt) 
+
 ```
 
 #### PCS3 Excluded
@@ -387,8 +445,11 @@ make_cor(data=data_ppt[data_ppt$PCS_Outlier_Press == F, ])
 ## Figures
 
 ```{r fig1}
-#| fig-width: 8
-#| fig-height: 6
+#| fig-width: 10
+#| fig-height: 8
+
+# rez <- rez
+# features <- features 
 
 p <- rez |> 
   mutate(Outcome = ifelse(Parameter2 == "PCS_Score", "Phenomenological Control",  "Psychoticism")) |>
@@ -425,3 +486,51 @@ p <- rez |>
          plot.title = element_text(size = 14, face = "bold", hjust = 0.5))
 p
 ```
+
+## Tables
+
+```{r}
+format_bf <- function(bf) {
+  ifelse(bf > 1000, "BF₁₀ > 1000",
+         sprintf("BF₁₀ = %.2f", bf))
+}
+
+ttests_table <- ttests |>
+  mutate(
+    Condition_Illusion = recode(Condition_Illusion, "Congruent" = "Congruent vs Mild","Mild" = "Mild vs Strong"),
+    Illusion_Type = recode( Illusion_Type,"MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal" )) |>
+   select(Illusion_Type, Condition_Illusion, Outcome, Median, BF) |>
+  pivot_wider(names_from = c(Outcome, Condition_Illusion),values_from = c(Median, BF)) |>
+  arrange(Illusion_Type) |>
+  mutate(
+    `Error Rate: Congruent vs Mild` = sprintf(
+      "M = %.2f, %s",
+      `Median_ErrorRate_Congruent vs Mild`,
+      format_bf(`BF_ErrorRate_Congruent vs Mild`)),
+    `Error Rate: Mild vs Strong` = sprintf(
+      "M = %.2f, %s",
+     `Median_ErrorRate_Mild vs Strong`,
+      format_bf(`BF_ErrorRate_Mild vs Strong`)),
+    `IES: Congruent vs Mild` = sprintf(
+      "M = %.2f, %s",
+      `Median_IES_Congruent vs Mild`,
+      format_bf(`BF_IES_Congruent vs Mild`)),
+    `IES: Mild vs Strong` = sprintf(
+      "M = %.2f, %s",
+      `Median_IES_Mild vs Strong`,
+      format_bf(`BF_IES_Mild vs Strong`))) |>
+  select(Illusion_Type,`Error Rate: Congruent vs Mild`,`Error Rate: Mild vs Strong`,`IES: Congruent vs Mild`,`IES: Mild vs Strong`)
+
+
+table1 <- ttests_table |>
+  gt::gt(rowname_col = "Illusion_Type") |>
+  gt::tab_spanner(label = "Error Rate", columns = c(`Error Rate: Congruent vs Mild`, `Error Rate: Mild vs Strong`)) |>
+  gt::tab_spanner(label = "IES",columns = c(`IES: Congruent vs Mild`, `IES: Mild vs Strong`) ) |>
+  gt::cols_label(Illusion_Type = "Illusion Type") 
+
+gt::gtsave(table1, "table1.tex", expand = 10)
+
+table1
+  
+```
+
