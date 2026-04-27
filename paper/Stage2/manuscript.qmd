@@ -398,7 +398,22 @@ To assess the robustness of these findings through a multiverse analysis approac
 
 # Discussion
 
-*This section will be completed after data is collected.*
+This study aimed to replicate previous findings indicating (1) an absence of a relationship between visual illusion sensitivity and phenomenological control [@lush2022], and (2) a positive relationship between illusion sensitivity and psychoticism [@makowski2023]. However, pre-registered Bayesian correlation analyses suggested an absence of a relationship between illusion sensitivity and both phenomenological control and psychoticism, supporting only the first hypothesis.
+<!--TO CONFIRM-->
+However, pre-registered Bayesian correlation analyses suggested an absence of a relationship between illusion sensitivity and both phenomenological control and psychoticism, supporting only the first hypothesis.
+
+<!--Simpler measures as explnation to null results between VI and Psychoticism -->
+One possible explanation for the lack of association between psychoticism and visual illusion sensitivity lies in how individual differences were operationalised. 
+In [@makowski2023], illusion sensitivity was modelled using hierarchical Bayesian General Additive Models, which capture non-linear effects of illusion strength, task difficulty, and their interaction, while also decomposing components of the response time distribution. Su
+ch models are better suited to extracting participant-specific parameters that more precisely reflect latent sensitivity to illusions.
+
+In contrast, although the present task robustly captured illusion sensitivity at the group level, the primary outcome (mean error rate in incongruent trials) aggregates across illusion strength and task difficulty, as well as variability in speed–accuracy trade-offs. As a result, this aggregated measure may obscure individual sensitivity profiles, such as differemces in responsiveness to increased illusion strength, which may be critical for detecting associations with personality traits.
+Although the inclusion of IES partially addresses this limitation by combining speed and accuracy, it assumes that both reflect a single underlying process. This assumption may not hold in the present task, where illusion strength and task difficulty likely differentially influence perceptual bias and decision processes. Consequently, IES may also obscure meaningful individual differences rather than recover them.
+Taken together, if the relationship between psychoticism and illusion sensitivity depends on condition-specific patterns of performance, simplified summary metrics may lack the resolution required to detect it. Future research should therefore examine this relationship using modelling approaches that retain trial-level structure and estimate participant-specific sensitivity parameters.
+
+Our findings are consistent with the cognitive impenetrability account proposed by @lush2022, whereby visual illusions are primarily driven by low-level perceptual processes that are relatively insensitive to higher-order cognitive influences such as phenomenological control. 
+However, as discussed above, our use of simplified outcome measures may have reduced sensitivity to individual differences. 
+As such, replicating these finidngs with participant-specific parameters are needed. 
 
 # Data Availability
 
