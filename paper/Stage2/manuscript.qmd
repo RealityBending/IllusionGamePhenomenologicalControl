@@ -112,7 +112,7 @@ format:
   apaquarto-html: default
   apaquarto-pdf:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
-    documentmode: man
+    documentmode: jou
 ---
 
 ```{r}
@@ -195,38 +195,39 @@ study_design_table
 
 ## Participants
 
-This study recruited 500 adult native English speakers via Prolific (www.prolific.com
-), all of whom completed the study on a desktop device. Participants were be first presented with an explanatory statement and the consent form, and could proceed by pressing a button to confirm they have read and understood the information. This study has been approved by the ethics board of the School of Psychology of the University of Sussex (ER/ASF25/5).
+Five hundred adult native English speakers (Mean age = 38.6, SD = 13.1, range: [18, 75], 50% of women) were recruited via Prolific (www.prolific.com) and completed the study on a desktop device. Participants were first presented with an explanatory statement, and could proceed by pressing a button to confirm they have read and understood the information. This study has been approved by the ethics board of the School of Psychology of the University of Sussex (ER/ASF25/5).
+
+Following the data exclusion steps (see **Results** section), the final sample included 444 for analyses related to t he Müller-Lyer illusion, 445 for the Ebbinghaus, and 446 for the Vertical-Horizontal illusions.
+
 
 ## Procedure
 
-The experiment’s setup follows of the born-open principle [@deleeuw2023]. 
-The online experiment, implemented entirely using JsPsych [@de2015jspsych], has its code stored on GitHub and will leverage the power of the platform to host the experiment for free. 
-Participant’s raw data files (containing identifiers) are automatically stored in a private OSF repository. 
-The preprocessing and analysis scripts, as well as the anonymized data, will be available directly on GitHub, ensuring the transparency and reproducibility of all the analysis steps.
+The experiment's setup follows of the born-open principle [@deleeuw2023], and all its related material is available at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**.
+The online experiment, implemented entirely using *JsPsych* [@de2015jspsych], has its code stored on GitHub and leverages the power of the platform to host the experiment for free. 
+Participant’s raw data files (containing identifiers) were stored in a private OSF repository, but deanonimized using a publically available preprocessing script. 
+The resulting anonymized data, and the analysis reports, are available, ensuring the transparency and reproducibility of all the analysis steps.
 
-Participants will be presented with a consent form followed by demographic questions (gender, education level, age, and ethnicity). 
-Although these variables are not directly analyzed in the current study, they will be used to provide a detailed and thorough description of the sample and maximizing data reusability.** 
-**Participants will then be administered the PCS and the Illusion Game task (IG) in a counterbalanced order.
+Following the informed consent, participants were presented demographic questions (gender, education level, age, and ethnicity). 
+Although these variables are not directly analyzed in the current study, they are used to provide a detailed and thorough description of the sample (thus limiting potential over-generalization) and maximizing data reusability.
+Participants then underwent the Phenomenological Control Scale (PCS) and the Illusion Game task (IG) in a counterbalanced order.
 
 ### Phenomenological Control Scale (PCS)
 
-Participants will be asked to put on their headphones and await further auditory instructions. 
-The PCS procedure starts with a recorded introduction explaining that a series of tests will be applied to evaluate how experiences can be created through imagination. 
-This will be followed by 10 suggestions in a fixed order [see @lush2021], such as "now extend your arms ahead of you, with palms facing each other, hands about a foot apart" and "as you sit comfortably in your chair with your eyes closed, a picture of two balls will be displayed on the computer screen". 
+Participants were asked to put on their headphones and await further auditory instructions. 
+The PCS procedure starts with a recorded introduction explaining that a series of tests will be applied to evaluate how experiences can be created through imagination, followed by 10 suggestions in a fixed order [see @lush2021], such as "now extend your arms ahead of you, with palms facing each other, hands about a foot apart" and "as you sit comfortably in your chair with your eyes closed, a picture of two balls will be displayed on the computer screen". 
 Once the 10 suggestions are completed, participants will be asked to rate their subjective experiences and response to each suggestion on a 6-points Likert scale (from 0-5).
-Phenomenological control will be indexed by averaging the scores from the 10 scales.
+The Phenomenological control score will be computed by averaging the scores from the 10 scales.
 
 ### Illusion Game
 
-The task is an adaptation of the one used in @makowski2023 to make it shorter, in which participants must make perceptual judgments (e.g., "which red line is the longer") as quickly and accurately as possible. It includes 3 illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal (see @fig-illusionexample). In the original Illusion Game, 10 visual illusions were presented in two sets, following a practice trial, and separated by two short questionnaires.**
-Participants completed a total of 1,340 trials, with the experiment lasting approximately 55 minutes.
+The Illsuion Game task used in the current study is an adaptation of the one used in @makowski2023 to make it shorter, in which participants must make perceptual judgments (e.g., "which red line is the longer") as quickly and accurately as possible. It includes 3 illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal (see @fig-illusionexample). In the original Illusion Game, 10 visual illusions were presented in two sets, following a practice trial, and separated by two short questionnaires.
+Participants completed a total of 1,340 trials, with the experiment lasting approximately 50 minutes.
 In the current procedure, only three illusions are used, selected based on the original study's findings that these illusions most strongly contribute to illusion sensitivity.
 
 ```{r}
 #| warning: false
 #| label: fig-illusionexample
-#| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
+#| apa-twocolumn: true  # A Figure Spanning Two Columns When in Journal Mode
 #| out-width: "100%"
 #| fig-cap: "The study involved three visual illusions, in which participants were instructed to respond as quickly as possible without making errors. Each illusion included two manipulated parameters: strength (e.g., the angle of the outward- or inward-pointing arrow-like fins in the Müller-Lyer illusion) and difficulty (e.g., the difference in line lengths in the Müller-Lyer illusion)."
 
@@ -287,22 +288,20 @@ This step is necessary because reaction time may not have a linear relationship 
 Finally, reliability analyses will be conducted on all resulting indices, with Cronbach’s alpha used to evaluate internal consistency across the three illusion types.
 
 Bayesian correlations are then computed between PCS and illusion sensitivity scores - with the resulting IES and error rate indices. 
-Following @lush2022, we expect to collect evidence against (BF10 <= 1/3) a relationship between PCS and VI sensitivity. 
+Following @lush2022, we expect to collect evidence against ($BF_{10} <= 1/3$) a relationship between PCS and VI sensitivity. 
 Additionally, Bayesian correlations will be computed between maladaptive trait facets and illusion sensitivity scores. 
-Based on prior research [@makowski2023], we expect to find evidence (BF10 ≥ 3) supporting a relationship between the psychoticism facet of the PID-5 and illusion sensitivity. 
+Based on prior research [@makowski2023], we expect to find evidence ($BF_{10} > 3$) supporting a relationship between the psychoticism facet of the PID-5 and illusion sensitivity. 
 
-All Bayesian analyses will be conducted using the BayesFactor package [@BayesFactor]. 
+All Bayesian analyses will be conducted using the *BayesFactor* package [@BayesFactor]. 
 For correlations, a medium shifted beta prior will be applied (r-scale parameter set to  1/3), as recommended by @morey2018baysefactor, providing a balanced approach to estimating effect sizes, without placing undue weight on larger effect sizes or artificially inflating evidence for the null hypothesis.
-For t-tests, the ttestBF function will be used with a medium Cauchy prior on the standardised effect size (r-scale = √2⁄2), corresponding to the default for independent samples.
+For t-tests, the *ttestBF* function will be used with a medium Cauchy prior on the standardised effect size (r-scale = √2⁄2), corresponding to the default for independent samples.
 
 Data analysis will be carried out using R, using *tidyverse* [@tidyverse] and *easystats* [@easystats; @parameters; @correlation; @bayestestR; @datawizard]. 
-The analysis script and additional information are available at **https://osf.io/da3u6/?view_only=247d4efa1afe456aa07662732946d4e6** [Note this link will be replaced with the GitHub page of the current project upon completion of the review process to ensure continued anonymisation].
+The analysis script and additional information are available at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**.
 
 # Results
 
-## 1. Data Exclusion 
-
-The initial sample consisted of 500 participants (Mean age = 38.6, SD = 13.1, range: [18, 75]).  49.4% identified as women, 49.8%  as males and 0.80%  as non-binary. 
+## Data Exclusion 
 
 ### Registered Exclusions 
 
@@ -311,45 +310,33 @@ Specifically, participants with mean reaction times exceeding 4 SDs above the gr
 In accordance with the registered protocol, participants were fully excluded if this occurred in the first block, whereas only the second block was removed if the criterion was met exclusively in the second block. 
 Based on these criteria, 17 participants were fully excluded, and 13 participants had their second block removed.
 
-### Deviations from registration
-
-The registered protocol specified that participants failing any of the three attention checks in the PCS would be excluded. 
-However, one attention check (requiring participants to press the space bar six times) resulted in the exclusion of 189 participants (37.80%), which was disproportionately high compared to the other two checks combined (n = 19; 3.8%).
-To evaluate whether this exclusion improved data quality, the internal consistency of the PCS was assessed with and without these participants. 
-Reliability was identical in both cases (Cronbach’s α = 0.78), indicating that their exclusion did not enhance scale reliability. 
-Accordingly, this attention check was excluded from the final exclusion criteria, and only the remaining two checks were used to identify inattentive participants.
-
-In addition, trial-level reaction time exclusions were introduced to remove implausible responses and reduce the influence of extreme values. 
+Trial-level reaction time exclusions were conducted to remove implausible responses and reduce the influence of extreme values. 
 Following @theriault2024, trials with response times below 0.2 seconds or above 5 seconds were excluded, resulting in the removal of 687 trials (0.31% of the data).
 
-<!--Move to another section? -->
-Notably, during data inspection, some participants exhibited systematic response patterns inconsistent with task instructions, reflected in error rates falling outside the 95% highest density interval (HDI) for a given illusion for the Congruent, Mild and Strong Conditions. 
-These cases likely reflect misunderstanding of task demands (e.g., consistently selecting the incorrect perceptual option). 
-As such, these participants were excluded at the illusion level (i.e., their data were set to missing for the relevant illusion only), affecting 20 participants (4.31%) for the Müller–Lyer illusion, 19 (4.09%) for the Ebbinghaus illusion, and 18 (3.88%) for the Vertical–Horizontal illusion. This procedure was not registered.
+### Deviations from registration
 
-Due to illusion-specific exclusions (i.e., block-level removal and HDI-based exclusions), the effective sample size varied across illusion types. 
-The final sample used for correlations comprised 440 participants for the Müller–Lyer illusion, 441 for the Ebbinghaus illusion, and 442 for the Vertical–Horizontal illusion.
+#### PCS
 
-The final sample includes 464 participants (Mean age = 38.7, SD = 13.2, range: [18, 75] ). 
-Out of these, 48.3% identified as female, 50.9% as male, and 0.86% as non-binary.  Out of these participants,  2.59%  reported having a doctoral degree, 18.32% masters degree, 48.49% a bachelors degree, 28.45 % a high school degree and 2.16%  other qualifications. 
+The registered protocol specified that participants failing any of the three attention checks in the PCS would be excluded. 
+However, one attention check (requiring participants to press the space bar six times) resulted in the exclusion of 189 participants (37.80%), which was disproportionately high compared to the other two checks combined, which were failed by 19 (3.8%) participants.
+This suggests an attention check that was not well calibrated, and led us to question the validity of this criterion for identifying inattentive participants.
 
-## 2. Score consistency
-
-Consistency analyses between the 3 illusions were conducted as registered, using Cronbach’s alpha. Error rate reliability was low (Mild: α = 0.32; Strong: α = 0.14), whereas IES reliability was mixed (Mild: α = 0.87; Strong: α = 0.33), overall providing no evidence for combining the scores of the 3 illusions.
-
-PCS consistency was good (α = 0.78), and remained stable even when excluding the participants according to the registered plan (i.e., based on the removed attention check), suggesting that participants flagged by this item were not detrimental to the consistency of the measure. 
+Firstly, we examined the consistency of the score with and without the participants flagged by this item, which remained similar (Cronbach's $\alpha$ = 0.78 without removal; 0.78 with removal), suggesting that their exclusion did not enhance the internal consistency of the scale. As such, we decided to present results with these participants. However, for accountability, the registered results without these participants are available in supplementary materials, but does not have an impact on the findings. 
 
 
-## 3. Manipulation Checks
+#### Illusion Game
 
-### Condition Differences
+During data inspection, a handful of participants exhibited systematic response patterns inconsistent with task instructions, reflected by very high error rates in the congruent condition (where error rates are typically very low), far beyond the bulk of the distribution.
+These cases likely reflect instructions misunderstanding (e.g., participants selecting the smallest circle instead of the largest circle). 
+Following this, participants outside the 97.5% CI for the error rate for a given illusion had their data for that specific illusion exlcuded, affecting 20 participants (4.31%) for the Müller–Lyer illusion, 19 (4.09%) for the Ebbinghaus illusion, and 18 (3.88%) for the Vertical–Horizontal illusion. Histograms showing the distribution of error rates and the rejection bounds are available in **Supplementary Materials**.
 
-Bayesian paired-samples t-tests revealed extreme evidence for differences between conditions, with performance decreasing as illusion strength increased across all illusion types and outcome measures. For all three illusions (Ebbinghaus, Müller–Lyer, Vertical–Horizontal), error rates and IES were lower in the Congruent relative to Mild condition, and lower in the Mild relative to Strong condition, consistent with the expected effect of illusion strength (see @tbl-tablemeans). 
+## Manipulation Check
+
 
 ```{r}
 #| warning: false
-#| label: tbl-tablemeans
-#| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
+#| label: fig-tablemeans
+#| apa-twocolumn: true  # A Figure Spanning Two Columns When in Journal Mode
 #| out-width: "100%"
 #| fig-cap: ""
 
@@ -385,28 +372,43 @@ gt_apastyle <- function(gt_table, font.size=12) {
 
 
 table <- readRDS("../../analysis/figures/table1.rds")
-
-table |> gt_apastyle()
+table
+# table |> gt_apastyle()
 ```
 
-### Collapsing Mild and Strong conditions
 
-Registered Bayesian correlations were conducted to assess whether Mild and Strong conditions could be collapsed (criterion: r > .50). 
-Although all correlations were positive, the threshold was not consistently met across illusion types and outcome measures, with about 33.3% of the indices yielding a correlation between .40 and .50 and the rest between .50 and .72.
+Bayesian paired-samples *t*-tests revealed extreme evidence for differences between illusion strength conditions, with performance decreasing as illusion strength increased across all illusion types and outcome measures ($BF_{10} > 1000$) . For all three illusions (Ebbinghaus, Müller–Lyer, Vertical–Horizontal), error rates and IES were significantly lower in the Congruent relative to Mild condition, and lower in the Mild relative to Strong condition, consistent with the expected effect of illusion strength (see @fig-tablemeans). 
 
-For Error Rate, all associations were strong and positive. 
-The Vertical–Horizontal illusion showed the strongest relationship between Mild and Strong conditions, r = .74, 95% CI [.70, .78], t(462) = 23.76, p < .001. Similarly strong associations were observed for the Ebbinghaus illusion, r = .72, 95% CI [.67, .76], t(462) = 22.07, p < .001, and the Müller–Lyer illusion, r = .66, 95% CI [.60, .71], t(462) = 18.81, p < .001.
 
-For IES, moderate to strong positive correlations were observed. The Ebbinghaus illusion showed the strongest association between Mild and Strong conditions, r = .59, 95% CI [.53, .64], t(462) = 15.63, p < .001. This was followed by the Müller–Lyer illusion, r = .42, 95% CI [.34, .49], t(462) = 9.87, p < .001, and the Vertical–Horizontal illusion, r = .40, 95% CI [.32, .48], t(462) = 9.49, p < .001.
+## Score consistency
 
-Given this inconsistent pattern, the decision was made to present Mild and Strong separately. For comprehensiveness, the combined score was additionally computed and tested for the analysis below, yielding identical results (see Supplementary Analysis).
+The 10 items forming the PCS score yielded accecptable consistency ($\alpha = 0.75$).
 
-## 4. Illusion Sensitivity, PCS, and Psychoticism
+For the illusion scores, the registered plan was to first evaluate the possibility of collapsing across Mild and Strong illusion strength conditions by inspecting the correlations between them. However, they yielded an inconsistent pattern of results, with some correlations being above the registered threshold (r > .50) and others falling below it, without any obvious pattern (see correlation tables in **Supplementary Materials**) with respect to specific illusions or outcome (error rate or IES). 
+Consequently, we decided to present them separately in the main analysis, although results with the aggregated scores are included in the Supplementary Materials for comprehensiveness, yielding identical results.
+
+Consistency analyses between the 3 illusions were conducted as registered, using Cronbach’s alpha. Error rate consistency was low (Mild: $\alpha = 0.32$; Strong: $\alpha = 0.14$), whereas IES reliability was mixed (Mild: $\alpha = 0.87$; Strong: $\alpha = 0.33$), overall providing no evidence for combining the scores of the 3 illusions.
+
+
+
+<!-- Registered Bayesian correlations were conducted to assess whether Mild and Strong conditions could be collapsed (criterion: r > .50).  -->
+<!-- Although all correlations were positive, the threshold was not consistently met across illusion types and outcome measures, with about 33.3% of the indices yielding a correlation between .40 and .50 and the rest between .50 and .72. -->
+
+<!-- For Error Rate, all associations were strong and positive.  -->
+<!-- The Vertical–Horizontal illusion showed the strongest relationship between Mild and Strong conditions, r = .74, 95% CI [.70, .78], t(462) = 23.76, p < .001. Similarly strong associations were observed for the Ebbinghaus illusion, r = .72, 95% CI [.67, .76], t(462) = 22.07, p < .001, and the Müller–Lyer illusion, r = .66, 95% CI [.60, .71], t(462) = 18.81, p < .001. -->
+
+<!-- For IES, moderate to strong positive correlations were observed. The Ebbinghaus illusion showed the strongest association between Mild and Strong conditions, r = .59, 95% CI [.53, .64], t(462) = 15.63, p < .001. This was followed by the Müller–Lyer illusion, r = .42, 95% CI [.34, .49], t(462) = 9.87, p < .001, and the Vertical–Horizontal illusion, r = .40, 95% CI [.32, .48], t(462) = 9.49, p < .001. -->
+
+
+
+## Correlations
 
 ### Registered Analysis
+
 Bayesian correlations were conducted to assess the relationship between illusion sensitivity (error rate and IES) and both PCS scores and the psychoticism facet of the PID-5 (see @fig-corr).
 
-All correlations yielded Bayes factors below 3, providing no evidence for a relationship between PCS and illusion sensitivity. **X%** analyses yielded Bayes factors at or below the registered threshold for evidence in favour of the null hypothesis (BF₁₀ ≤ 1/3), whereas the rest fell within the inconclusive range (1/3 < BF₁₀ < 3), with no clear pattern pointing to specific illusions or scores. Taken together, these results suggest an absence of  relationship between PCS and illusion sensitivity (see Figure 1).
+All correlations between illusion sensitivity indices and the PCS score yielded Bayes factors below 3 (with the exception of the error rate for Vertical-Horizontal at mild illusion strength, $r = .12; BF_{10} = 3.03$).
+Most yielded Bayes factors at or below the registered threshold for evidence in favour of the null hypothesis ($BF_{10} < 1/3$), whereas the rest fell within the inconclusive range ($1/3 < BF_{10} < 3$), with no clear pattern highlighting specific illusions or scores. Taken together, these results suggest an absence of  relationship between PCS and illusion sensitivity (see **Figure 1**).
 
 Similarly, all BFs for the relationship between illusion sensitivity and the psychoticism facet of the PID-5 were below 3, indicating no substantial evidence in favour of the second registered hypothesis. 
 The results are therefore not aligned with the hypothesised positive association.
@@ -422,7 +424,8 @@ knitr::include_graphics("../../analysis/figures/correlations.png")
 ```
 
 ### Exploratory analyses
-To assess the robustness of these findings through a multiverse analysis approach, additional (non-registered) scores were constructed. These included error rates and IES computed from collapsed conditions (Mild and Strong Illusion Strength together), including collapsed condition scores (e.g., the error), collapsed difficulty levels, fully disaggregated condition × difficulty combinations, and global performance indices. Bayesian correlations with the PCS and the Psychoticism were recomputed across these alternative operationalisations; with no changes in the results (i.e., all BFs < 3).
+
+To ensure the robustness of these findings to various analysis decisions, we additionally computed the correlations with variant scores of the illusion game, namely with outcomes collapsed across illusion strength (Mild and Strong together) and with outcomes computed separately for each difficulty level. This multiverse approach confirmed the registered analysis, with no changes in the observed pattern of null findings.
 
 # Discussion
 
@@ -449,7 +452,7 @@ All the study materials, experiment, data, and analysis is available on GitHub. 
 
 # Acknowledgments
 
-We would like to thank An Shu Te for her help in setting up the project, Ryan Scott for his help in implementing the phenomenological control scale, and Zoltan Dienes for his input, feedback and guidance.
+We would like to thank Oliver Collins for his help in the last mile of this project, An Shu Te for her help in setting it up, Ryan Scott for his help in implementing the phenomenological control scale, and Zoltan Dienes for his input, feedback and guidance.
 
 \pagebreak
 

@@ -38,43 +38,11 @@ data_ig <- read.csv("../data/data_illusion.csv") |>
 
 ```
 
-```{r}
-# APA style ####
-gt_apastyle <- function(gt_table, font.size=12) {
-  gt_table  |> 
-    gt::opt_table_lines(extent = "none") %>%
-    gt::tab_options(
-      heading.border.bottom.width = 2,
-      heading.border.bottom.color = "black",
-      heading.border.bottom.style = "solid",
-      table.border.top.color = "black",
-      table.border.top.style = "solid",
-      table.border.top.width = 2,  
-      table_body.hlines.color = "white",
-      table_body.border.top.color = "black",
-      table_body.border.top.style = "solid",
-      table_body.border.top.width = 2,
-      heading.title.font.size = font.size,
-      table.font.size = font.size,
-      heading.subtitle.font.size = font.size,
-      table_body.border.bottom.color = "black",
-      table_body.border.bottom.width = 2,
-      table_body.border.bottom.style = "solid",
-      column_labels.border.bottom.color = "black",
-      column_labels.border.bottom.style = "solid",
-      column_labels.border.bottom.width = 1,
-      latex.use_longtable = FALSE
-    ) |> 
-      gt::opt_table_font(font = "times")
-}
 
 
-```
+## PCS Score
 
-
-## Score Computation
-
-### PCS
+### Computation
 
 Mean subjective scale responses for item 4 (Taste) and item 10 (Post-session suggestion) are each generated from the combination of two responses which require processing prior to generating an overall subjective score. 
 The subjective score for item 4 is the mean of the responses to the (a)‘sour’ and (b)‘sweet’ sub-scales for the taste suggestion. 
@@ -89,7 +57,11 @@ data_ppt$pcs_postsessionsuggetsion <- sqrt(data_ppt$pcs_urgepress * data_ppt$pcs
 
 
 
-### Illusion Game
+## Illusion Game Scores
+
+### Computation 
+
+#### Full Stratification
 
 ```{r}
 ig_scores <- data_ig |>
@@ -102,52 +74,10 @@ ig_scores <- data_ig |>
         names_from = c("Illusion_Type", "Condition_Illusion", "Condition_Difficulty"),
         values_from = c("ErrorRate", "IES")
     )
-
-
 ```
 
-#### Mild vs. Strong
+#### Collapse Mild and Strong
 
-```{r}
-corrs <- data.frame()
-for (outcome in c("ErrorRate", "IES")) {
-    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
-       for (dif in c("Easy", "Hard")) {
-  
-         corrs <- correlation::correlation(
-                ig_scores[paste0(outcome, "_", ill_type,"_Mild", "_", dif )],
-                ig_scores[paste0(outcome, "_", ill_type, "_Strong", "_", dif )]
-            ) |>
-                mutate(Outcome = outcome) |>
-                rbind(corrs)
-        }
-    }
-}
-arrange(corrs, desc(r))
-```
-
-#### Easy vs. Hard
-
-
-```{r}
-corrs_2 <- data.frame()
-for (outcome in c("ErrorRate", "IES")) {
-    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
-        for (cond in c("Congruent", "Mild", "Strong")) {
-            corrs_2 <- correlation::correlation(
-                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Easy")],
-                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Hard")]
-            ) |>
-                mutate(Outcome = outcome) |>
-                rbind(corrs_2)
-        }
-    }
-}
-arrange(corrs_2, desc(r))
-```
-
-
-#### Final Indices
 
 ```{r}
 ig_scores_incongruent <- data_ig |>
@@ -164,8 +94,13 @@ ig_scores_incongruent <- data_ig |>
 names(ig_scores_incongruent) <- str_replace_all(names(ig_scores_incongruent), "_Hard", "_Incongruent_Hard")
 names(ig_scores_incongruent) <- str_replace_all(names(ig_scores_incongruent), "_Easy", "_Incongruent_Easy")
 ig_scores <- full_join(ig_scores, ig_scores_incongruent, by = "Participant")
+```
 
 
+#### Collapse Easy and Hard
+
+
+```{r}
 ig_scores_general <- data_ig |>
     summarize(
         ErrorRate = sum(Error) / n(),
@@ -177,7 +112,7 @@ ig_scores_general <- data_ig |>
         values_from = c("ErrorRate", "IES")
     ) |> 
   data_addsuffix(select=-Participant, pattern = "_General")
-names(ig_scores_general)
+
 ig_scores <- full_join(ig_scores, ig_scores_general, by = "Participant")
 
 
@@ -197,48 +132,16 @@ ig_scores_incongruent_general <- data_ig |>
 ig_scores <- full_join(ig_scores, ig_scores_incongruent_general, by = "Participant")
 ```
 
-##### Mild vs strong collapsed across easy and hard
+
+
+### Outlier Removal
+
+#### Exclusion
 
 ```{r}
-corrs_3 <- data.frame()
-for (outcome in c("ErrorRate", "IES")) {
-    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
-            corrs_3 <- correlation::correlation(
-                ig_scores[paste0(outcome, "_", ill_type, "_Mild_General")],
-                ig_scores[paste0(outcome, "_", ill_type, "_Strong_General")]
-            ) |>
-                mutate(Outcome = outcome) |>
-                rbind(corrs_3)
-        }
-}
-arrange(corrs_3, desc(r))
-```
+#| fig-width: 15
+#| fig-height: 10
 
-
-
-##### All General 
-```{r}
-
-corrs_4 <- data.frame()
-for (outcome in c("ErrorRate", "IES")) {
-    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
-      corrs_4 <- correlation::correlation(
-                ig_scores[paste0(outcome, "_", ill_type, "_Congruent_General")],
-                ig_scores[paste0(outcome, "_", ill_type, "_Incongruent_General")]
-            ) |>
-                mutate(Outcome = outcome) |>
-                rbind(corrs_4)
-    }
-}
-arrange(corrs_4, desc(r))
-
-```
-
-
-#### Outlier Removal
-
-
-```{r}
 vars <- names(ig_scores)[names(ig_scores) != "Participant"]
 vars <- vars[str_detect(vars, "ErrorRate")]
 vars <- vars[str_detect(vars, "General")]
@@ -254,11 +157,12 @@ for(var in vars){
 
   # Make plot
   ps[[var]] <- ggplot(ig_scores, aes(x = !!as.name(var))) +
-    geom_histogram(binwidth = 0.02) +
+    geom_histogram(binwidth = 0.015) +
     geom_vline(xintercept = bounds$CI_low, color = "red") +
     geom_vline(xintercept = bounds$CI_high, color = "red") +
     coord_cartesian(xlim = c(0, 1))  +
-    ggtitle(paste("95% HDI for", var))  
+    ggtitle(paste("97.5% HDI for", var))   +
+    theme_minimal()
   
   illu <- str_split_fixed(var, "_", 4)[,2]
   flagged_ppts <- ig_scores$Participant[(ig_scores[[var]] > bounds$CI_high) | (ig_scores[[var]] < bounds$CI_low) |  is.na(ig_scores[[var]])]
@@ -273,10 +177,9 @@ for(illu in names(outliers)) {
   print(paste0("Outliers for ", illu, ": ", length(outliers[[illu]]), " (",
                format_percent(length(outliers[[illu]]) / nrow(ig_scores)), ")", collapse = ", "))
   ig_scores[ig_scores$Participant %in% outliers[[illu]], str_detect(names(ig_scores), illu)] <- NA
+  print(paste0("N = ", nrow(ig_scores[!ig_scores$Participant %in% outliers[[illu]], str_detect(names(ig_scores), illu)])))
 }
 ```
-
-
 
 #### Correlation
 
@@ -295,6 +198,94 @@ correlation::correlation(select(ig_scores, -Participant), redundant=TRUE) |>
 
 
 ```
+
+
+
+### Should we collapse across Mild and Strong, and Easy and Hard?
+
+::: {.panel-tabset}
+
+#### Mild vs. Strong
+
+
+```{r}
+corrs <- data.frame()
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+       for (dif in c("Easy", "Hard")) {
+  
+         corrs <- correlation::correlation(
+                ig_scores[paste0(outcome, "_", ill_type,"_Mild", "_", dif )],
+                ig_scores[paste0(outcome, "_", ill_type, "_Strong", "_", dif )]
+            ) |>
+                mutate(Illusion = ill_type,
+                       Outcome = outcome) |>
+                rbind(corrs)
+        }
+    }
+}
+
+corrs2 <- data.frame()
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+            corrs2 <- correlation::correlation(
+                ig_scores[paste0(outcome, "_", ill_type, "_Mild_General")],
+                ig_scores[paste0(outcome, "_", ill_type, "_Strong_General")]
+            ) |>
+                mutate(Illusion = ill_type,
+                       Outcome = outcome) |>
+                rbind(corrs2)
+        }
+}
+
+
+
+print_corrs <- function(t) {
+  arrange(t, Illusion, Outcome, desc(r)) |> 
+    mutate(Parameter1 = str_replace(Parameter1, "ErrorRate_|IES_", ""),
+           Parameter1 = str_replace(Parameter1, paste0(Illusion, "_"), ""),
+           Parameter2 = str_replace(Parameter2, "ErrorRate_|IES_", ""),
+           Parameter2 = str_replace(Parameter2, paste0(Illusion, "_"), "")) |> 
+    datawizard::data_reorder(c("Illusion", "Outcome")) |> 
+    format_table() |> 
+    mutate(r = as.numeric(r)) |> 
+    gt::gt() |>
+    gt::data_color(
+        columns = r,
+        fn = function(x) dplyr::case_when(
+          x >= 0.5  ~ "lightgreen",
+          .default   = "#ffabab"
+        )
+      )
+}
+
+print_corrs(rbind(corrs, corrs2))
+```
+
+#### Easy vs. Hard
+
+```{r}
+corrs3 <- data.frame()
+for (outcome in c("ErrorRate", "IES")) {
+    for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
+        for (cond in c("Congruent", "Mild", "Strong")) {
+            corrs3 <- correlation::correlation(
+                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Easy")],
+                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Hard")]
+            ) |>
+                mutate(Illusion = ill_type,
+                       Outcome = outcome) |>
+                rbind(corrs3)
+        }
+    }
+}
+
+print_corrs(rbind(corrs3))
+```
+
+
+
+:::
 
 
 
@@ -338,10 +329,90 @@ for (outcome in c("ErrorRate", "IES")) {
 
 ttests |>
     select(Illusion_Type, Condition_Illusion, Outcome, Median, BF) |>
-    arrange(Illusion_Type, Condition_Illusion, Outcome) 
-
-
+    arrange(Illusion_Type, Condition_Illusion, Outcome) |> 
+    format_table() |> 
+    gt::gt()
 ```
+
+
+
+```{r}
+#| code-fold: true
+
+gt_apastyle <- function(gt_table, font.size=12) {
+  gt_table  |> 
+    gt::opt_table_lines(extent = "none") %>%
+    gt::tab_options(
+      heading.border.bottom.width = 2,
+      heading.border.bottom.color = "black",
+      heading.border.bottom.style = "solid",
+      table.border.top.color = "black",
+      table.border.top.style = "solid",
+      table.border.top.width = 2,  
+      table_body.hlines.color = "white",
+      table_body.border.top.color = "black",
+      table_body.border.top.style = "solid",
+      table_body.border.top.width = 2,
+      heading.title.font.size = font.size,
+      table.font.size = font.size,
+      heading.subtitle.font.size = font.size,
+      table_body.border.bottom.color = "black",
+      table_body.border.bottom.width = 2,
+      table_body.border.bottom.style = "solid",
+      column_labels.border.bottom.color = "black",
+      column_labels.border.bottom.style = "solid",
+      column_labels.border.bottom.width = 1,
+      latex.use_longtable = FALSE
+    ) |> 
+      gt::opt_table_font(font = "times")
+}
+
+
+ig_means <- ig_scores |>
+  select(contains("Mild_General"), contains("Strong_General"), contains("_Congruent_General")) |>
+  describe_distribution()
+
+ig_means_table <- ig_means |>
+  separate(Variable,into = c("Outcome", "Illusion_Type", "Condition", "Extra"),sep = "_") |>
+  select(Outcome, Illusion_Type, Condition, Mean, SD, Min, Max)|>
+  pivot_wider(
+    names_from = c(Outcome,  Condition),
+    values_from = c(Mean, SD, Min, Max)) |>
+  arrange(Illusion_Type) |>
+  mutate(`Error Rate Mild` = paste0(insight::format_percent(Mean_ErrorRate_Mild), " ± ",  round(SD_ErrorRate_Mild*100, 0), "%"),
+         `Error Rate Strong` = paste0(insight::format_percent(Mean_ErrorRate_Strong)," ± ",  round(SD_ErrorRate_Strong*100, 0), "%"),
+         `Error Rate Congruent` = paste0(insight::format_percent(Mean_ErrorRate_Congruent)," ± ",  round(SD_ErrorRate_Congruent*100, 0), "%"),
+        
+         `IES Mild` = sprintf("%.2f  ± %.2f", Mean_IES_Mild,SD_IES_Mild),
+         `IES Strong` = sprintf("%.2f  ± %.2f", Mean_IES_Strong,SD_IES_Strong),
+         `IES Congruent` = sprintf("%.2f  ± %.2f", Mean_IES_Congruent,SD_IES_Congruent)) |>
+ select(Illusion_Type,`Error Rate Congruent`, `Error Rate Mild`,`Error Rate Strong`, `IES Congruent`, `IES Mild`,`IES Strong` ) |>
+  mutate(Illusion_Type = recode(Illusion_Type,"MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal" ))
+
+
+table1 <- ig_means_table |>
+ gt::gt(rowname_col = "Illusion_Type") |>
+  gt::tab_spanner(label = "Error Rate",columns = starts_with("Error Rate")) |>
+  gt::tab_spanner(label = "IES",columns = starts_with("IES")) |>
+  gt::cols_label(
+    `Error Rate Congruent` = "Congruent",
+    `Error Rate Mild` = "Mild",
+    `Error Rate Strong` = "Strong",
+    `IES Congruent` = "Congruent",
+    `IES Mild` = "Mild",
+    `IES Strong` = "Strong") |>
+  gt::tab_source_note(
+    source_note = "Note. Values represent means and standard deviations. All Bayes factors (BFs) for the group differences exceeded 1000, indicating extreme evidence in favour of a difference between groups."
+  ) |> gt_apastyle()
+
+
+table1
+
+saveRDS(table1, "figures/table1.rds")
+   
+```
+
+
 
 
 ## Reliability
@@ -415,17 +486,6 @@ ig_scores |>
 
 #### All
 
-```{r}
-
-for (illu in names(outliers)) {
-  cols <- str_detect(names(ig_scores), illu)
-  n_valid <- sum(
-    rowSums(!is.na(ig_scores[, cols])) > 0
-  )
-  print( paste0("Final N for ", illu, ": ", n_valid, " (",format_percent(n_valid / nrow(ig_scores)), ")"))
-}
-```
-
 The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`, for a total trial number of `r nrow(data_ig)`.
 
 
@@ -442,8 +502,9 @@ make_cor <- function(data) {
   table <- rez |>
     dplyr::arrange(desc(BF)) |> 
     format_table() |>
-    dplyr::mutate(BF = as.numeric(BF)) |> 
-    dplyr::select(-Prior, -Method, -n_Obs, -pd, -`% in ROPE`) |>
+    dplyr::mutate(BF = as.numeric(BF),
+                  Parameter2 = str_remove_all(Parameter2, "_Score|PID5_")) |> 
+    dplyr::select(-Prior, -Method, -n_Obs, -`% in ROPE`) |>
     gt::gt() |>
     gt::data_color(
       columns = BF,
@@ -480,6 +541,7 @@ make_cor(data=data_ppt[data_ppt$PCS_Outlier_Press == F, ])
 ```{r fig1}
 #| fig-width: 10
 #| fig-height: 8
+#| dpi: 300
 
 # rez <- rez
 # features <- features 
@@ -500,7 +562,7 @@ p <- rez |>
   geom_linerange(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), linewidth = 1) +
   # geom_label(aes(label = format_bf(BF, stars=TRUE, protect_ratio=F)), 
   #           position = position_dodge(width = 0.5), hjust = 0.5, size = 2, vjust=1) +
-  geom_text(aes(x=0, label = insight::format_bf(BF, stars=TRUE, protect_ratio=F)), 
+  geom_text(aes(x=0, label = format_bf(BF, stars=TRUE, protect_ratio=F)), 
             position = position_dodge(width = 0.5), hjust = 0.5, size = 2, vjust=-0.5, show.legend = FALSE) +
   scale_color_manual(values = c("Congruent" = "#2196F3", "Mild" = "darkorange", "Strong" = "red"),
                      breaks = c("Strong", "Mild", "Congruent")) +
@@ -518,59 +580,6 @@ p <- rez |>
          strip.text.y = element_text(size = 10, face = "italic"),
          plot.title = element_text(size = 14, face = "bold", hjust = 0.5))
 p
-
-ggsave(p,  filename = "figures/correlations.png", device = "png")
-
-
-```
-
-## Tables
-
-
-```{r}
-
-ig_means <- ig_scores |>
-  select(contains("Mild_General"), contains("Strong_General"), contains("_Congruent_General")) |>
-  describe_distribution()
-
-ig_means_table <- ig_means |>
-  separate(Variable,into = c("Outcome", "Illusion_Type", "Condition", "Extra"),sep = "_") |>
-  select(Outcome, Illusion_Type, Condition, Mean, SD, Min, Max)|>
-  pivot_wider(
-    names_from = c(Outcome,  Condition),
-    values_from = c(Mean, SD, Min, Max)) |>
-  arrange(Illusion_Type) |>
-  mutate(`Error Rate Mild` = paste0(insight::format_percent(Mean_ErrorRate_Mild), " ± ",  round(SD_ErrorRate_Mild*100, 0), "%"),
-         `Error Rate Strong` = paste0(insight::format_percent(Mean_ErrorRate_Strong)," ± ",  round(SD_ErrorRate_Strong*100, 0), "%"),
-         `Error Rate Congruent` = paste0(insight::format_percent(Mean_ErrorRate_Congruent)," ± ",  round(SD_ErrorRate_Congruent*100, 0), "%"),
-        
-         `IES Mild` = sprintf("%.2f  ± %.2f", Mean_IES_Mild,SD_IES_Mild),
-         `IES Strong` = sprintf("%.2f  ± %.2f", Mean_IES_Strong,SD_IES_Strong),
-         `IES Congruent` = sprintf("%.2f  ± %.2f", Mean_IES_Congruent,SD_IES_Congruent)) |>
- select(Illusion_Type,`Error Rate Congruent`, `Error Rate Mild`,`Error Rate Strong`, `IES Congruent`, `IES Mild`,`IES Strong` ) |>
-  mutate(Illusion_Type = recode(Illusion_Type,"MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal" ))
-
-
-table1 <- ig_means_table |>
- gt::gt(rowname_col = "Illusion_Type") |>
-  gt::tab_spanner(label = "Error Rate",columns = starts_with("Error Rate")) |>
-  gt::tab_spanner(label = "IES",columns = starts_with("IES")) |>
-  gt::cols_label(
-    `Error Rate Congruent` = "Congruent",
-    `Error Rate Mild` = "Mild",
-    `Error Rate Strong` = "Strong",
-    `IES Congruent` = "Congruent",
-    `IES Mild` = "Mild",
-    `IES Strong` = "Strong") |>
-  gt::tab_source_note(
-    source_note = "Note. Values represent means and standard deviations. All Bayes factors (BFs) for the group differences exceeded 1000, indicating extreme evidence in favour of a difference between groups."
-  ) |> gt_apastyle()
-
-
-table1
-
-saveRDS(table1, "figures/table1.rds")
-   
 ```
 
 
