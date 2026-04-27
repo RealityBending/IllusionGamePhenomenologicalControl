@@ -300,39 +300,96 @@ The analysis script and additional information are available at **https://osf.io
 
 # Results
 
-## Data exclusion
+## 1. Data Exclusion 
 
-The initial sample consisted of The initial sample consisted of 496 participants (Mean age = 38.5, SD = 13.1, range: [18, 73]; Gender: 49.6% women, 49.6% men, 0.81% non-binary; Education: Bachelor, 49.40%; Doctorate, 2.82%; Elementary school, 0.20%; High school, 27.62%; Master, 18.15%; Other, 1.81%), for a total trial number of 238080.
+The initial sample consisted of 500 participants (Mean age = 38.6, SD = 13.1, range: [18, 75]).  49.4% identified as women, 49.8%  as males and 0.80%  as non-binary. 
 
-To ensure data quality, the registered protocol included three attention checks within the phenomenological control scale task. However, one of these checks  (i.e., instructing participants to press the space bar six times) led to the exclusion of 176 participants (36.74%), which was disproportionately high relative to the other two attention checks (17 participants; 3.55% combined).  Notably, only 7 participants failed more than one attention check, suggesting that the spacebar task may not have been a valid indicator of inattention. Accordingly, we deviated from the preregistered analysis by excluding this attention check from the final exclusion criteria. 
+### Registered Exclusions 
 
-For the Illusion Game, preregistered performance-based and RT exclusion criteria were applied to identify participants responding at chance level and those exhibiting atypically slow response patterns. Furthermore, participants with mean RTs exceeding 4 standard deviations above the group mean were excluded, as this may reflect atypical task strategies. Based on the preregistered criteria, 17 participants were fully excluded and 16 participants had their second block removed. 
+Registered exclusion criteria based on task performance and reaction times were applied. 
+Specifically, participants with mean reaction times exceeding 4 SDs above the group mean were flagged. 
+In accordance with the registered protocol, participants were fully excluded if this occurred in the first block, whereas only the second block was removed if the criterion was met exclusively in the second block. 
+Based on these criteria, 17 participants were fully excluded, and 13 participants had their second block removed.
 
-In addition to the preregistered protocol, trial-level exclusions were introduced to remove extreme response times [< 0.2 s or > 5 s; @theriault2024]. At the trial level, extreme RTs were removed (n = 739; 0.33% of trials) to minimise the influence of implausibly fast or slow responses.
+### Deviations from registration
 
-Additionally, given HDI...
+The registered protocol specified that participants failing any of the three attention checks in the PCS would be excluded. 
+However, one attention check (requiring participants to press the space bar six times) resulted in the exclusion of 189 participants (37.80%), which was disproportionately high compared to the other two checks combined (n = 19; 3.8%).
+To evaluate whether this exclusion improved data quality, the internal consistency of the PCS was assessed with and without these participants. 
+Reliability was identical in both cases (Cronbach’s α = 0.78), indicating that their exclusion did not enhance scale reliability. 
+Accordingly, this attention check was excluded from the final exclusion criteria, and only the remaining two checks were used to identify inattentive participants.
 
-The final sample therefore comprised 460 participants (M_age = 38.7, SD = 13.1, range = 18–73). The sample was 48.5% women, 50.7% men, and 0.87% non-binary. Educational attainment was distributed as follows: Bachelor’s degree (48.26%), Master’s degree (18.26%), Doctorate (2.61%), high school (28.70%), elementary school (0.22%), and other (1.96%).
+In addition, trial-level reaction time exclusions were introduced to remove implausible responses and reduce the influence of extreme values. 
+Following @theriault2024, trials with response times below 0.2 seconds or above 5 seconds were excluded, resulting in the removal of 687 trials (0.31% of the data).
 
-## Manipulation checks
+<!--Move to another section? -->
+Notably, during data inspection, some participants exhibited systematic response patterns inconsistent with task instructions, reflected in error rates falling outside the 95% highest density interval (HDI) for a given illusion for the Congruent, Mild and Strong Conditions. 
+These cases likely reflect misunderstanding of task demands (e.g., consistently selecting the incorrect perceptual option). 
+As such, these participants were excluded at the illusion level (i.e., their data were set to missing for the relevant illusion only), affecting 20 participants (4.31%) for the Müller–Lyer illusion, 19 (4.09%) for the Ebbinghaus illusion, and 18 (3.88%) for the Vertical–Horizontal illusion. This procedure was not registered.
 
-Bayesian paired-samples t-test revealed extreme evidence for differences between Congruent and Mild conditions, as well between Mild and Strong conditions, across all illusion types and both outcomes (all BF₁₀s > 10⁸²). Overall, performance systematically decreased as illusion strength increased across all illusion types and outcome measures. 
+Due to illusion-specific exclusions (i.e., block-level removal and HDI-based exclusions), the effective sample size varied across illusion types. 
+The final sample used for correlations comprised 440 participants for the Müller–Lyer illusion, 441 for the Ebbinghaus illusion, and 442 for the Vertical–Horizontal illusion.
 
-For the Ebbinghaus illusion, there was strong evidence for lower Error Rates and IES in the Congruent relative to Mild condition (Error Rate: median difference = −0.12, BF₁₀ = 4.19 × 10¹¹⁷; IES: median difference = −0.22, BF₁₀ = 8.52 × 10⁸⁴), as well as lower performance in the Mild relative to Strong condition (Error Rate: median difference = −0.24, BF₁₀ = 3.87 × 10¹⁶⁸; IES: median difference = −0.58, BF₁₀ = 3.82 × 10⁸²).
+The final sample includes 464 participants (Mean age = 38.7, SD = 13.2, range: [18, 75] ). 
+Out of these, 48.3% identified as female, 50.9% as male, and 0.86% as non-binary.  Out of these participants,  2.59%  reported having a doctoral degree, 18.32% masters degree, 48.49% a bachelors degree, 28.45 % a high school degree and 2.16%  other qualifications. 
 
-For the Müller-Lyer illusion, results showed similarly extreme evidence for condition differences, with lower scores in Congruent relative to Mild (Error Rate: median difference = −0.24, BF₁₀ = 2.08 × 10²⁴⁴; IES: median difference = −0.44, BF₁₀ = 4.16 × 10²⁰⁴), and in Mild relative to Strong (Error Rate: median difference = −0.37, BF₁₀ = 9.12 × 10²⁷⁸; IES: median difference = −1.60, BF₁₀ = 1.83 × 10¹⁵⁰).
+## 2. Score consistency
 
-For the Vertical–Horizontal illusion, there was again extreme evidence for differences between conditions, with lower Error Rates and IES in Congruent relative to Mild (Error Rate: median difference = −0.16, BF₁₀ = 4.97 × 10¹³⁵; IES: median difference = −0.34, BF₁₀ = 3.05 × 10¹⁴⁶), and in Mild relative to Strong (Error Rate: median difference = −0.33, BF₁₀ = 1.36 × 10²¹⁰; IES: median difference = −1.18, BF₁₀ = 1.34 × 10¹⁰⁰).
+Consistency analyses between the 3 illusions were conducted as registered, using Cronbach’s alpha. Error rate reliability was low (Mild: α = 0.32; Strong: α = 0.14), whereas IES reliability was mixed (Mild: α = 0.87; Strong: α = 0.33), overall providing no evidence for combining the scores of the 3 illusions.
 
-Bayesian correlations were conducted to assess the relationship between performance in the Mild and Strong illusion conditions, separately by illusion type, difficulty level (Easy, Hard), and outcome (Error Rate, IES). All correlations were positive and statistically significant (ps < .001), indicating consistent individual differences across illusion strength. However, not all correlations met the preregistered threshold for collapsing conditions (r > .50).
-
-For Error Rate, correlations exceeded the threshold for the Ebbinghaus (Easy: r = .52, 95% CI [.45, .58]; Hard: r = .63, 95% CI [.57, .68]) and Vertical–Horizontal illusions (Easy: r = .64, 95% CI [.58, .69]; Hard: r = .58, 95% CI [.52, .64]). In contrast, correlations for the Müller–Lyer illusion were below the threshold (Easy: r = .41, 95% CI [.33, .48]; Hard: r = .48, 95% CI [.41, .55]).
-
-For IES, fewer correlations met the threshold. Only the Ebbinghaus illusion in both conditions (Easy: r = .59, 95% CI [.52, .64]; Hard: r = .56, 95% CI [.49, .62]) and the Müller–Lyer illusion in the Easy condition (r = .53, 95% CI [.46, .59]) exceeded r > .50. All other correlations fell below the threshold (Müller–Lyer Hard: r = .33, 95% CI [.23, .43]; Vertical–Horizontal Easy: r = .37, 95% CI [.29, .45]; Hard: r = .40, 95% CI [.32, .48]).
-
-Overall, because the preregistered criterion (r > .50) was not consistently met across illusion types, outcomes, and difficulty levels, the Mild and Strong conditions were not collapsed and were analysed separately.
+PCS consistency was good (α = 0.78), and remained stable even when excluding the participants according to the registered plan (i.e., based on the removed attention check), suggesting that participants flagged by this item were not detrimental to the consistency of the measure. 
 
 
+## 3. Manipulation Checks
+
+### Condition Differences
+
+Bayesian paired-samples t-tests revealed extreme evidence for differences between conditions, with performance decreasing as illusion strength increased across all illusion types and outcome measures. For all three illusions (Ebbinghaus, Müller–Lyer, Vertical–Horizontal), error rates and IES were lower in the Congruent relative to Mild condition, and lower in the Mild relative to Strong condition, consistent with the expected effect of illusion strength. 
+
+```{r}
+#| warning: false
+#| label: fig-illusionexample
+#| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
+#| out-width: "100%"
+#| fig-cap: "The study involved three visual illusions, in which participants were instructed to respond as quickly as possible without making errors. Each illusion included two manipulated parameters: strength (e.g., the angle of the outward- or inward-pointing arrow-like fins in the Müller-Lyer illusion) and difficulty (e.g., the difference in line lengths in the Müller-Lyer illusion)."
+
+knitr::include_graphics("")
+```
+
+### Collapsing Mild and Strong conditions
+
+Registered Bayesian correlations were conducted to assess whether Mild and Strong conditions could be collapsed (criterion: r > .50). 
+Although all correlations were positive, the threshold was not consistently met across illusion types and outcome measures, with about 33.3% of the indices yielding a correlation between .40 and .50 and the rest between .50 and .72.
+
+For Error Rate, all associations were strong and positive. 
+The Vertical–Horizontal illusion showed the strongest relationship between Mild and Strong conditions, r = .74, 95% CI [.70, .78], t(462) = 23.76, p < .001. Similarly strong associations were observed for the Ebbinghaus illusion, r = .72, 95% CI [.67, .76], t(462) = 22.07, p < .001, and the Müller–Lyer illusion, r = .66, 95% CI [.60, .71], t(462) = 18.81, p < .001.
+
+For IES, moderate to strong positive correlations were observed. The Ebbinghaus illusion showed the strongest association between Mild and Strong conditions, r = .59, 95% CI [.53, .64], t(462) = 15.63, p < .001. This was followed by the Müller–Lyer illusion, r = .42, 95% CI [.34, .49], t(462) = 9.87, p < .001, and the Vertical–Horizontal illusion, r = .40, 95% CI [.32, .48], t(462) = 9.49, p < .001.
+
+Given this inconsistent pattern, the decision was made to present Mild and Strong separately. For comprehensiveness, the combined score was additionally computed and tested for the analysis below, yielding identical results (see Supplementary Analysis).
+
+## 4. Illusion Sensitivity, PCS, and Psychoticism
+
+### Registered Analysis
+Bayesian correlations were conducted to assess the relationship between illusion sensitivity (error rate and IES) and both PCS scores and the psychoticism facet of the PID-5.
+
+All correlations yielded Bayes factors below 3, providing no evidence for a relationship between PCS and illusion sensitivity. **X%** analyses yielded Bayes factors at or below the registered threshold for evidence in favour of the null hypothesis (BF₁₀ ≤ 1/3), whereas the rest fell within the inconclusive range (1/3 < BF₁₀ < 3), with no clear pattern pointing to specific illusions or scores. Taken together, these results suggest an absence of  relationship between PCS and illusion sensitivity (see Figure 1).
+
+Similarly, all BFs for the relationship between illusion sensitivity and the psychoticism facet of the PID-5 were below 3, indicating no substantial evidence in favour of the second registered hypothesis. 
+The results are therefore not aligned with the hypothesised positive association.
+
+```{r}
+#| warning: false
+#| label: fig-illusionexample
+#| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
+#| out-width: "100%"
+#| fig-cap: "The study involved three visual illusions, in which participants were instructed to respond as quickly as possible without making errors. Each illusion included two manipulated parameters: strength (e.g., the angle of the outward- or inward-pointing arrow-like fins in the Müller-Lyer illusion) and difficulty (e.g., the difference in line lengths in the Müller-Lyer illusion)."
+
+knitr::include_graphics("img/correlations.png")
+```
+
+### Exploratory analyses
+To assess the robustness of these findings through a multiverse analysis approach, additional (non-registered) scores were constructed. These included error rates and IES computed from collapsed conditions (Mild and Strong Illusion Strength together), including collapsed condition scores (e.g., the error), collapsed difficulty levels, fully disaggregated condition × difficulty combinations, and global performance indices. Bayesian correlations with the PCS and the Psychoticism were recomputed across these alternative operationalisations; with no changes in the results (i.e., all BFs < 3).
 
 # Discussion
 
