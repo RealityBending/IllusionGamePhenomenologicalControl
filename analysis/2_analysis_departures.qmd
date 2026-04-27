@@ -38,6 +38,39 @@ data_ig <- read.csv("../data/data_illusion.csv") |>
 
 ```
 
+```{r}
+# APA style ####
+gt_apastyle <- function(gt_table, font.size=12) {
+  gt_table  |> 
+    gt::opt_table_lines(extent = "none") %>%
+    gt::tab_options(
+      heading.border.bottom.width = 2,
+      heading.border.bottom.color = "black",
+      heading.border.bottom.style = "solid",
+      table.border.top.color = "black",
+      table.border.top.style = "solid",
+      table.border.top.width = 2,  
+      table_body.hlines.color = "white",
+      table_body.border.top.color = "black",
+      table_body.border.top.style = "solid",
+      table_body.border.top.width = 2,
+      heading.title.font.size = font.size,
+      table.font.size = font.size,
+      heading.subtitle.font.size = font.size,
+      table_body.border.bottom.color = "black",
+      table_body.border.bottom.width = 2,
+      table_body.border.bottom.style = "solid",
+      column_labels.border.bottom.color = "black",
+      column_labels.border.bottom.style = "solid",
+      column_labels.border.bottom.width = 1,
+      latex.use_longtable = FALSE
+    ) |> 
+      gt::opt_table_font(font = "times")
+}
+
+
+```
+
 
 ## Score Computation
 
@@ -467,7 +500,7 @@ p <- rez |>
   geom_linerange(aes(xmin = CI_low, xmax = CI_high), position = position_dodge(width = 0.5), linewidth = 1) +
   # geom_label(aes(label = format_bf(BF, stars=TRUE, protect_ratio=F)), 
   #           position = position_dodge(width = 0.5), hjust = 0.5, size = 2, vjust=1) +
-  geom_text(aes(x=0, label = format_bf(BF, stars=TRUE, protect_ratio=F)), 
+  geom_text(aes(x=0, label = insight::format_bf(BF, stars=TRUE, protect_ratio=F)), 
             position = position_dodge(width = 0.5), hjust = 0.5, size = 2, vjust=-0.5, show.legend = FALSE) +
   scale_color_manual(values = c("Congruent" = "#2196F3", "Mild" = "darkorange", "Strong" = "red"),
                      breaks = c("Strong", "Mild", "Congruent")) +
@@ -485,52 +518,59 @@ p <- rez |>
          strip.text.y = element_text(size = 10, face = "italic"),
          plot.title = element_text(size = 14, face = "bold", hjust = 0.5))
 p
+
+ggsave(p,  filename = "figures/correlations.png", device = "png")
+
+
 ```
 
 ## Tables
 
+
 ```{r}
-format_bf <- function(bf) {
-  ifelse(bf > 1000, "BF₁₀ > 1000",
-         sprintf("BF₁₀ = %.2f", bf))
-}
 
-ttests_table <- ttests |>
-  mutate(
-    Condition_Illusion = recode(Condition_Illusion, "Congruent" = "Congruent vs Mild","Mild" = "Mild vs Strong"),
-    Illusion_Type = recode( Illusion_Type,"MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal" )) |>
-   select(Illusion_Type, Condition_Illusion, Outcome, Median, BF) |>
-  pivot_wider(names_from = c(Outcome, Condition_Illusion),values_from = c(Median, BF)) |>
+ig_means <- ig_scores |>
+  select(contains("Mild_General"), contains("Strong_General"), contains("_Congruent_General")) |>
+  describe_distribution()
+
+ig_means_table <- ig_means |>
+  separate(Variable,into = c("Outcome", "Illusion_Type", "Condition", "Extra"),sep = "_") |>
+  select(Outcome, Illusion_Type, Condition, Mean, SD, Min, Max)|>
+  pivot_wider(
+    names_from = c(Outcome,  Condition),
+    values_from = c(Mean, SD, Min, Max)) |>
   arrange(Illusion_Type) |>
-  mutate(
-    `Error Rate: Congruent vs Mild` = sprintf(
-      "M = %.2f, %s",
-      `Median_ErrorRate_Congruent vs Mild`,
-      format_bf(`BF_ErrorRate_Congruent vs Mild`)),
-    `Error Rate: Mild vs Strong` = sprintf(
-      "M = %.2f, %s",
-     `Median_ErrorRate_Mild vs Strong`,
-      format_bf(`BF_ErrorRate_Mild vs Strong`)),
-    `IES: Congruent vs Mild` = sprintf(
-      "M = %.2f, %s",
-      `Median_IES_Congruent vs Mild`,
-      format_bf(`BF_IES_Congruent vs Mild`)),
-    `IES: Mild vs Strong` = sprintf(
-      "M = %.2f, %s",
-      `Median_IES_Mild vs Strong`,
-      format_bf(`BF_IES_Mild vs Strong`))) |>
-  select(Illusion_Type,`Error Rate: Congruent vs Mild`,`Error Rate: Mild vs Strong`,`IES: Congruent vs Mild`,`IES: Mild vs Strong`)
+  mutate(`Error Rate Mild` = paste0(insight::format_percent(Mean_ErrorRate_Mild), " ± ",  round(SD_ErrorRate_Mild*100, 0), "%"),
+         `Error Rate Strong` = paste0(insight::format_percent(Mean_ErrorRate_Strong)," ± ",  round(SD_ErrorRate_Strong*100, 0), "%"),
+         `Error Rate Congruent` = paste0(insight::format_percent(Mean_ErrorRate_Congruent)," ± ",  round(SD_ErrorRate_Congruent*100, 0), "%"),
+        
+         `IES Mild` = sprintf("%.2f  ± %.2f", Mean_IES_Mild,SD_IES_Mild),
+         `IES Strong` = sprintf("%.2f  ± %.2f", Mean_IES_Strong,SD_IES_Strong),
+         `IES Congruent` = sprintf("%.2f  ± %.2f", Mean_IES_Congruent,SD_IES_Congruent)) |>
+ select(Illusion_Type,`Error Rate Congruent`, `Error Rate Mild`,`Error Rate Strong`, `IES Congruent`, `IES Mild`,`IES Strong` ) |>
+  mutate(Illusion_Type = recode(Illusion_Type,"MullerLyer" = "Müller-Lyer","VerticalHorizontal" = "Vertical–Horizontal" ))
 
 
-table1 <- ttests_table |>
-  gt::gt(rowname_col = "Illusion_Type") |>
-  gt::tab_spanner(label = "Error Rate", columns = c(`Error Rate: Congruent vs Mild`, `Error Rate: Mild vs Strong`)) |>
-  gt::tab_spanner(label = "IES",columns = c(`IES: Congruent vs Mild`, `IES: Mild vs Strong`) ) |>
-  gt::cols_label(Illusion_Type = "Illusion Type") 
+table1 <- ig_means_table |>
+ gt::gt(rowname_col = "Illusion_Type") |>
+  gt::tab_spanner(label = "Error Rate",columns = starts_with("Error Rate")) |>
+  gt::tab_spanner(label = "IES",columns = starts_with("IES")) |>
+  gt::cols_label(
+    `Error Rate Congruent` = "Congruent",
+    `Error Rate Mild` = "Mild",
+    `Error Rate Strong` = "Strong",
+    `IES Congruent` = "Congruent",
+    `IES Mild` = "Mild",
+    `IES Strong` = "Strong") |>
+  gt::tab_source_note(
+    source_note = "Note. Values represent means and standard deviations. All Bayes factors (BFs) for the group differences exceeded 1000, indicating extreme evidence in favour of a difference between groups."
+  ) |> gt_apastyle()
 
-gt::gtsave(table1, "table1.tex", expand = 10)
 
 table1
-  
+
+saveRDS(table1, "figures/table1.rds")
+   
 ```
+
 
