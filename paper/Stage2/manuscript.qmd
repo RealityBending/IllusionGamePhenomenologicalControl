@@ -344,21 +344,49 @@ PCS consistency was good (α = 0.78), and remained stable even when excluding th
 
 ### Condition Differences
 
-Bayesian paired-samples t-tests revealed extreme evidence for differences between conditions, with performance decreasing as illusion strength increased across all illusion types and outcome measures. For all three illusions (Ebbinghaus, Müller–Lyer, Vertical–Horizontal), error rates and IES were lower in the Congruent relative to Mild condition, and lower in the Mild relative to Strong condition, consistent with the expected effect of illusion strength. 
+Bayesian paired-samples t-tests revealed extreme evidence for differences between conditions, with performance decreasing as illusion strength increased across all illusion types and outcome measures. For all three illusions (Ebbinghaus, Müller–Lyer, Vertical–Horizontal), error rates and IES were lower in the Congruent relative to Mild condition, and lower in the Mild relative to Strong condition, consistent with the expected effect of illusion strength (see @tbl-tablemeans). 
 
 ```{r}
 #| warning: false
-#| label: fig-illusionexample
+#| label: tbl-tablemeans
 #| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
 #| out-width: "100%"
 #| fig-cap: ""
 
-library(flextable)
-set_flextable_defaults(font.size = 6)
+library(gt)
+
+gt_apastyle <- function(gt_table, font.size=12) {
+  gt_table  |> 
+    gt::opt_table_lines(extent = "none") %>%
+    gt::tab_options(
+      heading.border.bottom.width = 2,
+      heading.border.bottom.color = "black",
+      heading.border.bottom.style = "solid",
+      table.border.top.color = "black",
+      table.border.top.style = "solid",
+      table.border.top.width = 2,  
+      table_body.hlines.color = "white",
+      table_body.border.top.color = "black",
+      table_body.border.top.style = "solid",
+      table_body.border.top.width = 2,
+      heading.title.font.size = font.size,
+      table.font.size = font.size,
+      heading.subtitle.font.size = font.size,
+      table_body.border.bottom.color = "black",
+      table_body.border.bottom.width = 2,
+      table_body.border.bottom.style = "solid",
+      column_labels.border.bottom.color = "black",
+      column_labels.border.bottom.style = "solid",
+      column_labels.border.bottom.width = 1,
+      latex.use_longtable = FALSE
+    ) |> 
+      gt::opt_table_font(font = "times")
+}
+
 
 table <- readRDS("../../analysis/figures/table1.rds")
 
-table
+table |> gt_apastyle()
 ```
 
 ### Collapsing Mild and Strong conditions
@@ -376,7 +404,7 @@ Given this inconsistent pattern, the decision was made to present Mild and Stron
 ## 4. Illusion Sensitivity, PCS, and Psychoticism
 
 ### Registered Analysis
-Bayesian correlations were conducted to assess the relationship between illusion sensitivity (error rate and IES) and both PCS scores and the psychoticism facet of the PID-5.
+Bayesian correlations were conducted to assess the relationship between illusion sensitivity (error rate and IES) and both PCS scores and the psychoticism facet of the PID-5 (see @fig-corr).
 
 All correlations yielded Bayes factors below 3, providing no evidence for a relationship between PCS and illusion sensitivity. **X%** analyses yielded Bayes factors at or below the registered threshold for evidence in favour of the null hypothesis (BF₁₀ ≤ 1/3), whereas the rest fell within the inconclusive range (1/3 < BF₁₀ < 3), with no clear pattern pointing to specific illusions or scores. Taken together, these results suggest an absence of  relationship between PCS and illusion sensitivity (see Figure 1).
 
@@ -385,7 +413,7 @@ The results are therefore not aligned with the hypothesised positive association
 
 ```{r}
 #| warning: false
-#| label: fig-illusionexample
+#| label: fig-corr
 #| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
 #| out-width: "100%"
 #| fig-cap: "The study involved three visual illusions, in which participants were instructed to respond as quickly as possible without making errors. Each illusion included two manipulated parameters: strength (e.g., the angle of the outward- or inward-pointing arrow-like fins in the Müller-Lyer illusion) and difficulty (e.g., the difference in line lengths in the Müller-Lyer illusion)."
