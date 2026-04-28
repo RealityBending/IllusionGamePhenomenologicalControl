@@ -1,6 +1,6 @@
 ---
 title: "Illusion Sensitivity and Phenomenological Control"
-subtitle: "Analysis - Departures From Preregistration"
+subtitle: "Analysis"
 date: "`r Sys.Date()`"
 editor: source
 editor_options: 
@@ -8,7 +8,7 @@ editor_options:
 format:
   html:
     code-fold: true
-    self-contained: true
+    self-contained: false
     toc: true
     warning: false 
     message: false 
@@ -541,8 +541,8 @@ make_cor(data=data_ppt[data_ppt$PCS_Outlier_Press == F, ])
 ## Figures
 
 ```{r fig1}
-#| fig-width: 10
-#| fig-height: 8
+#| fig-width: 9
+#| fig-height: 11
 #| dpi: 300
 
 # rez <- rez

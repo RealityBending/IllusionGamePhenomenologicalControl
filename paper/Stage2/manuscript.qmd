@@ -6,8 +6,6 @@ author:
     # conceptualization, data curation, formal Analysis, funding acquisition, investigation, 
     # methodology, project administration, resources, software, supervision, validation, 
     # visualization, writing, editing
-  #     - Supervision
-  #     - Writing – review & editing
   - name: Dominique Makowski
     corresponding: true
     orcid: 0000-0001-5375-9967
@@ -78,7 +76,7 @@ author-note:
     gratitude: null
     authorship-agreements: null
 abstract: "
-  Visual illusions highlight how easily our conscious experience can be altered with respect to perceptual reality. Despite sharing in-principle mechanisms with phenomenological control, i.e., the ability to alter our perceptual experience to match task demands or expectations, research tying the two remains scarce. This study aimed to replicate and extend Lush et al., (2022) by testing for a relationship between phenomenological control and illusion sensitivity across multiple illusion types, assessing the role of higher-level (top-down) processes. It also examines associations between visual illusion sensitivity and psychoticism to assess the potential contribution of lower-level effects (e.g., weak priors). Five hundred participants were recruited in an online study using a novel behavioural paradigm (Illusion Game) measuring sensitivity to three visual illusions (Ebbinghaus, Müller-Lyer, Vertical-Horizontal), alongside the Phenomenological Control Scale and personality measures. Bayesian correlation analyses provided evidence supporting the absence of a relationship between phenomenological control and illusion sensitivity, replicating prior findings. In contrast, no evidence was found for an association between psychoticism and illusion sensitivity. These findings support accounts of the cognitive impenetrability of visual illusions, suggesting that illusion susceptibility operates independently of higher-level control over subjective experience. Furthermore, low consistency across illusion measures highlights important methodological limitations in capturing individual differences in perceptual processing."
+  Visual illusions highlight how easily our conscious experience can be altered with respect to perceptual reality. Despite sharing in-principle mechanisms with phenomenological control, i.e., the ability to alter our perceptual experience to match task demands or expectations, research tying the two remains scarce. This study aimed to replicate and extend Lush et al., (2022) by testing for a relationship between phenomenological control and illusion sensitivity across multiple illusion types, assessing the role of higher-level (top-down) processes. It also examines associations between visual illusion sensitivity and psychoticism to assess the potential contribution of lower-level effects (e.g., weak priors). Five hundred participants were recruited in an online study using an illusion-based perceptual decision paradigm (Illusion Game; Makowski et al., 2023) measuring sensitivity to three visual illusions (Ebbinghaus, Müller-Lyer, Vertical-Horizontal), alongside the Phenomenological Control Scale and personality measures. Bayesian correlation analyses provided evidence supporting the absence of a relationship between phenomenological control and illusion sensitivity, replicating prior findings. No evidence was also found for an association between illusion sensitivity and psychoticism. These findings support the hypothesis that visual illusions are to some degree cognitively impenetrable, and suggest that illusion susceptibility operates independently of higher-level control over subjective experience. However, low consistency across illusion measures highlights important methodological limitations in capturing individual differences related to illusion sensitivity."
 keywords: [illusion sensitivity, visual illusions, phenomenological control, suggestibility, hypnotizability]
 floatsintext: true
 numbered-lines: true
@@ -197,8 +195,7 @@ Following the data exclusion steps (see **Results** section), the final sample i
 
 ## Procedure
 
-The experiment's setup follows the born-open principle [@deleeuw2023], and all its related material is available at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**.
-The online experiment, implemented entirely using *JsPsych* [@de2015jspsych], has its code stored on GitHub and leverages the power of the platform to host the experiment for free. 
+The experiment's setup follows the born-open principle [@deleeuw2023], and all its related material is available at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**. The online experiment, implemented entirely using *JsPsych* [@de2015jspsych], has its code stored on GitHub and leverages the power of the platform to host the experiment for free. 
 Participant’s raw data files (containing identifiers) were stored in a private OSF repository, but deanonimized using a publically available preprocessing script. 
 The resulting anonymized data, and the analysis reports, are available, ensuring the transparency and reproducibility of all the analysis steps.
 
@@ -310,13 +307,13 @@ Following @theriault2024, trials with response times below 0.2 seconds or above 
 
 ### Deviations From Registration
 
-#### PCS
+#### Phenomenological Control
 
 The registered protocol specified that participants failing any of the three attention checks in the PCS would be excluded. 
 However, one attention check (requiring participants to press the space bar at least 5 times) resulted in the exclusion of 189 participants (37.8%), which was disproportionately high compared to the other two checks combined, which were failed by 19 (3.8%) participants.
 This suggests an attention check that was not well calibrated, and led us to question the validity of this criterion for identifying inattentive participants.
 
-Firstly, we examined the consistency of the score with and without the participants flagged by this item, which remained similar (Cronbach's $\alpha$ = 0.78 without removal; 0.78 with removal), suggesting that their exclusion did not enhance the internal consistency of the scale. As such, we decided to present results with these participants. However, for accountability, the registered results without these participants are available in supplementary materials, but does not have an impact on the findings. 
+Firstly, we examined the consistency of the score with and without the participants flagged by this item, which remained similar (Cronbach's $\alpha$ = 0.78 without removal; 0.78 with removal), suggesting that their exclusion did not enhance the internal consistency of the scale. As such, we decided to present results with these participants. However, for accountability, the registered results without these participants are available in the full analysis report on the project's GitHub repository, but they did not have an impact on the findings. 
 
 
 #### Illusion Game
@@ -335,6 +332,7 @@ Bayesian paired-samples *t*-tests revealed extreme evidence for differences betw
 #| warning: false
 #| apa-twocolumn: true
 #| disable-apaquarto-processing: true
+#| tbl-cap: "Mean and standard deviation of error rate and IES for each illusion type and strength condition. Note that all differences between adjacent ilustion strength conditions are significant (BF > 1000)."
 
 
 table <- readRDS("../../analysis/figures/table1_raw.rds")
@@ -344,67 +342,13 @@ names(table) <- str_replace(names(table), "IES ", "IES - ") |>
 table |>
   datawizard::data_rename("Illusion_Type", "Illusion") |>
   flextable::as_flextable()|>
-  flextable::add_footer_lines(
-    values = flextable::as_paragraph(flextable::as_i("Note. "),"These values present mean and standard deviations.")) |>
+  # flextable::add_footer_lines(
+  #   values = flextable::as_paragraph(flextable::as_i("Note. "),"These values present mean and standard deviations.")) |>
   flextable::set_table_properties(width = 1, layout = "autofit") |>
   flextable::fontsize(size = 10)
   
-# insight::export_table(table,
-#                       column_names = c(
-#                         "Illusion",
-#                         "ER - Congruent", "ER - Mild", "ER - Strong",
-#                         "IES - Congruent", "IES - Mild", "IES - Strong"))
 ```
 
-<!-- ```{r} -->
-<!-- #| eval: true -->
-<!-- #| warning: false -->
-<!-- #| label: fig-tablemeans -->
-<!-- #| apa-twocolumn: true  # A Figure Spanning Two Columns When in Journal Mode -->
-<!-- #| out-width: "100%" -->
-<!-- #| fig-cap: "" -->
-
-<!-- library(gt) -->
-
-<!-- gt_apastyle <- function(gt_table, font.size=12) { -->
-<!--   gt_table  |> -->
-<!--     gt::opt_table_lines(extent = "none") %>% -->
-<!--     gt::tab_options( -->
-<!--       heading.border.bottom.width = 2, -->
-<!--       heading.border.bottom.color = "black", -->
-<!--       heading.border.bottom.style = "solid", -->
-<!--       table.border.top.color = "black", -->
-<!--       table.border.top.style = "solid", -->
-<!--       table.border.top.width = 2, -->
-<!--       table_body.hlines.color = "white", -->
-<!--       table_body.border.top.color = "black", -->
-<!--       table_body.border.top.style = "solid", -->
-<!--       table_body.border.top.width = 2, -->
-<!--       # heading.title.font.size = font.size, -->
-<!--       # table.font.size = font.size, -->
-<!--       # heading.subtitle.font.size = font.size, -->
-<!--       table_body.border.bottom.color = "black", -->
-<!--       table_body.border.bottom.width = 2, -->
-<!--       table_body.border.bottom.style = "solid", -->
-<!--       column_labels.border.bottom.color = "black", -->
-<!--       column_labels.border.bottom.style = "solid", -->
-<!--       column_labels.border.bottom.width = 1, -->
-<!--       latex.use_longtable = FALSE -->
-<!--     ) |> -->
-<!--       gt::opt_table_font(font = "times") -->
-<!-- } -->
-
-
-<!-- # table <- readRDS("../../analysis/figures/table1_raw.rds") -->
-<!-- # table |> -->
-<!-- #   flextable::flextable() |> -->
-<!-- #   flextable::theme_apa() -->
-<!-- # -->
-<!-- # insight::export_table(table, format = "tt", -->
-<!-- #                       column_names = c("Congruent", "Mild", "Strong"), -->
-<!-- readRDS("../../analysis/figures/table1.rds") |>  -->
-<!--   gt::as_latex() -->
-<!-- ``` -->
 
 
 
@@ -412,7 +356,7 @@ table |>
 
 The 10 items forming the PCS score yielded acceptable consistency ($\alpha = 0.78$).
 
-For the illusion scores, the registered plan was to first evaluate the possibility of collapsing across Mild and Strong illusion strength conditions by inspecting the correlations between them. However, they yielded an inconsistent pattern of results, with some correlations being above the registered threshold (r > .50) and others falling below it, without any obvious pattern (see correlation tables in the data analysis folder on the project's GitHub repository) with respect to specific illusions or outcome (error rate or IES). 
+For the illusion scores, the registered plan was to first evaluate the possibility of collapsing across Mild and Strong illusion strength conditions by inspecting the correlations between them. However, they yielded an inconsistent pattern of results, with some correlations being above the registered threshold (r > .50) and others falling below it, without any obvious pattern (see correlation tables in the full analysis report on the project's GitHub repository) with respect to specific illusions or outcome (error rate or IES). 
 Consequently, we decided to present them separately in the main analysis, although results with the aggregated scores are included on the project's GitHub repository for comprehensiveness, yielding identical results.
 
 Consistency analyses between the 3 illusions were conducted as registered, using Cronbach’s alpha. Error rate consistency was low (Mild: $\alpha = 0.32$; Strong: $\alpha = 0.14$), whereas IES reliability was mixed (Mild: $\alpha = 0.87$; Strong: $\alpha = 0.33$), overall providing no evidence for combining the scores of the 3 illusions.
@@ -448,7 +392,7 @@ The results are therefore not aligned with the hypothesised positive association
 #| out-width: "100%"
 #| fig-cap: "The study involved three visual illusions, in which participants were instructed to respond as quickly as possible without making errors. Each illusion included two manipulated parameters: strength (e.g., the angle of the outward- or inward-pointing arrow-like fins in the Müller-Lyer illusion) and difficulty (e.g., the difference in line lengths in the Müller-Lyer illusion)."
 
-knitr::include_graphics("../../analysis/figures/correlations.png")
+knitr::include_graphics("../../analysis/2_analysis_files/figure-html/fig1-1.png")
 ```
 
 ### Exploratory Analyses
@@ -481,7 +425,9 @@ In summary, the present study reinforces the view that visual illusions are high
 
 # Data Availability
 
-All the study materials, experiment, data, and analysis are available on GitHub. [For the review process the pcs materials, the illusion game, and the analyses scripts can be accessed here: **https://osf.io/da3u6/?view_only=247d4efa1afe456aa07662732946d4e6**. Note this link will be replaced with the GitHub page of the current project upon completion of the review process to ensure continued anonymisation]. 
+All the study materials, experiment, data, and analysis are available on GitHub at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**.
+
+URL to the preregistered Stage 1 protocol: https://osf.io/kvjnm
 
 # Acknowledgments
 
