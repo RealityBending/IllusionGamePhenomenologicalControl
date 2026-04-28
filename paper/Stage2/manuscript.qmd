@@ -216,8 +216,8 @@ Participants then underwent the Phenomenological Control Scale (PCS) and the Ill
 ### Phenomenological Control Scale (PCS)
 
 Participants were asked to put on their headphones and await further auditory instructions. 
-The PCS procedure starts with a recorded introduction explaining that a series of tests will be applied to evaluate how experiences can be created through imagination, followed by 10 suggestions in a fixed order [see @lush2021], such as "now extend your arms ahead of you, with palms facing each other, hands about a foot apart" and "as you sit comfortably in your chair with your eyes closed, a picture of two balls will be displayed on the computer screen". 
-Once the 10 suggestions are completed, participants will be asked to rate their subjective experiences and response to each suggestion on a 6-points Likert scale (from 0-5).
+The PCS procedure started with a recorded introduction explaining that a series of tests would be applied to evaluate how experiences can be created through imagination, followed by 10 suggestions in a fixed order [see @lush2021], such as "now extend your arms ahead of you, with palms facing each other, hands about a foot apart" and "as you sit comfortably in your chair with your eyes closed, a picture of two balls will be displayed on the computer screen". 
+Once the 10 suggestions were completed, participants were asked to rate their subjective experiences and response to each suggestion on a 6-points Likert scale (from 0-5).
 The Phenomenological control score will be computed by averaging the scores from the 10 scales.
 
 ### Illusion Game
@@ -236,26 +236,26 @@ In the current procedure, only three illusions are used, selected based on the o
 knitr::include_graphics("img/IllusionTable.jpg")
 ```
 
-The procedure encompasses 2 sets of 80 trials for each illusion type, preceded by a practice trial for each illusion. 
-Each set will include, in a random order, the 3 blocks of illusion types, in which trials are separated by a fixation cross, temporally (uniformly sampled duration of 500 - 1000s) and spatially jittered (around the centre of the screen in a radius of a 1 cm) to attenuate its potential usefulness as a reference point. 
-After each illusion type block, an arbitrary score is presented (computed as a scaled Inverse Efficiency Score) as a gamification mechanism to increase motivation to perform to the best of one's abilities. 
-To mitigate for the potential variability in the speed/accuracy trade-off, the instructions emphasize with equal weight to be fast and to avoid errors.
+The procedure encompassed 2 sets of 80 trials for each illusion type, preceded by a practice trial for each illusion. 
+Each set included, in a random order, the 3 blocks of illusion types, in which trials were separated by a fixation cross, temporally (uniformly sampled duration of 500 - 1000s) and spatially jittered (around the centre of the screen in a radius of a 1 cm) to attenuate its potential usefulness as a reference point. 
+After each illusion type block, an arbitrary score was presented (computed as a scaled Inverse Efficiency Score) as a gamification mechanism to increase motivation to perform to the best of one's abilities. 
+To mitigate for the potential variability in the speed/accuracy trade-off, the instructions emphasized with equal weight to be fast and to avoid errors.
 
-For each illusion type, two continuous dimensions are orthogonally manipulated namely task difficulty and illusion strength, so that each trial corresponds to a unique combination, providing an objectively correct answer for each trial.
+For each illusion type, two continuous dimensions were orthogonally manipulated namely task difficulty and illusion strength, so that each trial corresponds to a unique combination, providing an objectively correct answer for each trial.
 The use of these manipulations allows concise, standardised reporting of illusion parameters and ensures our stimuli are fully reproducible [see @makowski2021].
 
-Task difficulty corresponds to the difficulty of the perceptual decision (e.g., if the task is to select the longest red line, task difficulty corresponds to how the lines are objectively different). 
+Task difficulty corresponds to the difficulty of the perceptual decision (e.g., if the task is to select the longest red line, task difficulty corresponds to how the lines are objectively different).
 Illusion strength corresponds to the degree to which the illusion elements (e.g., the black arrow lines in Müller-Lyer) are interfering with the aforementioned task. 
 Note that the illusion effect can be either “incongruent”, making the task more difficult by biasing perceptual decisions toward the incorrect response or “congruent”, making the task easier by biasing decisions toward the correct response (e.g., in the Müller-Lyer illusion, if the outwards-facing arrowheads are placed on the longer line, identifying which line is the longest becomes easier).
-Participants respond with a key arrow (left vs. right; or up vs. down), and their reaction time (RT) and accuracy are recorded.
+Participants responded with a key arrow (left vs. right; or up vs. down), and their reaction time (RT) and accuracy were recorded.
 
-Visual illusion sensitivity will be measured as the average error rate in the incongruent condition, and separately for the 3 illusion types. 
-Although the error rate is arguably a crude score, which does not take into account the effect of varying illusion strength, the interaction with task difficulty and the possible adjustments in response strategy (speed-accuracy trade off), it is also the most simple and easy to reproduce, hence its usage as our primary outcome for the current registered report.
-As a secondary exploratory outcome, the Inverse Efficiency Score [IES, @townsend2014methods] will also be computed. This metric incorporates both speed and accuracy by dividing the mean reaction time of correct responses by the proportion of correct responses, separately for each illusion.
+Visual illusion sensitivity was measured as the average error rate in the incongruent condition, and separately for the 3 illusion types. 
+Although the error rate is arguably a crude score, which does not take into account the effect of varying illusion strength, the interaction with task difficulty and the possible adjustments in response strategy (speed-accuracy trade off), it is also the most simple and easy to reproduce, hence its usage as our primary outcome for the current registered report. 
+As a secondary exploratory outcome, the Inverse Efficiency Score (IES, Townsend & Ashby, 2014) was computed. This metric incorporates both speed and accuracy by dividing the mean reaction time of correct responses by the proportion of correct responses, separately for each illusion.
 
-The two sets of 3 illusion blocks will be separated by 2 short questionnaires acting as a break, namely the IPIP-6 [@sibley2011mini], measuring 6 personality traits with 24 analogue scales items, and the PID-5 [@krueger2011], measuring 5 maladaptive personality traits with 25 Likert scales items. 
-These questionnaires are included as a way of providing a break between the two cognitively taxing blocks and maintain paradigmatic consistency with previous studies [@makowski2023].
-Additionally, the psychoticism subscale of the PID-5 will be used to examine the correlation between maladaptive traits and illusion sensitivity, evaluating the existence of the link proposed in previous studies [@costa2023].
+The two sets of 3 illusion blocks were separated by 2 short questionnaires acting as a break, namely the IPIP-6 [@sibley2011mini], measuring 6 personality traits with 24 analogue scales items, and the PID-5 [@krueger2011], measuring 5 maladaptive personality traits with 25 Likert scales items. 
+These questionnaires were included as a way of providing a break between the two cognitively taxing blocks and maintain paradigmatic consistency with previous studies [@makowski2023]. 
+Additionally, the psychoticism subscale of the PID-5 was used to examine the correlation between maladaptive traits and illusion sensitivity, evaluating the existence of the link proposed in previous studies [@costa2023].
 
 ## Data Analysis
 
@@ -341,12 +341,15 @@ Following this, participants outside the 97.5% CI for the error rate for a given
 #| disable-apaquarto-processing: true
 #| apa-twocolumn: true
 
+
 table <- readRDS("../../analysis/figures/table1_raw.rds")
 names(table) <- str_replace(names(table), "IES ", "IES - ") |> 
   str_replace("Rate ", "Rate - ")
+
 table |>
   datawizard::data_rename("Illusion_Type", "Illusion") |>
-  flextable::as_flextable()
+  flextable::as_flextable() |>
+  flextable::add_footer_lines("Note. These values present mean and standard deviations.")
 # insight::export_table(table,
 #                       column_names = c(
 #                         "Illusion",
@@ -405,12 +408,13 @@ table |>
 <!-- ``` -->
 
 
-Bayesian paired-samples *t*-tests revealed extreme evidence for differences between illusion strength conditions, with performance decreasing as illusion strength increased across all illusion types and outcome measures ($BF_{10} > 1000$) . For all three illusions (Ebbinghaus, Müller–Lyer, Vertical–Horizontal), error rates and IES were significantly lower in the Congruent relative to Mild condition, and lower in the Mild relative to Strong condition, consistent with the expected effect of illusion strength (see @tbl-tablemeans). 
+
+Bayesian paired-samples *t*-tests revealed extreme evidence for differences between illusion strength conditions, with performance decreasing as illusion strength increased across all illusion types and outcome measures ($BF_{10} > 1000$). For all three illusions (Ebbinghaus, Müller–Lyer, Vertical–Horizontal), error rates and IES were significantly lower in the Congruent relative to Mild condition, and lower in the Mild relative to Strong condition, consistent with the expected effect of illusion strength (see @tbl-tablemeans). 
 
 
 ## Score consistency
 
-The 10 items forming the PCS score yielded accecptable consistency ($\alpha = 0.75$).
+The 10 items forming the PCS score yielded accecptable consistency ($\alpha = 0.78$).
 
 For the illusion scores, the registered plan was to first evaluate the possibility of collapsing across Mild and Strong illusion strength conditions by inspecting the correlations between them. However, they yielded an inconsistent pattern of results, with some correlations being above the registered threshold (r > .50) and others falling below it, without any obvious pattern (see correlation tables in **Supplementary Materials**) with respect to specific illusions or outcome (error rate or IES). 
 Consequently, we decided to present them separately in the main analysis, although results with the aggregated scores are included in the Supplementary Materials for comprehensiveness, yielding identical results.
@@ -466,7 +470,7 @@ The present findings provide compelling evidence replicating @lush2022, confirmi
 <!-- Psychoticism -->
 In contrast to our registered hypothesis, we found no evidence of an association between visual illusion sensitivity and the psychoticism facet of the PID-5. This result was unexpected, given the literature linking schizophrenia-spectrum traits and schizotypy to reduced susceptibility to visual illusions, a phenomenon often attributed to the reduced precision of perceptual priors within predictive coding frameworks. However, this discrepancy may be driven by how individual differences were operationalized in the current study. For instance, whereas @makowski2023 measured sensitivity across an aggregate of 10 different visual illusions, the current procedure was streamlined to include only three, and analyzed the relationship with psychoticism with each illusion individually, we may have lacked the statistical breadth required to extract a robust, common "illusion sensitivity" factor. Conceptually, we could hypothesize that the task-performance on any single illusion is driven by a combination of illusion-specific factors (e.g., the particular perceptual properties and localized prior-systems engaged by that specific visual configuration) and illusion-general factors (an overarching, trait-level characteristic tapped into during illusory perceptual interference). When analyzing specific illusions in isolation, the illusion-specific factors might overweigh the common component, potentially masking associations with broad personality constructs. However, this assumption is challenged by the fact that the internal consistency (i.e., the inter-correlation) between the three illusions in our sample was remarkably low, inconsistent at first glance with the notion of a common "illusion sensitivity" factor. This lack of coherence might result from a compounding of issues related to both the low number of illusions, as well as the specific measurement indices utilized. 
 
-Indeed, it is important to underline that the above findings and hypotheses are predicated on one critical assumption: that the outcome measures used in the current study (error rate and IES) are valid and sensitive indices to the individual differences in illusion sensitivity. Previous studies that successfully detected relationships with personality traits, such as @makowski2023, utilized indices derived from participant-specific parameters extracted from group-level hierarchical Bayesian General Additive Models. In contrast, the current preregistered analysis intentionally relied on rather crude summary measures. This critical methodological trade-off regarding how perceptual interference is quantified was adopted as complex computational models, while sensitive, carry significant drawbacks. For instance, they are computationally challenging and complex, and the resulting individual indices are not easily reproducible and replicable (as the estimates are inherently dependent on a bespoke parent model estimated from a specific dataset). Moreover, they are inherently limited by the appropriateness of the parent model as an accurate representation of the underlying data-generating process, which as noted by @makowski2023, is not yet established. In particular, while the GAMs used are great models to describe complex, potentially non-linear, patterns and relationships, they did not account for the interaction between speed and accuracy, which might be an important aspect of illusion-related perceptual interference effects.
+Indeed, it is important to underline that the above findings and hypotheses are predicated on one critical assumption: that the outcome measures used in the current study (error rate and IES) are valid and sensitive indices to the individual differences in illusion sensitivity. Previous studies that successfully detected relationships with personality traits, such as @makowski2023, utilized indices derived from participant-specific parameters extracted from group-level hierarchical Bayesian General Additive Models (GAMs). In contrast, the current preregistered analysis intentionally relied on rather crude summary measures. This critical methodological trade-off regarding how perceptual interference is quantified was adopted as complex computational models, while sensitive, carry significant drawbacks. For instance, they are computationally challenging and complex, and the resulting individual indices are not easily reproducible and replicable (as the estimates are inherently dependent on a bespoke parent model estimated from a specific dataset). Moreover, they are inherently limited by the appropriateness of the parent model as an accurate representation of the underlying data-generating process, which as noted by @makowski2023, is not yet established. In particular, while the GAMs used are great models to describe complex, potentially non-linear, patterns and relationships, they did not account for the interaction between speed and accuracy, which might be an important aspect of illusion-related perceptual interference effects.
 But while our chosen summary metrics provided a straightforward, reproducible index of performance, collapsing the variance across task difficulty, illusion strength, and speed-accuracy trade-offs might have stripped away the nuanced resolution required to detect the subtle, low-level individual differences associated with personality-level characteristics.
 
 
