@@ -427,7 +427,7 @@ In summary, the present study reinforces the view that visual illusions are high
 
 All the study materials, experiment, data, and analysis are available on GitHub at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**.
 
-This study was pre-registered as a Stage 1 Registered Report (https://osf.io/kvjnm) following in-principle acceptance on the 5/12/2025. 
+This study was pre-registered as a Registered Report (https://osf.io/kvjnm) following Stage 1 in-principle acceptance on the 5/12/2025. 
 
 # Acknowledgments
 
