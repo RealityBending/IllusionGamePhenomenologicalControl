@@ -112,12 +112,13 @@ format:
   apaquarto-html: default
   apaquarto-pdf:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
-    documentmode: jou
+    documentmode: man
 ---
 
 ```{r}
 #| label: setup
 #| include: false
+
 library(conflicted)
 library(tidyverse)
 library(flextable)
@@ -173,6 +174,7 @@ Additionally, we will explore the relationship between psychoticism, as a proxy 
 ```{r}
 #| tbl-cap: "Study Design Table"
 #| label: tbl-DesignTable
+#| apa-twocolumn: true
 
 question <- c("Question", "Hypothesis", "Sampling Plan", "Analysis Plan", "Rationale for Deciding the Sensitivity of the Test", "Interpretation Given Different Outcomes", "Theory That Could Be Shown Wrong by the Outcomes")
 answer <- c("Is there a correlation between trait phenomenological control (PC) and visual illusion (VI) sensitivity? Additionally, is there a relationship between VI sensitivity and the psychoticism facet of the PID-5, as a proxy for schizophrenia-related traits?", "In line with Lush et al. (2022), we hypothesise that there will be evidence supporting the absence of a relationship between PC and VI sensitivity. Based on Makowski et al. (2023) and prior work on weak priors in schizophrenia, we hypothesise that higher psychoticism scores will be negatively associated with VI sensitivity.", "The goal is to recruit around 500 adult English speakers using Prolific. This sample size is based on the ones used in Lush et al., 2021 and Lush et al., 2022 that we aim at replicate.", "Bayesian correlations will be conducted using the BayesFactor::correlationBF() function, with a medium prior (r-scale = 1/3), separately for: 1) PC scores and VI sensitivity (error rate and IES), across all three illusion types; and 2) Psychoticism facet scores from the PID-5 and VI sensitivity scores, across all three illusion types.", "For the PC–VI sensitivity relationship, we will interpret BF₁₀ ≤ 1/3 as evidence against a relationship, in line with Lush et al. (2022). For the psychoticism–VI sensitivity relationship, BF₁₀ > 3 will be interpreted as evidence supporting a relationship, following findings by Makowski et al. (2023).", "If there is no evidence for a PC–VI relationship across all three illusions, it would support the hypothesis that VI sensitivity is independent from PC. If a negative association is found between psychoticism and VI sensitivity, it may suggest a low-level perceptual basis for inter-individual differences in illusion sensitivity.", "The cognitive impenetrability of visual illusions, which posits that illusion sensitivity is driven solely by low-level processes and is not influenced by top-down mechanisms such as phenomenological control. Conversely, a lack of association with psychoticism would challenge the view that low-level perceptual alterations underlie illusion sensitivity in non-clinical populations.")
@@ -335,49 +337,75 @@ Following this, participants outside the 97.5% CI for the error rate for a given
 
 ```{r}
 #| warning: false
-#| label: fig-tablemeans
-#| apa-twocolumn: true  # A Figure Spanning Two Columns When in Journal Mode
-#| out-width: "100%"
-#| fig-cap: ""
+#| label: tbl-tablemeans
+#| disable-apaquarto-processing: true
+#| apa-twocolumn: true
 
-library(gt)
-
-gt_apastyle <- function(gt_table, font.size=12) {
-  gt_table  |> 
-    gt::opt_table_lines(extent = "none") %>%
-    gt::tab_options(
-      heading.border.bottom.width = 2,
-      heading.border.bottom.color = "black",
-      heading.border.bottom.style = "solid",
-      table.border.top.color = "black",
-      table.border.top.style = "solid",
-      table.border.top.width = 2,  
-      table_body.hlines.color = "white",
-      table_body.border.top.color = "black",
-      table_body.border.top.style = "solid",
-      table_body.border.top.width = 2,
-      heading.title.font.size = font.size,
-      table.font.size = font.size,
-      heading.subtitle.font.size = font.size,
-      table_body.border.bottom.color = "black",
-      table_body.border.bottom.width = 2,
-      table_body.border.bottom.style = "solid",
-      column_labels.border.bottom.color = "black",
-      column_labels.border.bottom.style = "solid",
-      column_labels.border.bottom.width = 1,
-      latex.use_longtable = FALSE
-    ) |> 
-      gt::opt_table_font(font = "times")
-}
-
-
-table <- readRDS("../../analysis/figures/table1.rds")
-table
-# table |> gt_apastyle()
+table <- readRDS("../../analysis/figures/table1_raw.rds")
+names(table) <- str_replace(names(table), "IES ", "IES - ") |> 
+  str_replace("Rate ", "Rate - ")
+table |>
+  datawizard::data_rename("Illusion_Type", "Illusion") |>
+  flextable::as_flextable()
+# insight::export_table(table,
+#                       column_names = c(
+#                         "Illusion",
+#                         "ER - Congruent", "ER - Mild", "ER - Strong",
+#                         "IES - Congruent", "IES - Mild", "IES - Strong"))
 ```
 
+<!-- ```{r} -->
+<!-- #| eval: true -->
+<!-- #| warning: false -->
+<!-- #| label: fig-tablemeans -->
+<!-- #| apa-twocolumn: true  # A Figure Spanning Two Columns When in Journal Mode -->
+<!-- #| out-width: "100%" -->
+<!-- #| fig-cap: "" -->
 
-Bayesian paired-samples *t*-tests revealed extreme evidence for differences between illusion strength conditions, with performance decreasing as illusion strength increased across all illusion types and outcome measures ($BF_{10} > 1000$) . For all three illusions (Ebbinghaus, Müller–Lyer, Vertical–Horizontal), error rates and IES were significantly lower in the Congruent relative to Mild condition, and lower in the Mild relative to Strong condition, consistent with the expected effect of illusion strength (see @fig-tablemeans). 
+<!-- library(gt) -->
+
+<!-- gt_apastyle <- function(gt_table, font.size=12) { -->
+<!--   gt_table  |> -->
+<!--     gt::opt_table_lines(extent = "none") %>% -->
+<!--     gt::tab_options( -->
+<!--       heading.border.bottom.width = 2, -->
+<!--       heading.border.bottom.color = "black", -->
+<!--       heading.border.bottom.style = "solid", -->
+<!--       table.border.top.color = "black", -->
+<!--       table.border.top.style = "solid", -->
+<!--       table.border.top.width = 2, -->
+<!--       table_body.hlines.color = "white", -->
+<!--       table_body.border.top.color = "black", -->
+<!--       table_body.border.top.style = "solid", -->
+<!--       table_body.border.top.width = 2, -->
+<!--       # heading.title.font.size = font.size, -->
+<!--       # table.font.size = font.size, -->
+<!--       # heading.subtitle.font.size = font.size, -->
+<!--       table_body.border.bottom.color = "black", -->
+<!--       table_body.border.bottom.width = 2, -->
+<!--       table_body.border.bottom.style = "solid", -->
+<!--       column_labels.border.bottom.color = "black", -->
+<!--       column_labels.border.bottom.style = "solid", -->
+<!--       column_labels.border.bottom.width = 1, -->
+<!--       latex.use_longtable = FALSE -->
+<!--     ) |> -->
+<!--       gt::opt_table_font(font = "times") -->
+<!-- } -->
+
+
+<!-- # table <- readRDS("../../analysis/figures/table1_raw.rds") -->
+<!-- # table |> -->
+<!-- #   flextable::flextable() |> -->
+<!-- #   flextable::theme_apa() -->
+<!-- # -->
+<!-- # insight::export_table(table, format = "tt", -->
+<!-- #                       column_names = c("Congruent", "Mild", "Strong"), -->
+<!-- readRDS("../../analysis/figures/table1.rds") |>  -->
+<!--   gt::as_latex() -->
+<!-- ``` -->
+
+
+Bayesian paired-samples *t*-tests revealed extreme evidence for differences between illusion strength conditions, with performance decreasing as illusion strength increased across all illusion types and outcome measures ($BF_{10} > 1000$) . For all three illusions (Ebbinghaus, Müller–Lyer, Vertical–Horizontal), error rates and IES were significantly lower in the Congruent relative to Mild condition, and lower in the Mild relative to Strong condition, consistent with the expected effect of illusion strength (see @tbl-tablemeans). 
 
 
 ## Score consistency
@@ -416,7 +444,7 @@ The results are therefore not aligned with the hypothesised positive association
 ```{r}
 #| warning: false
 #| label: fig-corr
-#| apa-twocolumn: false  # A Figure Spanning Two Columns When in Journal Mode
+#| apa-twocolumn: true  # A Figure Spanning Two Columns When in Journal Mode
 #| out-width: "100%"
 #| fig-cap: "The study involved three visual illusions, in which participants were instructed to respond as quickly as possible without making errors. Each illusion included two manipulated parameters: strength (e.g., the angle of the outward- or inward-pointing arrow-like fins in the Müller-Lyer illusion) and difficulty (e.g., the difference in line lengths in the Müller-Lyer illusion)."
 
@@ -429,9 +457,7 @@ To ensure the robustness of these findings to various analysis decisions, we add
 
 # Discussion
 
-This study aimed to replicate previous findings indicating (1) an absence of a relationship between visual illusion sensitivity and phenomenological control [@lush2022], and (2) a positive relationship between illusion sensitivity and psychoticism [@makowski2023]. However, pre-registered Bayesian correlation analyses suggested an absence of a relationship between illusion sensitivity and both phenomenological control and psychoticism, supporting only the first hypothesis.
-<!--TO CONFIRM-->
-However, pre-registered Bayesian correlation analyses suggested an absence of a relationship between illusion sensitivity and both phenomenological control and psychoticism, supporting only the first hypothesis.
+This study aimed to replicate previous findings indicating (1) an absence of a relationship between visual illusion sensitivity and phenomenological control [@lush2022], and (2) the existence of a positive relationship between illusion sensitivity and psychoticism [@makowski2023]. However, pre-registered Bayesian correlation analyses suggested an absence of a relationship between illusion sensitivity and both phenomenological control and psychoticism, supporting only the first hypothesis.
 
 <!--Simpler measures as explnation to null results between VI and Psychoticism -->
 One possible explanation for the lack of association between psychoticism and visual illusion sensitivity lies in how individual differences were operationalised. 

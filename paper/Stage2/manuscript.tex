@@ -1,5 +1,5 @@
 \documentclass[
-  jou,
+  man,
   floatsintext,
   longtable,
   nolmodern,
@@ -9,7 +9,7 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
-
+\usepackage{setspace}
 
 
 \usepackage[bidi=default]{babel}
@@ -21,10 +21,9 @@
 \def\languageshorthands#1{}
 
 \RequirePackage{longtable}
-% \setlength\LTleft{0pt}
 \RequirePackage{threeparttablex}
 
-% % 
+\usepackage{framed}
 
 
 \makeatletter
@@ -42,7 +41,11 @@
 
 
 
-\usepackage{longtable, booktabs, multirow, multicol, colortbl, hhline, caption, array, float}
+\usepackage{longtable, booktabs, multirow, multicol, colortbl, hhline, caption, array, float, xpatch}
+\usepackage{subcaption}
+
+
+\renewcommand\thesubfigure{\Alph{subfigure}}
 \setcounter{topnumber}{2}
 \setcounter{bottomnumber}{2}
 \setcounter{totalnumber}{4}
@@ -68,12 +71,12 @@
 \definecolor{quarto-callout-tip-color-frame}{HTML}{02B875}
 \definecolor{quarto-callout-caution-color-frame}{HTML}{FD7E14}
 
-\newlength\Oldarrayrulewidth
-\newlength\Oldtabcolsep
+%\newlength\Oldarrayrulewidth
+%\newlength\Oldtabcolsep
 
 
 \usepackage{hyperref}
-
+\usepackage[protrusion=true]{microtype}
 
 
 
@@ -143,6 +146,7 @@
 
 
 \usepackage[nolongtablepatch]{lineno}
+
 \linenumbers
 
 
@@ -158,10 +162,13 @@
 
 \title{Testing the Relationship between Phenomenological Control related
 to Illusion Sensitivity}
+
+
 \shorttitle{Illusion Sensitivity and Phenomenological Control}
 
 
 \usepackage{etoolbox}
+
 
 
 
@@ -174,10 +181,9 @@ to Illusion Sensitivity}
 
 
 
+
 \affiliation{
 {School of Psychology, University of Sussex}}
-
-
 
 
 
@@ -196,16 +202,17 @@ correlation between phenomenological control (measured using the
 Phenomenological Control Scale) and illusion sensitivity to different
 illusion types. \emph{{[}N participants were recruited in an online
 study. Results will be added in the final version of the
-manuscript{]}}.}
-% 
+manuscript{]}}. }
+
 \keywords{illusion sensitivity, visual illusions, phenomenological
 control, suggestibility, hypnotizability}
 
 \authornote{\par{\addORCIDlink{Dominique
 Makowski}{0000-0001-5375-9967}}\par{\addORCIDlink{Ana
-Neves}{0009-0006-0020-7599}}
+Neves}{0009-0006-0020-7599}} 
 \par{ }
-\par{       Author roles were classified using the Contributor Role Taxonomy (CRediT; https://credit.niso.org/) as follows: Dominique
+\par{       Author roles were classified using the Contributor Role
+Taxonomy (CRediT; https://credit.niso.org/) as follows:  Dominique
 Makowski:   Conceptualization, Data curation, formal Analysis, Funding
 acquisition, Investigation, Methodology, Project
 administration, Resources, Software, Supervision, Validation, Visualization, Writing
@@ -214,54 +221,76 @@ administration, Data curation, Formal
 Analysis, Investigation, Visualization, Writing -- original
 draft, Writing -- review \& editing}
 \par{Correspondence concerning this article should be addressed
-to Dominique Makowski, Email: D.Makowski@sussex.ac.uk}
+to Dominique
+Makowski, Email: \href{mailto:D.Makowski@sussex.ac.uk}{D.Makowski@sussex.ac.uk}}
 }
-
-
-\usepackage{pbalance} 
-\usepackage{float}
-\makeatletter
-\let\oldtpt\ThreePartTable
-\let\endoldtpt\endThreePartTable
-\def\ThreePartTable{\@ifnextchar[\ThreePartTable@i \ThreePartTable@ii}
-\def\ThreePartTable@i[#1]{\begin{figure}[!htbp]
-\onecolumn
-\begin{minipage}{0.5\textwidth}
-\oldtpt[#1]
-}
-\def\ThreePartTable@ii{\begin{figure}[!htbp]
-\onecolumn
-\begin{minipage}{0.5\textwidth}
-\oldtpt
-}
-\def\endThreePartTable{
-\endoldtpt
-\end{minipage}
-\twocolumn
-\end{figure}}
-\makeatother
-
 
 \makeatletter
-\let\endoldlt\endlongtable		
+\let\endoldlt\endlongtable
 \def\endlongtable{
 \hline
-\endoldlt}
+\endoldlt
+}
 \makeatother
-
-\newenvironment{twocolumntable}% environment name
-{% begin code
-\begin{table*}[!htbp]%
-\onecolumn%
-}%
-{%
-\twocolumn%
-\end{table*}%
-}% end code
 
 \urlstyle{same}
 
 
+
+\usepackage{fontspec}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{colortbl}
+\usepackage{ulem}
+\usepackage{hhline}
+\newlength\Oldarrayrulewidth
+\newlength\Oldtabcolsep
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{wrapfig}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
 
 % From https://tex.stackexchange.com/a/645996/211326
 %%% apa7 doesn't want to add appendix section titles in the toc
@@ -273,18 +302,41 @@ to Dominique Makowski, Email: D.Makowski@sussex.ac.uk}
   {}{}
 \makeatother
 
+%% Disable longtable counter
+%% https://tex.stackexchange.com/a/248395/211326
+
+\usepackage{etoolbox}
+
+\makeatletter
+\patchcmd{\LT@caption}
+  {\bgroup}
+  {\bgroup\global\LTpatch@captiontrue}
+  {}{}
+\patchcmd{\longtable}
+  {\par}
+  {\par\global\LTpatch@captionfalse}
+  {}{}
+\apptocmd{\endlongtable}
+  {\ifLTpatch@caption\else\addtocounter{table}{-1}\fi}
+  {}{}
+\newif\ifLTpatch@caption
+\makeatother
+
 \begin{document}
 
 \maketitle
 
 
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
 
 \setlength\LTleft{0pt}
 
 \resetlinenumber[1]
 
 
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{snugshade}\begin{singlespace}}{\end{singlespace}\end{snugshade}}\fi
+
+\setlength{\cslhangindent}{0.5in}
 
 Visual Illusions are an interesting type of stimuli highlighting the
 ease with which our phenomenological conscious experience can become
@@ -292,63 +344,72 @@ dissociated from physical reality. Their robust and reliable effect
 makes them useful stimuli to explore how perception is constructed and
 shaped, and several theoretical models have been put forth to explain
 how they work. In particular, illusions have been reframed using a
-predictive coding account of perception (e.g., Notredame et al., 2014;
-Nour \& Nour, 2015) in which the brain optimally combines, using some
-flavour of Bayesian inference, perceptual inputs with prior knowledge to
-make sense of ambiguous environments (Friston, 2010).
+predictive coding account of perception (e.g.,
+\citeproc{ref-notredame2014}{Notredame et al., 2014};
+\citeproc{ref-nour2015perception}{Nour \& Nour, 2015}) in which the
+brain optimally combines, using some flavour of Bayesian inference,
+perceptual inputs with prior knowledge to make sense of ambiguous
+environments (\citeproc{ref-friston2010}{Friston, 2010}).
 
 Such computational model(s) propose to conceptualize illusions as
-stimuli providing weak or conflicting sensory evidence (Gershman et al.,
-2012; Sundareswara \& Schrater, 2008) that bias perception toward prior
-knowledge. In other words, the weight of priors, in the form of
-perceptual knowledge about the world (e.g., internalized rules of
-perspective) is amplified when the sensory input is confusing. For
-instance, in the Müller-Lyer illusion, we ``compute'' the two (actually
-identical) lines as being of different lengths because the line flanked
-with converging fins is misinterpreted as being further away (Notredame
-et al., 2014). In this context, measuring sensitivity to illusion can be
-operationalized as indexing the parameters of the Bayesian inference
-process (e.g., prior precision).
+stimuli providing weak or conflicting sensory evidence
+(\citeproc{ref-gershman2012}{Gershman et al., 2012};
+\citeproc{ref-sundareswara2008}{Sundareswara \& Schrater, 2008}) that
+bias perception toward prior knowledge. In other words, the weight of
+priors, in the form of perceptual knowledge about the world (e.g.,
+internalized rules of perspective) is amplified when the sensory input
+is confusing. For instance, in the Müller-Lyer illusion, we ``compute''
+the two (actually identical) lines as being of different lengths because
+the line flanked with converging fins is misinterpreted as being further
+away (\citeproc{ref-notredame2014}{Notredame et al., 2014}). In this
+context, measuring sensitivity to illusion can be operationalized as
+indexing the parameters of the Bayesian inference process (e.g., prior
+precision).
 
 These accounts also provide a compelling framework to explain existing
 findings reporting interindividual variability in the sensitivity to
 illusions. Indeed, several studies suggest a potential link with
-psychopathology, in particular schizophrenia (Costa et al., 2023) and
-autism (Gori et al., 2016), in which the reported lower sensitivity to
-illusions has been attributed to a diminished influence of top-down
-processes such as prior knowledge (Mitchell et al., 2010) and a greater
-emphasis on (i.e., precision of) sensory information (Palmer et al.,
-2017). Evidence beyond psychopathology also suggests variability in the
-general population, potentially correlated with personality traits such
-as agreeableness and honest-humility (Makowski et al., 2023), as well as
-cognitive abilities (Shoshina \& Shelepin, 2014).
+psychopathology, in particular schizophrenia
+(\citeproc{ref-costa2023}{Costa et al., 2023}) and autism
+(\citeproc{ref-gori2016}{Gori et al., 2016}), in which the reported
+lower sensitivity to illusions has been attributed to a diminished
+influence of top-down processes such as prior knowledge
+(\citeproc{ref-mitchell2010}{Mitchell et al., 2010}) and a greater
+emphasis on (i.e., precision of) sensory information
+(\citeproc{ref-palmer2017}{Palmer et al., 2017}). Evidence beyond
+psychopathology also suggests variability in the general population,
+potentially correlated with personality traits such as agreeableness and
+honest-humility (\citeproc{ref-makowski2023}{Makowski et al., 2023}), as
+well as cognitive abilities (\citeproc{ref-shoshina2014}{Shoshina \&
+Shelepin, 2014}).
 
 However, the exact nature of this interindividual variability and its
 potential origin remains unclear. The somewhat mixed evidence in the
 literature regarding its generalizability and strength could be related
 to the variety of the paradigms used and the type of processes being
-mobilised (Makowski et al., 2021). Indeed, traditional methods
-frequently focus on participant's experience by prompting them to assess
-the difference between two identical targets, estimate the target's
-physical properties, or adjust the targets to match a reference stimulus
-(Todorović, 2020). Relying on metacognitive judgments about one's
-subjective experiences adds an additional layer to the measure that
-might not be desired when attempting to measure illusion sensitivity.
-Moreover, paradigms often face challenges in diversifying the illusory
-effects (i.e., using multiple stimuli to experimentally manipulate the
-strength of the illusion) and the illusion types (i.e., using various
-illusions, such as Müller-Lyer, Ebbinghaus, Delboeuf which might rely on
-a different admixture of mechanisms), hindering the potential of
-obtaining a comprehensive, valid, and reliable measure of illusion
-sensitivity.
+mobilised (\citeproc{ref-makowski2021}{Makowski et al., 2021}). Indeed,
+traditional methods frequently focus on participant's experience by
+prompting them to assess the difference between two identical targets,
+estimate the target's physical properties, or adjust the targets to
+match a reference stimulus (\citeproc{ref-todorovic2020}{Todorović,
+2020}). Relying on metacognitive judgments about one's subjective
+experiences adds an additional layer to the measure that might not be
+desired when attempting to measure illusion sensitivity. Moreover,
+paradigms often face challenges in diversifying the illusory effects
+(i.e., using multiple stimuli to experimentally manipulate the strength
+of the illusion) and the illusion types (i.e., using various illusions,
+such as Müller-Lyer, Ebbinghaus, Delboeuf which might rely on a
+different admixture of mechanisms), hindering the potential of obtaining
+a comprehensive, valid, and reliable measure of illusion sensitivity.
 
-The ``Illusion Game'' paradigm (Makowski et al., 2023) has been recently
-developed to measure illusion sensitivity to various illusion types
-through its behavioural impact (on response time and error rate) in a
-perceptual decision task (where participants have to respond as fast as
-possible; e.g., ``which of the left or right circles is bigger''). The
-stimuli for different classical illusions are created using the
-\emph{Pyllusion} software (Makowski et al., 2021), which allows
+The ``Illusion Game'' paradigm (\citeproc{ref-makowski2023}{Makowski et
+al., 2023}) has been recently developed to measure illusion sensitivity
+to various illusion types through its behavioural impact (on response
+time and error rate) in a perceptual decision task (where participants
+have to respond as fast as possible; e.g., ``which of the left or right
+circles is bigger''). The stimuli for different classical illusions are
+created using the \emph{Pyllusion} software
+(\citeproc{ref-makowski2021}{Makowski et al., 2021}), which allows
 researchers to modulate the strength of the illusion as a continuous
 dimension, independently from the difficulty of the perceptual task.
 This paradigm, inspired by psychophysics, lends itself to the
@@ -380,49 +441,55 @@ our subjective experience and distort reality - even momentarily - to
 meet the goals at hand is not novel. While this phenomenon has been
 historically often studied under the label of ``hypnotisability'' - the
 tendency to alter our conscious experience to match external demands
-(Lush et al., 2021), the term ``phenomenological control'' (PC) has been
-recently introduced to disconnect this concept from the potentially
-negative associations with hypnosis and the misconception that a
-hypnotic context is necessary for responding to imaginative suggestions
-(Dienes et al., 2022).
+(\citeproc{ref-lush2021}{Lush et al., 2021}), the term
+``phenomenological control'' (PC) has been recently introduced to
+disconnect this concept from the potentially negative associations with
+hypnosis and the misconception that a hypnotic context is necessary for
+responding to imaginative suggestions (\citeproc{ref-dienes2022}{Dienes
+et al., 2022}).
 
 To encourage the empirical exploration of our ability and tendency to
 alter our phenomenological experience and further accelerate
-investigations away from the hypnotic context, Lush et al. (2021)
-adapted the Sussex-Waterloo Scale of Hypnotisability (SWASH, Lush et
-al., 2018) by removing all its references to hypnosis, to measure trait
+investigations away from the hypnotic context, Lush et al.
+(\citeproc{ref-lush2021}{2021}) adapted the Sussex-Waterloo Scale of
+Hypnotisability (SWASH, \citeproc{ref-lush2018}{Lush et al., 2018}) by
+removing all its references to hypnosis, to measure trait
 phenomenological control. This newly developed phenomenological control
 scale (PCS) consists of 10 imaginative suggestions followed by
 subjective ratings for each suggestion and has demonstrated validity in
-online experiments (Lush et al., 2022).
+online experiments (\citeproc{ref-lush2022}{Lush et al., 2022}).
 
-Interestingly, Lush et al. (2022) did test for a relationship between PC
-and illusion sensitivity using the Müller-Lyer illusion (in which the
-arrangement of the arrowheads flanking two lines makes them appear as
-having different lengths), and reported evidence in favour of an absence
-of correlation between the two measures. This finding was interpreted as
-indicative of the cognitive impenetrability of illusions, implying that
-the effect is driven by low-level processes and therefore not influenced
-by top-down mechanisms such as PC. Note that both prior-knowledge and
-phenomenological control are considered top-down processes, but the
-cognitive impenetrability hypothesis suggests that the processes at
-stake for the illusions happen at a lower- encapsulated- level (in the
-form of \emph{perceptual} priors).
+Interestingly, Lush et al. (\citeproc{ref-lush2022}{2022}) did test for
+a relationship between PC and illusion sensitivity using the Müller-Lyer
+illusion (in which the arrangement of the arrowheads flanking two lines
+makes them appear as having different lengths), and reported evidence in
+favour of an absence of correlation between the two measures. This
+finding was interpreted as indicative of the cognitive impenetrability
+of illusions, implying that the effect is driven by low-level processes
+and therefore not influenced by top-down mechanisms such as PC. Note
+that both prior-knowledge and phenomenological control are considered
+top-down processes, but the cognitive impenetrability hypothesis
+suggests that the processes at stake for the illusions happen at a
+lower- encapsulated- level (in the form of \emph{perceptual} priors).
 
 The goal of this study is thus to replicate the results from Lush et al.
-(2022) pointing to an absence of a relationship between phenomenological
-control and illusion sensitivity, by generalising them to a different
-illusion paradigm that encompasses other illusion types. Additionally,
-we will explore the relationship between psychoticism, as a proxy for
-schizophrenia, and illusion sensitivity to assess the potential impact
-of lower-level effects---such as weak priors observed in individuals
-with schizophrenia (Costa et al., 2023)---on sensitivity to
+(\citeproc{ref-lush2022}{2022}) pointing to an absence of a relationship
+between phenomenological control and illusion sensitivity, by
+generalising them to a different illusion paradigm that encompasses
+other illusion types. Additionally, we will explore the relationship
+between psychoticism, as a proxy for schizophrenia, and illusion
+sensitivity to assess the potential impact of lower-level effects---such
+as weak priors observed in individuals with schizophrenia
+(\citeproc{ref-costa2023}{Costa et al., 2023})---on sensitivity to
 illusions.\textbf{ }These analyses may offer evidence clarifying whether
 inter-individual variability in illusion sensitivity is driven by
 lower-level perceptual mechanisms or higher-level cognitive processes
 (Table~\ref{tbl-DesignTable}).
 
-\begin{ThreePartTable}
+\begin{table}
+
+{\caption{{Study Design Table}{\label{tbl-DesignTable}}}
+\vspace{-20pt}}
 
 \global\setlength{\Oldarrayrulewidth}{\arrayrulewidth}
 
@@ -436,11 +503,9 @@ lower-level perceptual mechanisms or higher-level cognitive processes
 
 \providecommand{\ascline}[3]{\noalign{\global\arrayrulewidth #1}\arrayrulecolor[HTML]{#2}\cline{#3}}
 
-\begin{longtable}[c]{cc}
+\begin{longtable*}[c]{cc}
 
-\caption{\label{tbl-DesignTable}Study Design Table}
 
-\tabularnewline
 
 \ascline{0.75pt}{000000}{1-2}
 
@@ -485,7 +550,10 @@ lower-level perceptual mechanisms or higher-level cognitive processes
 \ascline{0.75pt}{000000}{1-2}
 
 
-\end{longtable}
+
+\end{longtable*}
+
+
 
 \arrayrulecolor[HTML]{000000}
 
@@ -495,7 +563,7 @@ lower-level perceptual mechanisms or higher-level cognitive processes
 
 \renewcommand*{\arraystretch}{1}
 
-\end{ThreePartTable}
+\end{table}
 
 \section{Methods}\label{methods}
 
@@ -517,16 +585,18 @@ illusions.
 
 \subsection{Procedure}\label{procedure}
 
-The experiment's setup follows of the born-open principle (De Leeuw,
-2023), and all its related material is available at
+The experiment's setup follows of the born-open principle
+(\citeproc{ref-deleeuw2023}{De Leeuw, 2023}), and all its related
+material is available at
 \textbf{https://github.com/RealityBending/IllusionGamePhenomenologicalControl}.
-The online experiment, implemented entirely using \emph{JsPsych} (De
-Leeuw, 2015), has its code stored on GitHub and leverages the power of
-the platform to host the experiment for free. Participant's raw data
-files (containing identifiers) were stored in a private OSF repository,
-but deanonimized using a publically available preprocessing script. The
-resulting anonymized data, and the analysis reports, are available,
-ensuring the transparency and reproducibility of all the analysis steps.
+The online experiment, implemented entirely using \emph{JsPsych}
+(\citeproc{ref-de2015jspsych}{De Leeuw, 2015}), has its code stored on
+GitHub and leverages the power of the platform to host the experiment
+for free. Participant's raw data files (containing identifiers) were
+stored in a private OSF repository, but deanonimized using a publically
+available preprocessing script. The resulting anonymized data, and the
+analysis reports, are available, ensuring the transparency and
+reproducibility of all the analysis steps.
 
 Following the informed consent, participants were presented demographic
 questions (gender, education level, age, and ethnicity). Although these
@@ -543,44 +613,48 @@ Participants were asked to put on their headphones and await further
 auditory instructions. The PCS procedure starts with a recorded
 introduction explaining that a series of tests will be applied to
 evaluate how experiences can be created through imagination, followed by
-10 suggestions in a fixed order (see Lush et al., 2021), such as ``now
-extend your arms ahead of you, with palms facing each other, hands about
-a foot apart'' and ``as you sit comfortably in your chair with your eyes
-closed, a picture of two balls will be displayed on the computer
-screen''. Once the 10 suggestions are completed, participants will be
-asked to rate their subjective experiences and response to each
-suggestion on a 6-points Likert scale (from 0-5). The Phenomenological
-control score will be computed by averaging the scores from the 10
-scales.
+10 suggestions in a fixed order (see \citeproc{ref-lush2021}{Lush et
+al., 2021}), such as ``now extend your arms ahead of you, with palms
+facing each other, hands about a foot apart'' and ``as you sit
+comfortably in your chair with your eyes closed, a picture of two balls
+will be displayed on the computer screen''. Once the 10 suggestions are
+completed, participants will be asked to rate their subjective
+experiences and response to each suggestion on a 6-points Likert scale
+(from 0-5). The Phenomenological control score will be computed by
+averaging the scores from the 10 scales.
 
 \subsubsection{Illusion Game}\label{illusion-game}
 
 The Illsuion Game task used in the current study is an adaptation of the
-one used in Makowski et al. (2023) to make it shorter, in which
-participants must make perceptual judgments (e.g., ``which red line is
-the longer'') as quickly and accurately as possible. It includes 3
-illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal
-(see Figure~\ref{fig-illusionexample}). In the original Illusion Game,
-10 visual illusions were presented in two sets, following a practice
-trial, and separated by two short questionnaires. Participants completed
-a total of 1,340 trials, with the experiment lasting approximately 50
-minutes. In the current procedure, only three illusions are used,
-selected based on the original study's findings that these illusions
-most strongly contribute to illusion sensitivity.
+one used in Makowski et al. (\citeproc{ref-makowski2023}{2023}) to make
+it shorter, in which participants must make perceptual judgments (e.g.,
+``which red line is the longer'') as quickly and accurately as possible.
+It includes 3 illusion types, namely Ebbinghaus, Müller-Lyer, and
+Vertical-Horizontal (see Figure~\ref{fig-illusionexample}). In the
+original Illusion Game, 10 visual illusions were presented in two sets,
+following a practice trial, and separated by two short questionnaires.
+Participants completed a total of 1,340 trials, with the experiment
+lasting approximately 50 minutes. In the current procedure, only three
+illusions are used, selected based on the original study's findings that
+these illusions most strongly contribute to illusion sensitivity.
 
-\begin{figure*}[!htbp]
+\begin{figure}
 
-{\caption{{The study involved three visual illusions, in which
-participants were instructed to respond as quickly as possible without
-making errors. Each illusion included two manipulated parameters:
-strength (e.g., the angle of the outward- or inward-pointing arrow-like
-fins in the Müller-Lyer illusion) and difficulty (e.g., the difference
-in line lengths in the Müller-Lyer
-illusion).}{\label{fig-illusionexample}}}}
+\caption{\label{fig-illusionexample}The study involved three visual
+illusions, in which participants were instructed to respond as quickly
+as possible without making errors. Each illusion included two
+manipulated parameters: strength (e.g., the angle of the outward- or
+inward-pointing arrow-like fins in the Müller-Lyer illusion) and
+difficulty (e.g., the difference in line lengths in the Müller-Lyer
+illusion).}
+
+\centering{
 
 \includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{img/IllusionTable.jpg}
 
-\end{figure*}
+}
+
+\end{figure}%
 
 The procedure encompasses 2 sets of 80 trials for each illusion type,
 preceded by a practice trial for each illusion. Each set will include,
@@ -600,7 +674,8 @@ manipulated namely task difficulty and illusion strength, so that each
 trial corresponds to a unique combination, providing an objectively
 correct answer for each trial. The use of these manipulations allows
 concise, standardised reporting of illusion parameters and ensures our
-stimuli are fully reproducible (see Makowski et al., 2021).
+stimuli are fully reproducible (see \citeproc{ref-makowski2021}{Makowski
+et al., 2021}).
 
 Task difficulty corresponds to the difficulty of the perceptual decision
 (e.g., if the task is to select the longest red line, task difficulty
@@ -624,22 +699,24 @@ with task difficulty and the possible adjustments in response strategy
 (speed-accuracy trade off), it is also the most simple and easy to
 reproduce, hence its usage as our primary outcome for the current
 registered report. As a secondary exploratory outcome, the Inverse
-Efficiency Score (IES, Townsend \& Ashby, 2014) will also be computed.
-This metric incorporates both speed and accuracy by dividing the mean
-reaction time of correct responses by the proportion of correct
-responses, separately for each illusion.
+Efficiency Score (IES, \citeproc{ref-townsend2014methods}{Townsend \&
+Ashby, 2014}) will also be computed. This metric incorporates both speed
+and accuracy by dividing the mean reaction time of correct responses by
+the proportion of correct responses, separately for each illusion.
 
 The two sets of 3 illusion blocks will be separated by 2 short
-questionnaires acting as a break, namely the IPIP-6 (Sibley et al.,
-2011), measuring 6 personality traits with 24 analogue scales items, and
-the PID-5 (Krueger et al., 2011), measuring 5 maladaptive personality
-traits with 25 Likert scales items. These questionnaires are included as
-a way of providing a break between the two cognitively taxing blocks and
-maintain paradigmatic consistency with previous studies (Makowski et
-al., 2023). Additionally, the psychoticism subscale of the PID-5 will be
-used to examine the correlation between maladaptive traits and illusion
+questionnaires acting as a break, namely the IPIP-6
+(\citeproc{ref-sibley2011mini}{Sibley et al., 2011}), measuring 6
+personality traits with 24 analogue scales items, and the PID-5
+(\citeproc{ref-krueger2011}{Krueger et al., 2011}), measuring 5
+maladaptive personality traits with 25 Likert scales items. These
+questionnaires are included as a way of providing a break between the
+two cognitively taxing blocks and maintain paradigmatic consistency with
+previous studies (\citeproc{ref-makowski2023}{Makowski et al., 2023}).
+Additionally, the psychoticism subscale of the PID-5 will be used to
+examine the correlation between maladaptive traits and illusion
 sensitivity, evaluating the existence of the link proposed in previous
-studies (Costa et al., 2023).
+studies (\citeproc{ref-costa2023}{Costa et al., 2023}).
 
 \subsection{Data Analysis}\label{data-analysis}
 
@@ -659,7 +736,8 @@ spacebar six times. Pressing it fewer than five times within the
 allotted time indicates a failure to follow the auditory instructions.
 Participants who fail any one of these will be excluded from further
 analysis. Finally, the reliability of the PCS will be assessed by
-computing Cronbach's alpha of its items (Cronbach, 1951).
+computing Cronbach's alpha of its items
+(\citeproc{ref-cronbach1951coefficient}{Cronbach, 1951}).
 
 Outliers in the Illusion Game will be identified based on participants'
 performance. Specifically, any participant exhibiting an error rate
@@ -675,10 +753,10 @@ of illusion sensitivity based on the valid data from the first block,
 albeit with reduced precision. To mitigate the risk of confounding
 effects driven by extreme speed or accuracy strategies, participants
 whose RTs are significantly slower than the group average (RT
-\textgreater{} 4 SD above the mean, based on Makowski et al., 2023) will
-be excluded from the analysis. After removing problematic participants
-and trials, the outcome measures (PC and VI sensitivity scores) will be
-computed.
+\textgreater{} 4 SD above the mean, based on
+\citeproc{ref-makowski2023}{Makowski et al., 2023}) will be excluded
+from the analysis. After removing problematic participants and trials,
+the outcome measures (PC and VI sensitivity scores) will be computed.
 
 To assess whether the illusions functioned as expected, stimuli will be
 categorized into three groups: Strong Illusion Strength \& Incongruent,
@@ -694,40 +772,46 @@ illusions operated as intended.
 Next, to determine whether the Mild and Strong Illusion Strength groups
 can be collapsed for further analysis, Bayesian correlations will be
 computed between them for each illusion and outcome measure. If these
-correlations are sufficiently high (r \textgreater{} .50, Cohen, 2013),
-the groups will be collapsed and outcomes recomputed across all relevant
-trials (i.e., by averaging across these groups). If not, the groups will
-be analysed separately. This step is necessary because reaction time may
-not have a linear relationship with illusion strength (Makowski et al.,
-2023), and collapsing the data without this check may obscure meaningful
-differences. Finally, reliability analyses will be conducted on all
-resulting indices, with Cronbach's alpha used to evaluate internal
-consistency across the three illusion types.
+correlations are sufficiently high (r \textgreater{} .50,
+\citeproc{ref-cohen2013statistical}{Cohen, 2013}), the groups will be
+collapsed and outcomes recomputed across all relevant trials (i.e., by
+averaging across these groups). If not, the groups will be analysed
+separately. This step is necessary because reaction time may not have a
+linear relationship with illusion strength
+(\citeproc{ref-makowski2023}{Makowski et al., 2023}), and collapsing the
+data without this check may obscure meaningful differences. Finally,
+reliability analyses will be conducted on all resulting indices, with
+Cronbach's alpha used to evaluate internal consistency across the three
+illusion types.
 
 Bayesian correlations are then computed between PCS and illusion
 sensitivity scores - with the resulting IES and error rate indices.
-Following Lush et al. (2022), we expect to collect evidence against
-(\(BF_{10} <= 1/3\)) a relationship between PCS and VI sensitivity.
-Additionally, Bayesian correlations will be computed between maladaptive
-trait facets and illusion sensitivity scores. Based on prior research
-(Makowski et al., 2023), we expect to find evidence (\(BF_{10} > 3\))
-supporting a relationship between the psychoticism facet of the PID-5
-and illusion sensitivity.
+Following Lush et al. (\citeproc{ref-lush2022}{2022}), we expect to
+collect evidence against (\(BF_{10} <= 1/3\)) a relationship between PCS
+and VI sensitivity. Additionally, Bayesian correlations will be computed
+between maladaptive trait facets and illusion sensitivity scores. Based
+on prior research (\citeproc{ref-makowski2023}{Makowski et al., 2023}),
+we expect to find evidence (\(BF_{10} > 3\)) supporting a relationship
+between the psychoticism facet of the PID-5 and illusion sensitivity.
 
 All Bayesian analyses will be conducted using the \emph{BayesFactor}
-package (Morey \& Rouder, 2024). For correlations, a medium shifted beta
-prior will be applied (r-scale parameter set to 1/3), as recommended by
-Morey and Rouder (2018), providing a balanced approach to estimating
-effect sizes, without placing undue weight on larger effect sizes or
-artificially inflating evidence for the null hypothesis. For t-tests,
-the \emph{ttestBF} function will be used with a medium Cauchy prior on
-the standardised effect size (r-scale = √2⁄2), corresponding to the
-default for independent samples.
+package (\citeproc{ref-BayesFactor}{Morey \& Rouder, 2024}). For
+correlations, a medium shifted beta prior will be applied (r-scale
+parameter set to 1/3), as recommended by Morey and Rouder
+(\citeproc{ref-morey2018baysefactor}{2018}), providing a balanced
+approach to estimating effect sizes, without placing undue weight on
+larger effect sizes or artificially inflating evidence for the null
+hypothesis. For t-tests, the \emph{ttestBF} function will be used with a
+medium Cauchy prior on the standardised effect size (r-scale = √2⁄2),
+corresponding to the default for independent samples.
 
 Data analysis will be carried out using R, using \emph{tidyverse}
-(Wickham et al., 2019) and \emph{easystats} (Lüdecke et al., 2020, 2022;
-Makowski et al., 2019, 2022; Patil et al., 2022). The analysis script
-and additional information are available at
+(\citeproc{ref-tidyverse}{Wickham et al., 2019}) and \emph{easystats}
+(\citeproc{ref-parameters}{Lüdecke et al., 2020},
+\citeproc{ref-easystats}{2022}; \citeproc{ref-bayestestR}{Makowski et
+al., 2019}, \citeproc{ref-correlation}{2022};
+\citeproc{ref-datawizard}{Patil et al., 2022}). The analysis script and
+additional information are available at
 \textbf{https://github.com/RealityBending/IllusionGamePhenomenologicalControl}.
 
 \section{Results}\label{results}
@@ -747,9 +831,9 @@ their second block removed.
 
 Trial-level reaction time exclusions were conducted to remove
 implausible responses and reduce the influence of extreme values.
-Following Thériault et al. (2024), trials with response times below 0.2
-seconds or above 5 seconds were excluded, resulting in the removal of
-687 trials (0.31\% of the data).
+Following Thériault et al. (\citeproc{ref-theriault2024}{2024}), trials
+with response times below 0.2 seconds or above 5 seconds were excluded,
+resulting in the removal of 687 trials (0.31\% of the data).
 
 \subsubsection{Deviations from
 registration}\label{deviations-from-registration}
@@ -791,34 +875,64 @@ rejection bounds are available in \textbf{Supplementary Materials}.
 
 \subsection{Manipulation Check}\label{manipulation-check}
 
-\begin{figure}
+\global\setlength{\Oldarrayrulewidth}{\arrayrulewidth}
 
-\caption{\label{fig-tablemeans}}
+\global\setlength{\Oldtabcolsep}{\tabcolsep}
 
-\centering{
+\setlength{\tabcolsep}{2pt}
 
-\begin{table}
-\fontsize{9.0pt}{11.0pt}\selectfont
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|llllll}
-\toprule
- & \multicolumn{3}{c}{{Error Rate}} & \multicolumn{3}{c}{{IES}} \\ 
-\cmidrule(lr){2-4} \cmidrule(lr){5-7}
- & Congruent & Mild & Strong & Congruent & Mild & Strong \\ 
-\midrule\addlinespace[2.5pt]
-Ebbinghaus & 3.40\% ± 4\% & 15.09\% ± 8\% & 40.20\% ± 15\% & 0.78  ± 0.20 & 1.01  ± 0.32 & 1.70  ± 0.99 \\ 
-Müller-Lyer & 0.94\% ± 1\% & 25.22\% ± 7\% & 62.53\% ± 12\% & 0.65  ± 0.14 & 1.11  ± 0.29 & 2.82  ± 1.08 \\ 
-Vertical–Horizontal & 2.85\% ± 2\% & 19.92\% ± 10\% & 52.99\% ± 17\% & 0.69  ± 0.19 & 1.04  ± 0.30 & 2.45  ± 1.70 \\ 
-\bottomrule
-\end{tabular*}
-\begin{minipage}{\linewidth}
-\vspace{.05em}
-Note. Values represent means and standard deviations. All Bayes factors (BFs) for the group differences exceeded 1000, indicating extreme evidence in favour of a difference between groups.\\
-\end{minipage}
-\end{table}
+\renewcommand*{\arraystretch}{1.5}
 
-}
 
-\end{figure}%
+
+\providecommand{\ascline}[3]{\noalign{\global\arrayrulewidth #1}\arrayrulecolor[HTML]{#2}\cline{#3}}
+
+\begin{longtable}[c]{|p{0.75in}|p{0.75in}|p{0.75in}|p{0.75in}|p{0.75in}|p{0.75in}|p{0.75in}}
+
+\caption{\label{tbl-tablemeans}}
+
+\tabularnewline
+
+\ascline{1.5pt}{666666}{1-7}
+
+\multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Illusion}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Error\ Rate\ Congruent}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Error\ Rate\ Mild}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Error\ Rate\ Strong}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{IES\ Congruent}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{IES\ Mild}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{IES\ Strong}}}} \\
+
+\ascline{1.5pt}{666666}{1-7}\endfirsthead 
+
+\ascline{1.5pt}{666666}{1-7}
+
+\multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Illusion}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Error\ Rate\ Congruent}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Error\ Rate\ Mild}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Error\ Rate\ Strong}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{IES\ Congruent}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{IES\ Mild}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{IES\ Strong}}}} \\
+
+\ascline{1.5pt}{666666}{1-7}\endhead
+
+
+
+\multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Ebbinghaus}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{3.40\%\ ±\ 4\%}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{15.09\%\ ±\ 8\%}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{40.20\%\ ±\ 15\%}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{0.78\ \ ±\ 0.20}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{1.01\ \ ±\ 0.32}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{1.70\ \ ±\ 0.99}}}} \\
+
+
+
+
+
+\multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Müller-Lyer}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{0.94\%\ ±\ 1\%}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{25.22\%\ ±\ 7\%}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{62.53\%\ ±\ 12\%}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{0.65\ \ ±\ 0.14}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{1.11\ \ ±\ 0.29}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{2.82\ \ ±\ 1.08}}}} \\
+
+
+
+
+
+\multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{Vertical–Horizontal}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{2.85\%\ ±\ 2\%}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{19.92\%\ ±\ 10\%}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{52.99\%\ ±\ 17\%}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{0.69\ \ ±\ 0.19}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{1.04\ \ ±\ 0.30}}}} & \multicolumn{1}{>{\raggedright}m{\dimexpr 0.75in+0\tabcolsep}}{\textcolor[HTML]{000000}{\fontsize{11}{11}\selectfont{\global\setmainfont{Arial}{2.45\ \ ±\ 1.70}}}} \\
+
+\ascline{1.5pt}{666666}{1-7}
+
+
+\end{longtable}
+
+\arrayrulecolor[HTML]{000000}
+
+\global\setlength{\arrayrulewidth}{\Oldarrayrulewidth}
+
+\global\setlength{\tabcolsep}{\Oldtabcolsep}
+
+\renewcommand*{\arraystretch}{1}
 
 Bayesian paired-samples \emph{t}-tests revealed extreme evidence for
 differences between illusion strength conditions, with performance
@@ -827,7 +941,7 @@ outcome measures (\(BF_{10} > 1000\)) . For all three illusions
 (Ebbinghaus, Müller--Lyer, Vertical--Horizontal), error rates and IES
 were significantly lower in the Congruent relative to Mild condition,
 and lower in the Mild relative to Strong condition, consistent with the
-expected effect of illusion strength (see Figure~\ref{fig-tablemeans}).
+expected effect of illusion strength (see \textbf{?@fig-tablemeans}).
 
 \subsection{Score consistency}\label{score-consistency}
 
@@ -909,19 +1023,18 @@ findings.
 
 This study aimed to replicate previous findings indicating (1) an
 absence of a relationship between visual illusion sensitivity and
-phenomenological control (Lush et al., 2022), and (2) a positive
-relationship between illusion sensitivity and psychoticism (Makowski et
-al., 2023). However, pre-registered Bayesian correlation analyses
-suggested an absence of a relationship between illusion sensitivity and
-both phenomenological control and psychoticism, supporting only the
-first hypothesis. However, pre-registered Bayesian correlation analyses
+phenomenological control (\citeproc{ref-lush2022}{Lush et al., 2022}),
+and (2) the existence of a positive relationship between illusion
+sensitivity and psychoticism (\citeproc{ref-makowski2023}{Makowski et
+al., 2023}). However, pre-registered Bayesian correlation analyses
 suggested an absence of a relationship between illusion sensitivity and
 both phenomenological control and psychoticism, supporting only the
 first hypothesis.
 
 One possible explanation for the lack of association between
 psychoticism and visual illusion sensitivity lies in how individual
-differences were operationalised. In (Makowski et al., 2023), illusion
+differences were operationalised. In
+(\citeproc{ref-makowski2023}{Makowski et al., 2023}), illusion
 sensitivity was modelled using hierarchical Bayesian General Additive
 Models, which capture non-linear effects of illusion strength, task
 difficulty, and their interaction, while also decomposing components of
@@ -951,12 +1064,13 @@ trial-level structure and estimate participant-specific sensitivity
 parameters.
 
 Our findings are consistent with the cognitive impenetrability account
-proposed by Lush et al. (2022), whereby visual illusions are primarily
-driven by low-level perceptual processes that are relatively insensitive
-to higher-order cognitive influences such as phenomenological control.
-However, as discussed above, our use of simplified outcome measures may
-have reduced sensitivity to individual differences. As such, replicating
-these finidngs with participant-specific parameters are needed.
+proposed by Lush et al. (\citeproc{ref-lush2022}{2022}), whereby visual
+illusions are primarily driven by low-level perceptual processes that
+are relatively insensitive to higher-order cognitive influences such as
+phenomenological control. However, as discussed above, our use of
+simplified outcome measures may have reduced sensitivity to individual
+differences. As such, replicating these finidngs with
+participant-specific parameters are needed.
 
 \section{Data Availability}\label{data-availability}
 

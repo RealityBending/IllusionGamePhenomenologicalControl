@@ -403,12 +403,14 @@ table1 <- ig_means_table |>
     `IES Strong` = "Strong") |>
   gt::tab_source_note(
     source_note = "Note. Values represent means and standard deviations. All Bayes factors (BFs) for the group differences exceeded 1000, indicating extreme evidence in favour of a difference between groups."
-  ) |> gt_apastyle()
+  ) 
 
 
-table1
+table1 |> gt_apastyle()
 
 saveRDS(table1, "figures/table1.rds")
+   
+saveRDS(ig_means_table, "figures/table1_raw.rds")
    
 ```
 
