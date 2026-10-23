@@ -173,50 +173,83 @@ pcs_ex_bar
 
 ## Illusion Game Participants
 
-We removed participants with an error rate > 45% (suggesting chance-level, i.e., random, responding) for any of the illusion types. Outliers detected in the first block will be discarded entirely (suggesting that they did not properly do the task), but if only the second set is bad, then only the second set will be discarded (suggesting that they got "bored" when having to re-do the task), as the illusion sensitivity can still be estimated, albeit with less precision. Additionally, participants whose RTs are significantly slower than the group average (possibly indicative of a different strategy) were also excluded from the analysis (RT > 4 SD above the mean).
+### Error Rate (registered)
+
+We removed participants with an error rate > 45% (suggesting chance-level, i.e., random, responding) for any of the illusion types. Outliers detected in the first block will be discarded entirely (suggesting that they did not properly do the task), but if only the second set is bad, then only the second set will be discarded (suggesting that they got "bored" when having to re-do the task), as the illusion sensitivity can still be estimated, albeit with less precision. 
 
 ```{r}
-#| message: false
-
-data_outliers <- data_ig |>
+data_error <- data_ig |>
     summarize(
         p_Error = sum(Error) / n(),
-        z_RT = mean(RT),
         .by = c("Participant", "Illusion_Type", "Block")
     ) |>
-    mutate(z_RT = as.numeric(standardize(z_RT)), .by = c("Illusion_Type", "Block")) |>
     arrange(desc(p_Error))
 
-outliers <- filter(data_outliers, p_Error > 0.45 | z_RT > 4)
-outliers_full <- unique(filter(outliers, Block == "A")$Participant)
-outliers_half <- unique(filter(outliers, Block == "B")$Participant)
-outliers_half <- outliers_half[!(outliers_half %in% outliers_full)]
+outliers_error <- filter(data_error, p_Error > 0.45)
+outliers_error_full <- unique(filter(outliers_error, Block == "A")$Participant)
+outliers_error_half <- unique(filter(outliers_error, Block == "B")$Participant)
+outliers_error_half <- outliers_error_half[!(outliers_error_half %in% outliers_error_full)]
 
-p1 <- data_outliers |>
+data_error |>
     ggplot(aes(x = p_Error)) +
     geom_density(aes(color = Illusion_Type)) +
-    geom_vline(xintercept = 0.45, linetype = "dashed", color = "red")
+    geom_vline(xintercept = 0.45, linetype = "dashed", color = "red") +
+    facet_wrap(~Block) +
+    theme_minimal()
+```
 
-p2 <- data_outliers |>
+Based on error rate, `r length(outliers_error_full)` participants were excluded entirely and `r length(outliers_error_half)` participants had their second block removed.
+
+
+### Response Time (registered)
+
+Participants whose RTs are significantly slower than the group average (possibly indicative of a different strategy) were also excluded from the analysis (RT > 4 SD above the mean).
+
+```{r}
+data_rt <- data_ig |>
+    summarize(Mean_RT = mean(RT), .by = "Participant") |>
+    mutate(z_RT = as.numeric(standardize(Mean_RT)))
+
+outliers_rt <- filter(data_rt, z_RT > 4)$Participant
+
+data_rt |>
     ggplot(aes(x = z_RT)) +
-    geom_density(aes(color = Illusion_Type)) +
-    geom_vline(xintercept = 4, linetype = "dashed", color = "red")
-
-p1 / p2
+    geom_density() +
+    geom_vline(xintercept = 4, linetype = "dashed", color = "red") +
+    theme_minimal()
 ```
 
-We discarded `r length(outliers_full)` participants (entirely) and `r length(outliers_half)` participant's second blocks based on error rate.
+Based on RT, `r length(outliers_rt)` participants were excluded entirely (`r sum(outliers_rt %in% outliers_error_full)` of whom were also flagged by the error-rate criterion).
+
+### Sensitivity: block-wise RT rule (unregistered)
 
 ```{r}
+data_rt_block <- data_ig |>
+    summarize(Mean_RT = mean(RT), .by = c("Participant", "Illusion_Type", "Block")) |>
+    mutate(z_RT = as.numeric(standardize(Mean_RT)), .by = c("Illusion_Type", "Block"))
+
+outliers_rtblock_full <- unique(filter(data_rt_block, z_RT > 4, Block == "A")$Participant)
+outliers_rtblock_half <- unique(filter(data_rt_block, z_RT > 4, Block == "B")$Participant)
+outliers_rtblock_half <- outliers_rtblock_half[!(outliers_rtblock_half %in% outliers_rtblock_full)]
+
+data_ppt$IG_Outlier_RTBlock_Full <- data_ppt$Participant %in% outliers_rtblock_full
+data_ppt$IG_Outlier_RTBlock_Half <- data_ppt$Participant %in% outliers_rtblock_half
+```
+
+### Apply
+
+```{r}
+outliers_full <- unique(c(outliers_error_full, outliers_rt))
+outliers_half <- outliers_error_half[!(outliers_error_half %in% outliers_full)]
+
 data_ig <- data_ig |>
-   filter(!Participant %in% outliers_full) |>
-   filter(!((Block == "B") & (Participant %in% outliers_half)))
-```
+    filter(!Participant %in% outliers_full) |>
+    filter(!((Block == "B") & (Participant %in% outliers_half)))
 
-```{r}
 data_ppt <- filter(data_ppt, !Participant %in% outliers_full)
 data_ig <- filter(data_ig, Participant %in% data_ppt$Participant)
 ```
+
 
 ::: {.panel-tabset}
 
@@ -224,8 +257,9 @@ data_ig <- filter(data_ig, Participant %in% data_ppt$Participant)
 
 ```{r}
 ig_ex_tib <- bind_rows(
-  tibble(Participant = outliers_full, "Extent of Exclusion" = "Participant-level"),
-  tibble(Participant = outliers_half, "Extent of Exclusion" = "Block-level")
+  tibble(Participant = outliers_error_full, Reason = "Error rate > 45% (block A)", "Extent of Exclusion" = "Participant-level"),
+  tibble(Participant = outliers_error_half, Reason = "Error rate > 45% (block B only)", "Extent of Exclusion" = "Block-level"),
+  tibble(Participant = outliers_rt, Reason = "Mean RT > 4 SD", "Extent of Exclusion" = "Participant-level")
 )
 
 ig_ex_tib |> 
