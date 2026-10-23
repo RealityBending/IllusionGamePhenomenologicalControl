@@ -125,14 +125,18 @@ outliers_pcs3 <- data_ppt[data_ppt$pcs_press < 5, "Participant"] # get PP count
 outliers_pcs <- unique(c(outliers_pcs1, outliers_pcs2))
 ```
 
-Departing from our preregistered analysis, here we will not include the third attention check, in which participants were told to press the space bar upon seeing the words "PLEASE WAIT" on the screen. This is because a significant proportion (`r length(outliers_pcs3)` (`r insight::format_percent(length(outliers_pcs3) / nrow(data_ppt))`)) of participants were excluded. 
+Departing from our preregistered analysis, the main analysis does not apply the third attention check, in which participants had to press the space bar at least 5 times upon seeing the words "PLEASE WAIT" on the screen. This check failed `r length(outliers_pcs3)` (`r insight::format_percent(length(outliers_pcs3) / nrow(data_ppt))`) participants, `r sum(data_ppt$pcs_press == 0)` of whom did not press at all. The space bar task is the behavioural component of PCS item 10 (post-session suggestion), in which participants are told that they will press the space bar six times *and will forget having been told to do so*, so not pressing can reflect a response to the amnesia suggestion rather than inattention (see the analysis report). The fully registered sample, in which this check is applied, is built at the end of this report.
 
-Thus, we will only remove `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_pcs) / nrow(data_ppt))`) participants that either did not report hearing "Hello" at the beginning of the experiment, or responded that no balls were presented on the screen.
+Thus, we only removed `r length(outliers_pcs)` (`r insight::format_percent(length(outliers_pcs) / nrow(data_ppt))`) participants that either did not report hearing "Hello" at the beginning of the experiment, or responded that no balls were presented on the screen.
 
 ```{r}
 data_ppt$PCS_Outlier_Press <- ifelse(data_ppt$Participant %in% outliers_pcs3, TRUE, FALSE)
 data_ppt <- filter(data_ppt, !Participant %in% outliers_pcs)
 data_ig <- filter(data_ig, !Participant %in% outliers_pcs)
+
+# Kept for the fully registered sample (see below)
+data_ppt_pcs <- data_ppt
+data_ig_pcs <- data_ig
 ```
 
 ::: {.panel-tabset}
@@ -291,15 +295,15 @@ ig_ex_bar
 
 ## Illusion Game Trials
 
-We removed individual extreme trials (RT < 0.2 s or > 5 s; Thériault et al., 2024) to mitigate the risk of confounding effects driven by extreme speed or accuracy strategies.
+Departing from the registered protocol, individual extreme trials (RT < 0.2 s or > 5 s; Thériault et al., 2024) were flagged to mitigate the risk of confounding effects driven by extreme speed or accuracy strategies. These trials are kept in the saved data (column `RT_Outlier`) and are only removed in the corresponding sensitivity analysis.
 
 ```{r}
+data_ig$RT_Outlier <- data_ig$RT <= 0.2 | data_ig$RT >= 5
 n_before <- nrow(data_ig)
-data_ig <- filter(data_ig, RT > 0.2 & RT < 5)
-n_removed <- n_before - nrow(data_ig)
+n_removed <- sum(data_ig$RT_Outlier)
 ```
 
-This removed `r n_removed` trials (`r round(n_removed / n_before * 100, 2)`% of total).
+This flagged `r n_removed` trials (`r round(n_removed / n_before * 100, 2)`% of total; `r sum(data_ig$RT <= 0.2)` faster than 0.2 s and `r sum(data_ig$RT >= 5)` slower than 5 s).
 
 # Final Sample
 
@@ -383,6 +387,33 @@ p_eth
 
 :::
 
+# Fully Registered Sample
+
+This sample applies all registered exclusion criteria, including the space bar check, and no unregistered step (the trial-level RT filter is not applied). The Illusion Game criteria are recomputed on the participants who passed all three PCS checks.
+
+```{r}
+ig_reg <- filter(data_ig_pcs, !Participant %in% outliers_pcs3)
+
+err_reg <- ig_reg |>
+    summarize(p_Error = sum(Error) / n(), .by = c("Participant", "Illusion_Type", "Block")) |>
+    filter(p_Error > 0.45)
+reg_full <- unique(filter(err_reg, Block == "A")$Participant)
+reg_half <- unique(filter(err_reg, Block == "B")$Participant)
+
+rt_reg <- ig_reg |>
+    summarize(Mean_RT = mean(RT), .by = "Participant") |>
+    mutate(z_RT = as.numeric(standardize(Mean_RT)))
+reg_full <- unique(c(reg_full, filter(rt_reg, z_RT > 4)$Participant))
+reg_half <- reg_half[!(reg_half %in% reg_full)]
+
+data_ig_registered <- ig_reg |>
+    filter(!Participant %in% reg_full) |>
+    filter(!((Block == "B") & (Participant %in% reg_half)))
+data_ppt_registered <- filter(data_ppt_pcs, Participant %in% data_ig_registered$Participant)
+```
+
+Of the `r length(unique(ig_reg$Participant))` participants who passed all three PCS checks, `r length(reg_full)` were fully excluded and `r length(reg_half)` had their second block removed, leaving `r nrow(data_ppt_registered)` participants (`r nrow(data_ig_registered)` trials).
+
 # Save
 
 ```{r}
@@ -390,5 +421,7 @@ p_eth
 
 write.csv(data_ppt, "../data/data_participants.csv", row.names = FALSE)
 write.csv(data_ig, "../data/data_illusion.csv", row.names = FALSE)
+write.csv(data_ppt_registered, "../data/data_participants_registered.csv", row.names = FALSE)
+write.csv(data_ig_registered, "../data/data_illusion_registered.csv", row.names = FALSE)
 ```
 
