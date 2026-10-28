@@ -47,8 +47,6 @@ for (file in files) {
     Screen_Height = dat$screen_height
   )
 
-  data_ppt$Prolific_ID <- prolific_id
-
   # Demographics
   demog <- jsonlite::fromJSON(rawdata[rawdata$screen == "demographic_questions", ]$response)
 
