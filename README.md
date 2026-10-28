@@ -54,10 +54,9 @@ PCS items are scored from 0 to 5; the PCS score is the mean of the 10 items (com
 
 The scripts are run in the following order. Each Quarto document renders to an HTML report documenting every step (links above).
 
-1. **[`analysis/preprocessing.R`](analysis/preprocessing.R)** — Reads the raw jsPsych files (one per participant; stored in a private OSF repository because they contain identifiers), extracts participant- and trial-level data, recodes participants as `S001`–`S500`, and writes `rawdata_participants.csv` and `rawdata_illusion.csv`. *This step cannot be rerun without access to the private raw files; its outputs are provided.*
-2. **[`analysis/1_cleaning.qmd`](analysis/1_cleaning.qmd)** — Computes questionnaire scores, applies the exclusion criteria, and writes the cleaned data files (both samples) and the exclusion counts used in the flow diagram.
-3. **[`analysis/2_analysis.qmd`](analysis/2_analysis.qmd)** — Computes the illusion sensitivity scores (error rate and inverse efficiency score, IES), runs the manipulation checks, the registered decision rule for collapsing Mild and Strong conditions, reliability analyses, the registered Bayesian correlations, and all sensitivity and exploratory analyses. Saves all tables (`.rds`) and figures (`.png`) used in the manuscript to `analysis/figures/`.
-4. **[`paper/Stage2_R1/manuscript_R1.qmd`](paper/Stage2_R1/manuscript_R1.qmd)** — The manuscript, which reads the tables and figures from `analysis/figures/`.
+1. **[`analysis/1_cleaning.qmd`](analysis/1_cleaning.qmd)** — Computes questionnaire scores, applies the exclusion criteria, and writes the cleaned data files (both samples) and the exclusion counts used in the flow diagram.
+2. **[`analysis/2_analysis.qmd`](analysis/2_analysis.qmd)** — Computes the illusion sensitivity scores (error rate and inverse efficiency score, IES), runs the manipulation checks, the registered decision rule for collapsing Mild and Strong conditions, reliability analyses, the registered Bayesian correlations, and all sensitivity and exploratory analyses. Saves all tables (`.rds`) and figures (`.png`) used in the manuscript to `analysis/figures/`.
+3. **[`paper/Stage2_R1/manuscript_R1.qmd`](paper/Stage2_R1/manuscript_R1.qmd)** — The manuscript, which reads the tables and figures from `analysis/figures/`.
 
 ### Registered and unregistered analyses
 
