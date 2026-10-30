@@ -186,21 +186,20 @@ study_design_table
 
 ## Participants
 
-Five hundred English-speaking adults (Mean age = 38.6, SD = 13.1, range: [18, 75], 50% of women) were recruited via Prolific (www.prolific.com) and completed the study on a desktop device. 
+Five hundred **adult English speakers** (Mean age = 38.6, SD = 13.1, range: [18, 75], 50% of women) were recruited via Prolific (www.prolific.com) and completed the study on a desktop device.^[**Eligibility was implemented using Prolific's screening filters, which admitted participants whose first or primary language was English. This departs from the Stage 1 manuscript, which specified native English speakers: this wording did not reflect the intended recruitment criterion and was an error in the Stage 1 manuscript.**] 
 Out of these participants,  2.8%  reported having a doctoral degree, 18.2% masters degree, 49.6% a bachelors degree, 27.4% a high school degree and 2%  other qualifications. 
-Participants were first presented with an explanatory statement, and could proceed by pressing a button to confirm they have read and understood the information. This study has been approved by the ethics board of the School of Psychology of the University of Sussex (ER/ASF25/5).
+Participants were first presented with an explanatory statement and **the consent form**, and could proceed by pressing a button to confirm they had read and understood the information. This study has been approved by the ethics board of the School of Psychology of the University of Sussex (ER/ASF25/5).
 
-Following the data exclusion steps (see **Results** section), the final sample included 444 participants for analyses related to the Müller-Lyer illusion, 445 for the Ebbinghaus illusion, and 446 for the Vertical-Horizontal illusion.
-
+Following the exclusion steps (see Results and **@fig-consort**), **295 participants (Mean age = 38.1, *SD* = 12.9, 48.8% women) were retained in the fully registered analysis, and 468 participants (Mean age = 38.7, *SD* = 13.2, 48.7% women) in the unregistered analysis, of whom 458 were analysed for each illusion (see Deviations From Registration).**
 
 ## Procedure
 
 The experiment's setup follows the born-open principle [@deleeuw2023], and all its related material is available at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**. The online experiment, implemented entirely using *JsPsych* [@de2015jspsych], has its code stored on GitHub and leverages the power of the platform to host the experiment for free. 
-Participant’s raw data files (containing identifiers) were stored in a private OSF repository, but deanonimized using a publically available preprocessing script. 
+Participant’s raw data files (containing identifiers) were stored in a private OSF repository, but anonimized using a publically available preprocessing script. 
 The resulting anonymized data, and the analysis reports, are available, ensuring the transparency and reproducibility of all the analysis steps.
 
 Following the informed consent, participants were presented with demographic questions (gender, education level, age, and ethnicity). 
-Although these variables are not directly analyzed in the current study, they are used to provide a detailed and thorough description of the sample (thus limiting potential over-generalization) and maximizing data reusability.
+Although these variables **were not directly** analyzed in the current study, they **were** used to provide a detailed and thorough description of the sample (thus limiting potential over-generalization) and **to maximize** data reusability.
 Participants then underwent the Phenomenological Control Scale (PCS) and the Illusion Game task (IG) in a counterbalanced order.
 
 ### Phenomenological Control Scale (PCS)
@@ -208,12 +207,12 @@ Participants then underwent the Phenomenological Control Scale (PCS) and the Ill
 Participants were asked to put on their headphones and await further auditory instructions. 
 The PCS procedure started with a recorded introduction explaining that a series of tests would be applied to evaluate how experiences can be created through imagination, followed by 10 suggestions in a fixed order [see @lush2021], such as "now extend your arms ahead of you, with palms facing each other, hands about a foot apart" and "as you sit comfortably in your chair with your eyes closed, a picture of two balls will be displayed on the computer screen". 
 Once the 10 suggestions were completed, participants were asked to rate their subjective experiences and response to each suggestion on a 6-points Likert scale (from 0-5).
-The Phenomenological control score will be computed by averaging the scores from the 10 scales.
+The Phenomenological control score **was** computed by averaging the scores from the 10 scales.
 
 ### Illusion Game
 
-The Illsuion Game task used in the current study is an adaptation of the one used in @makowski2023 to make it shorter, in which participants must make perceptual judgments (e.g., "which red line is the longer") as quickly and accurately as possible. It included 3 illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal (see @fig-illusionexample). In the original Illusion Game, 10 visual illusions were presented in two sets, following a practice trial, and separated by two short questionnaires.
-Participants completed a total of 1,340 trials, with the experiment lasting approximately 48 minutes.
+The Illusion Game task used in the current study is an adaptation of the one used in @makowski2023 to make it shorter, in which participants must make perceptual judgments (e.g., "which red line is the longer") as quickly and accurately as possible. It included 3 illusion types, namely Ebbinghaus, Müller-Lyer, and Vertical-Horizontal (see @fig-illusionexample). In the original Illusion Game, 10 visual illusions were presented in two sets, following a practice trial, and separated by two short questionnaires.
+Participants completed a total of 1,340 trials, with the experiment lasting approximately **55 minutes.**
 In the current procedure, only three illusions were used, selected based on the original study's findings that these illusions most strongly contribute to illusion sensitivity.
 
 ```{r}
@@ -249,47 +248,49 @@ Additionally, the psychoticism subscale of the PID-5 was used to examine the cor
 
 ## Data Analysis
 
-The phenomenological control scale will include several attention checks to identify problematic participants.
-The task consists of various auditory and visual exercises; at the outset, participants hear a voice say “Hello” and are asked to select the corresponding phrase from multiple options (i.e., “Hello”, “Goodbye”, “How are you”, “Thank you”).
-Selecting an incorrect response indicates inattention to auditory stimuli.
-In a subsequent exercise, participants are instructed: “Open your eyes. You will see only two balls on the screen… just two balls”.
-However, three differently coloured balls are displayed.
-If a participant selects the response “No Balls Were Presented”, it suggests they failed to attend to both the auditory instruction and the visual stimuli.
-In another task, participants are instructed to press the spacebar six times.
-Pressing it fewer than five times within the allotted time indicates a failure to follow the auditory instructions.
-Participants who fail any one of these will be excluded from further analysis.
-Finally, the reliability of the PCS will be assessed by computing Cronbach's alpha of its items [@cronbach1951coefficient].
+The phenomenological control scale **included** several attention checks to identify problematic participants.
+The task **consisted** of various auditory and visual exercises; at the outset, participants **heard** a voice say “Hello” and **were** asked to select the corresponding phrase from multiple options (i.e., “Hello”, “Goodbye”, “How are you”, “Thank you”).
+Selecting an incorrect response **indicated** inattention to auditory stimuli.
+In a subsequent exercise, participants **were** instructed: “Open your eyes. You will see only two balls on the screen… just two balls”.
+However, three differently coloured balls **were** displayed.
+If a participant **selected** the response “No Balls Were Presented”, it **suggested** they failed to attend to both the auditory instruction and the visual stimuli.
+In another task, participants **were** instructed to press the spacebar six times.
+Pressing it fewer than five times within the allotted time **indicated** a failure to follow the auditory instructions.
+Participants who **failed** any one of these **were to be** excluded from further analysis **(see Deviations From Registration)**.
+Finally, the reliability of the PCS **was** assessed by computing Cronbach's alpha of its items [@cronbach1951coefficient].
 
-Outliers in the Illusion Game will be identified based on participants’ performance. 
-Specifically, any participant exhibiting an error rate greater than 45% for any illusion type will be considered to be responding at chance level (i.e., randomly) and flagged accordingly. 
-If this level of performance occurs in the first block, the entire participant will be excluded from analysis, as it suggests a failure to properly engage with the task.
-However, if the elevated error rate is observed only in the second block, this will be interpreted as a loss of engagement or motivation (e.g., boredom due to task repetition).
-In such cases, only the second block will be discarded, allowing for estimation of illusion sensitivity based on the valid data from the first block, albeit with reduced precision. 
-To mitigate the risk of confounding effects driven by extreme speed or accuracy strategies, participants whose RTs are significantly slower than the group average [RT > 4 SD above the mean, based on @makowski2023] will be excluded from the analysis.
-After removing problematic participants and trials, the outcome measures (PC and VI sensitivity scores) will be computed.
+Outliers in the Illusion Game **were** identified based on participants’ performance.
+Specifically, any participant exhibiting an error rate greater than 45% for any illusion type **was** considered to be responding at chance level (i.e., randomly) and flagged accordingly.
+If this level of performance **occurred** in the first block, the entire participant **was** excluded from analysis, as it suggests a failure to properly engage with the task.
+However, if the elevated error rate **was** observed only in the second block, this **was** interpreted as a loss of engagement or motivation (e.g., boredom due to task repetition).
+In such cases, only the second block **was** discarded, allowing for estimation of illusion sensitivity based on the valid data from the first block, albeit with reduced precision.
+To mitigate the risk of confounding effects driven by extreme speed or accuracy strategies, participants whose **mean RT was slower than** the group average [RT > 4 SD above the mean, based on @makowski2023] **were** excluded from the analysis.
+After removing problematic participants and trials, the outcome measures (PC and VI sensitivity scores) **were** computed.
 
-To assess whether the illusions functioned as expected, stimuli will be categorized into three groups: Strong Illusion Strength & Incongruent, Mild Illusion Strength & Incongruent, and Congruent. 
-The two outcome measures—error rate and IES—will be computed separately for each illusion and each illusion strength group.
-To evaluate differences between these conditions, two Bayesian t-tests will be conducted: one comparing the Congruent and Mild conditions, and the other comparing the Mild and Strong conditions.
-Significant differences in either IES or error rate across these comparisons will be taken as evidence that the illusions operated as intended.
+To assess whether the illusions functioned as expected, stimuli **were** categorized into three groups: Strong Illusion Strength & Incongruent, Mild Illusion Strength & Incongruent, and Congruent.
+The two outcome measures—error rate and IES—**were** computed separately for each illusion and each illusion strength group.
+To evaluate differences between these conditions, two Bayesian t-tests **were** conducted: one comparing the Congruent and Mild conditions, and the other comparing the Mild and Strong conditions.
+**Evidence (BF~10~ > 3) for** differences in either IES or error rate across these comparisons **was** taken as evidence that the illusions operated as intended.
 
-Next, to determine whether the Mild and Strong Illusion Strength groups can be collapsed for further analysis, Bayesian correlations will be computed between them for each illusion and outcome measure.
-If these correlations are sufficiently high [r > .50, @cohen2013statistical], the groups will be collapsed and outcomes recomputed across all relevant trials  (i.e., by averaging across these groups).
-If not, the groups will be analysed separately.
-This step is necessary because reaction time may not have a linear relationship with illusion strength [@makowski2023], and collapsing the data without this check may obscure meaningful differences.
-Finally, reliability analyses will be conducted on all resulting indices, with Cronbach’s alpha used to evaluate internal consistency across the three illusion types.
+Next, to determine whether the Mild and Strong Illusion Strength groups **could** be collapsed for further analysis, Bayesian correlations **were** computed between them for each illusion and outcome measure.
+If these correlations **were** sufficiently high [r > .50, @cohen2013statistical], the groups **were** collapsed and outcomes recomputed across all relevant trials  (i.e., by averaging across these groups).
+If not, the groups **were** analysed separately.
+This step **was** necessary because reaction time may not have a linear relationship with illusion strength [@makowski2023], and collapsing the data without this check may obscure meaningful differences.
+Finally, reliability analyses **were** conducted on all resulting indices, with Cronbach’s alpha used to evaluate internal consistency across the three illusion types.
 
-Bayesian correlations are then computed between PCS and illusion sensitivity scores - with the resulting IES and error rate indices. 
-Following @lush2022, we expect to collect evidence against ($BF_{10} <= 1/3$) a relationship between PCS and VI sensitivity. 
-Additionally, Bayesian correlations will be computed between maladaptive trait facets and illusion sensitivity scores. 
-Based on prior research [@makowski2023], we expect to find evidence ($BF_{10} > 3$) supporting a relationship between the psychoticism facet of the PID-5 and illusion sensitivity. 
+Bayesian correlations **were** then computed between PCS and illusion sensitivity scores - with the resulting IES and error rate indices.
+Following @lush2022, we **expected** to collect evidence against ($BF_{10} <= 1/3$) a relationship between PCS and VI sensitivity.
+Additionally, Bayesian correlations **were** computed between maladaptive trait facets and illusion sensitivity scores.
+Based on prior research [@makowski2023], we **expected** to find evidence ($BF_{10} > 3$) supporting a **(negative)** relationship between the psychoticism facet of the PID-5 and illusion sensitivity.
+**Bayes factors between 1/3 and 3 were interpreted as inconclusive.**
 
-All Bayesian analyses will be conducted using the *BayesFactor* package [@BayesFactor]. 
-For correlations, a medium shifted beta prior will be applied (r-scale parameter set to  1/3), as recommended by @morey2018baysefactor, providing a balanced approach to estimating effect sizes, without placing undue weight on larger effect sizes or artificially inflating evidence for the null hypothesis.
-For t-tests, the *ttestBF* function will be used with a medium Cauchy prior on the standardised effect size (r-scale = √2⁄2), corresponding to the default for independent samples.
+All Bayesian analyses **were** conducted using the *BayesFactor* package [@BayesFactor].
+For correlations, a medium shifted beta prior **was** applied (r-scale parameter set to  1/3), as recommended by @morey2018baysefactor, providing a balanced approach to estimating effect sizes, without placing undue weight on larger effect sizes or artificially inflating evidence for the null hypothesis.
+For t-tests, the *ttestBF* function **was** used with a medium Cauchy prior on the standardised effect size (r-scale = √2⁄2), corresponding to the default for independent samples.
 
-Data analysis will be carried out using R, using *tidyverse* [@tidyverse] and *easystats* [@easystats; @parameters; @correlation; @bayestestR; @datawizard]. 
+Data analysis **was** carried out using R, using *tidyverse* [@tidyverse] and *easystats* [@easystats; @parameters; @correlation; @bayestestR; @datawizard].
 The analysis script and additional information are available at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**.
+**Departures from this registered plan are reported in the Results as deviations. Results are reported both for the fully registered analysis and for an unregistered analysis incorporating these deviations, and sensitivity analyses evaluate the effect of each deviation separately (Table S1).**
 
 # Results
 
@@ -297,30 +298,38 @@ The analysis script and additional information are available at **https://github
 
 ### Registered Exclusions 
 
-Registered exclusion criteria based on task performance and reaction times were applied. 
-Specifically, participants with mean reaction times exceeding 4 SDs above the group mean were flagged. 
-In accordance with the registered protocol, participants were fully excluded if this occurred in the first block, whereas only the second block was removed if the criterion was met exclusively in the second block. 
-Based on these criteria, 17 participants were fully excluded, and 13 participants had their second block removed.
+**Of the 500 recruited participants, 19 failed the first two PCS attention checks (10 did not report hearing “Hello”; 9 reported that no balls were presented), and 189 failed the space bar check, 181 of whom had passed the first two checks (see Deviations From Registration). In line with the registered protocol, participants with an error rate above 45% for any illusion type in the first block were fully excluded, participants exceeding this threshold only in the second block had that block removed (these participants were retained), and participants whose mean RT exceeded the group mean by more than 4 SD were fully excluded.**
 
-Trial-level reaction time exclusions were conducted to remove implausible responses and reduce the influence of extreme values. 
-Following @theriault2024, trials with response times below 0.2 seconds or above 5 seconds were excluded, resulting in the removal of 687 trials (0.31% of the data).
+**Applying all registered criteria left 295 participants (fully registered analysis): of the 300 participants who passed all three PCS checks, 4 were fully excluded on the basis of error rate and 1 on the basis of RT, and 3 had their second block removed. The full sequence of exclusions is shown in @fig-consort.**
+
+```{r}
+#| label: fig-consort
+#| apa-twocolumn: true
+#| out-width: "100%"
+#| fig-cap: "Flow of participants and trials through the registered exclusion criteria (red) and the deviations from the registered protocol (yellow), and the resulting analysed samples (blue)."
+
+knitr::include_graphics("../../analysis/figures/fig_consort.png")
+```
 
 ### Deviations From Registration
 
 #### Phenomenological Control
 
-The registered protocol specified that participants failing any of the three attention checks in the PCS would be excluded. 
-However, one attention check (requiring participants to press the space bar at least 5 times) resulted in the exclusion of 189 participants (37.8%), which was disproportionately high compared to the other two checks combined, which were failed by 19 (3.8%) participants.
-This suggests an attention check that was not well calibrated, and led us to question the validity of this criterion for identifying inattentive participants.
+The registered protocol specified that participants failing any of **three** attention checks in the PCS would be excluded.
+**The first two checks were failed by 19 participants (3.8%), whereas the third, requiring at least five space bar presses when “PLEASE WAIT” was displayed, was failed by 189 participants (37.8%). Most failures (177 of 189) recorded no presses at all, which argues against dropped key presses (which would produce partial counts). These participants passed the other two checks, and their scores on the remaining PCS items were not lower than those of participants who passed (*M* = 2.49 vs. 2.28; BF~10~ = 2.90), suggesting that failures did not reflect general inattention. Instead, the failure rate may reflect how the check was implemented: although the auditory instruction, delivered with eyes closed, stated that the “PLEASE WAIT” message would appear “a little later”, the screen appeared as soon as the recording ended (i.e., as participants were told to open their eyes), disappeared after 10 seconds, and only recorded presses made while it was displayed. Participants who were still reorienting after opening their eyes, or who pressed during the instruction, would therefore have been recorded as not pressing at all.**
 
-Firstly, we examined the consistency of the score with and without the participants flagged by this item, which remained similar (Cronbach's $\alpha$ = 0.78 without removal; 0.78 with removal), suggesting that their exclusion did not enhance the internal consistency of the scale. As such, we decided to present results with these participants. However, for accountability, the registered results without these participants are available in the full analysis report on the project's GitHub repository, but they did not have an impact on the findings. 
+**We therefore report the fully registered analysis, in which all three checks were applied (N = 295), alongside an unregistered analysis in which the space bar check was not applied. In this sample (the 481 participants who passed the first two PCS checks), the registered Illusion Game criteria fully excluded 8 participants on the basis of error rate and 5 on the basis of RT (none of whom were flagged by both criteria), and removed the second block of 7 participants (who were retained), leaving 468 participants. The unregistered analysis also includes the two Illusion Game deviations described below.**
 
 
 #### Illusion Game
 
-During data inspection, a handful of participants exhibited systematic response patterns inconsistent with task instructions, reflected by very high error rates in the congruent condition (where error rates are typically very low), far beyond the bulk of the distribution.
-These cases likely reflect instructions misunderstanding (e.g., participants selecting the smallest circle instead of the largest circle). 
-Following this, participants outside the 97.5% CI for the error rate for a given illusion had their data for that specific illusion excluded, affecting 20 participants (4.31%) for the Müller–Lyer illusion, 19 (4.09%) for the Ebbinghaus illusion, and 18 (3.88%) for the Vertical–Horizontal illusion. Histograms showing the distribution of error rates and the rejection bounds are available on the project's GitHub repository (see link above).
+##### Participant exclusions (per illusion)
+
+During data inspection, a **small number** of participants **showed very high error rates in the congruent condition, where the illusion makes the task easier and errors are typically rare. These patterns are more consistent with a misunderstanding of the instructions (e.g., selecting the smaller instead of the larger circle) than with illusion sensitivity. In the unregistered analysis, participants whose congruent error rate for a given illusion lay above the 97.5% highest density interval (HDI) of its distribution were therefore excluded from the analyses of that illusion only (10 participants, 2.14%, for each illusion), leaving 458 participants per illusion. Because congruent error rates are bounded at zero, the lower bound of this interval was zero, so only the upper tail was flagged. In the initial submission, this procedure was applied more broadly, to both tails of both the congruent and incongruent error rates, which also excluded participants with very low incongruent error rates who may simply be highly resistant to the illusion. Results without this exclusion, and with the original two-sided version, are reported in Table S1.** Histograms showing the distribution of error rates and the **HDI** bounds are available on the project's GitHub repository (see link above).
+
+##### Trial exclusions
+
+**The Stage 1 protocol referred to the removal of problematic trials but did not specify a criterion. In the unregistered analysis, trials with response times below 0.2 s or above 5 s were excluded as implausible [@theriault2024], removing 864 trials (0.39% of the data; 298 faster than 0.2 s and 566 slower than 5 s). Retaining these trials did not change the classification of any test of the primary outcome (Table S1).**
 
 ## Manipulation Check
 
@@ -390,9 +399,9 @@ The results are therefore not aligned with the hypothesised positive association
 #| label: fig-corr
 #| apa-twocolumn: true  # A Figure Spanning Two Columns When in Journal Mode
 #| out-width: "100%"
-#| fig-cap: "The study involved three visual illusions, in which participants were instructed to respond as quickly as possible without making errors. Each illusion included two manipulated parameters: strength (e.g., the angle of the outward- or inward-pointing arrow-like fins in the Müller-Lyer illusion) and difficulty (e.g., the difference in line lengths in the Müller-Lyer illusion)."
+#| fig-cap: "Bayesian correlations (posterior median and 95% credible interval) between illusion sensitivity and dispositional traits in the fully registered analysis (N = 295). Error rate (primary outcome) and IES (secondary outcome) are shown in separate panels. Labels show BF₁₀ (° BF₁₀ < 0.33; * BF₁₀ > 3; ** BF₁₀ > 10). 'Mild + Strong' denotes scores collapsed across illusion strength. The Congruent condition is not a measure of illusion sensitivity and is shown for reference only. The corresponding figure for the analysis without the space bar check is available in the analysis report."
 
-knitr::include_graphics("../../analysis/2_analysis_files/figure-html/fig1-1.png")
+knitr::include_graphics("../../analysis/figures/fig_correlations_registered.png")
 ```
 
 ### Exploratory Analyses
