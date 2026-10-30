@@ -54,20 +54,31 @@ PCS items are scored from 0 to 5; the PCS score is the mean of the 10 items (com
 
 The scripts are run in the following order. Each Quarto document renders to an HTML report documenting every step (links above).
 
-1. **[`analysis/1_cleaning.qmd`](analysis/1_cleaning.qmd)** — Computes questionnaire scores, applies the exclusion criteria, and writes the cleaned data files (both samples) and the exclusion counts used in the flow diagram.
-2. **[`analysis/2_analysis.qmd`](analysis/2_analysis.qmd)** — Computes the illusion sensitivity scores (error rate and inverse efficiency score, IES), runs the manipulation checks, the registered decision rule for collapsing Mild and Strong conditions, reliability analyses, the registered Bayesian correlations, and all sensitivity and exploratory analyses. Saves all tables (`.rds`) and figures (`.png`) used in the manuscript to `analysis/figures/`.
-3. **[`paper/Stage2_R1/manuscript_R1.qmd`](paper/Stage2_R1/manuscript_R1.qmd)** — The manuscript, which reads the tables and figures from `analysis/figures/`.
+1. **[`analysis/preprocessing.R`](analysis/preprocessing.R)** — Reads the raw jsPsych files (one per participant), extracts the participant- and trial-level data, recodes participants as `S001`–`S500`, and writes `rawdata_participants.csv` and `rawdata_illusion.csv`. The raw jsPsych files contain identifiers and are stored in a private OSF repository, so this step cannot be rerun without access to them; its (anonymised) outputs are provided in `data/`, and all following steps start from these.
+2. **[`analysis/1_cleaning.qmd`](analysis/1_cleaning.qmd)** — Computes questionnaire scores, applies the exclusion criteria, and writes the cleaned data files (both samples) and the exclusion counts used in the flow diagram. Each exclusion step is labelled as registered or unregistered, and is followed by an *Apply* section where it is implemented. The report is organised as follows:
+   - **Data Preparation**
+     - *Experiment Duration*
+     - *Personality Questionnaires*: IPIP6 and PID-5 scores
+     - *Exclusions*
+       - *PCS*: the three attention checks as registered (*PCS (registered)*), the deviation of not applying the space bar check in the main analysis (*PCS (unregistered)*), and *Apply*
+       - *Illusion Game Participants*: error rate > 45% with the block-specific rule (*Error Rate (registered)*), mean RT > 4 SD (*Response Time (registered)*), the block-wise RT rule flagged for a sensitivity analysis (*Sensitivity: Block-Wise RT Rule (unregistered)*), and *Apply*
+       - *Illusion Game Trials*: no trial-level criterion was registered (*Registered*); trials with RT < 0.2 s or > 5 s are flagged for a sensitivity analysis (*Unregistered*); and *Apply*
+       - *Final Sample*: the fully registered sample, N = 295 (*Registered*), and the sample without the space bar check, N = 468 (*Without the Space Bar Check (unregistered)*), each with a summary and plots of age and gender, education and ethnicity
+   - **Exclusion Counts**: the numbers used in the exclusion flow diagram
+   - **Save**: writes the four cleaned data files
+3. **[`analysis/2_analysis.qmd`](analysis/2_analysis.qmd)** — Computes the illusion sensitivity scores (error rate and inverse efficiency score, IES), runs the manipulation checks, the registered decision rule for collapsing Mild and Strong conditions, reliability analyses, the registered Bayesian correlations, and all sensitivity and exploratory analyses. Saves all tables (`.rds`) and figures (`.png`) used in the manuscript to `analysis/figures/`.
+4. **[`paper/Stage2_R1/manuscript_R1.qmd`](paper/Stage2_R1/manuscript_R1.qmd)** — The manuscript, which reads the tables and figures from `analysis/figures/`.
 
 ### Registered and unregistered analyses
 
 | Step | Status | Where |
 |---|---|---|
-| PCS attention checks (“Hello”, “no balls”) | Registered | `1_cleaning.qmd` → *Exclusion → PCS* |
-| PCS space bar attention check | Registered; applied in the fully registered analysis only (deviation: not applied in the analysis without the space bar check) | `1_cleaning.qmd` → *Exclusion → PCS* and *Fully Registered Sample* |
-| Error rate > 45% (block-specific rule) | Registered | `1_cleaning.qmd` → *Illusion Game Participants → Error Rate* |
-| Mean RT > 4 SD (participant-level) | Registered | `1_cleaning.qmd` → *Illusion Game Participants → Response Time* |
-| Block-wise RT rule | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Sensitivity: block-wise RT rule*; `2_analysis.qmd` → *Sensitivity Datasets* |
-| Trial-level RT filter (< 0.2 s or > 5 s) | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Illusion Game Trials*; `2_analysis.qmd` → *Sensitivity Datasets* |
+| PCS attention checks (“Hello”, “no balls”) | Registered | `1_cleaning.qmd` → *Exclusions → PCS → PCS (registered)* |
+| PCS space bar attention check | Registered; applied in the fully registered analysis only (deviation: not applied in the analysis without the space bar check) | `1_cleaning.qmd` → *Exclusions → PCS → PCS (registered)* and *PCS (unregistered)*; *Final Sample → Registered* |
+| Error rate > 45% (block-specific rule) | Registered | `1_cleaning.qmd` → *Exclusions → Illusion Game Participants → Error Rate (registered)* |
+| Mean RT > 4 SD (participant-level) | Registered | `1_cleaning.qmd` → *Exclusions → Illusion Game Participants → Response Time (registered)* |
+| Block-wise RT rule | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Exclusions → Illusion Game Participants → Sensitivity: Block-Wise RT Rule (unregistered)*; `2_analysis.qmd` → *Sensitivity Datasets* |
+| Trial-level RT filter (< 0.2 s or > 5 s) | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Exclusions → Illusion Game Trials → Unregistered*; `2_analysis.qmd` → *Sensitivity Datasets* |
 | 97.5% HDI exclusion of extreme error rates | Unregistered (sensitivity analysis) | `2_analysis.qmd` → *Outlier Removal* |
 | Manipulation checks (Bayesian *t*-tests) | Registered | `2_analysis.qmd` → *Manipulation Check* |
 | Decision rule for collapsing Mild and Strong (r > .50) | Registered | `2_analysis.qmd` → *Should we collapse across Mild and Strong?* → *Registered Decision* |
