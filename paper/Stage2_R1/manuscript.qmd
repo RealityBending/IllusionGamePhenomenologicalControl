@@ -298,9 +298,7 @@ The analysis script and additional information are available at **https://github
 
 ### Registered Exclusions 
 
-**Of the 500 recruited participants, 19 failed the first two PCS attention checks (10 did not report hearing “Hello”; 9 reported that no balls were presented), and 189 failed the space bar check, 181 of whom had passed the first two checks (see Deviations From Registration). In line with the registered protocol, participants with an error rate above 45% for any illusion type in the first block were fully excluded, participants exceeding this threshold only in the second block had that block removed (these participants were retained), and participants whose mean RT exceeded the group mean by more than 4 SD were fully excluded.**
-
-**Applying all registered criteria left 295 participants (fully registered analysis): of the 300 participants who passed all three PCS checks, 4 were fully excluded on the basis of error rate and 1 on the basis of RT, and 3 had their second block removed. The full sequence of exclusions is shown in @fig-consort.**
+**Of the 500 recruited participants, 19 failed the first two PCS attention checks (10 did not report hearing “Hello”; 9 reported that no balls were presented), and 189 failed the space bar check, 181 of whom had passed the first two checks (see Deviations From Registration). Of the 300 participants who passed all three checks, in line with the registered protocol, 4 participants with an error rate above 45% for any illusion type in the first block were fully excluded, 3 participants exceeding this threshold only in the second block had that block removed (these participants were retained), and 1 participant whose mean RT exceeded the group mean by more than 4 SD was fully excluded. This left 295 participants for the fully registered analysis. The full sequence of exclusions is shown in @fig-consort.**
 
 ```{r}
 #| label: fig-consort
@@ -316,20 +314,21 @@ knitr::include_graphics("../../analysis/figures/fig_consort.png")
 #### Phenomenological Control
 
 The registered protocol specified that participants failing any of **three** attention checks in the PCS would be excluded.
-**The first two checks were failed by 19 participants (3.8%), whereas the third, requiring at least five space bar presses when “PLEASE WAIT” was displayed, was failed by 189 participants (37.8%). Most failures (177 of 189) recorded no presses at all, which argues against dropped key presses (which would produce partial counts). These participants passed the other two checks, and their scores on the remaining PCS items were not lower than those of participants who passed (*M* = 2.49 vs. 2.28; BF~10~ = 2.90), suggesting that failures did not reflect general inattention. Instead, the failure rate may reflect how the check was implemented: although the auditory instruction, delivered with eyes closed, stated that the “PLEASE WAIT” message would appear “a little later”, the screen appeared as soon as the recording ended (i.e., as participants were told to open their eyes), disappeared after 10 seconds, and only recorded presses made while it was displayed. Participants who were still reorienting after opening their eyes, or who pressed during the instruction, would therefore have been recorded as not pressing at all.**
+**The first two checks were failed by 19 participants (3.8%), whereas the third, requiring at least five space bar presses when “PLEASE WAIT” was displayed, was failed by 189 participants (37.8%). Most failures (177 of 189) recorded no presses at all, which argues against dropped key presses (which would produce partial counts). Most of these participants (181 of 189) passed the other two checks, and in the unregistered analysis sample (N = 468), the scores of participants who failed the space bar check on the remaining PCS items were not lower than those of participants who passed it (M = 2.49 vs. 2.28; BF~10~ = 2.90), suggesting that failures did not reflect general inattention. Instead, the failure rate may reflect how the check was implemented: although the auditory instruction, delivered with eyes closed, stated that the “PLEASE WAIT” message would appear “a little later”, the screen appeared as soon as the recording ended (i.e., as participants were told to open their eyes), disappeared after 10 seconds, and only recorded presses made while it was displayed. Participants who were still reorienting after opening their eyes, or who pressed during the instruction, would therefore have been recorded as not pressing at all.**
 
 **We therefore report the fully registered analysis, in which all three checks were applied (N = 295), alongside an unregistered analysis in which the space bar check was not applied. In this sample (the 481 participants who passed the first two PCS checks), the registered Illusion Game criteria fully excluded 8 participants on the basis of error rate and 5 on the basis of RT (none of whom were flagged by both criteria), and removed the second block of 7 participants (who were retained), leaving 468 participants. The unregistered analysis also includes the two Illusion Game deviations described below.**
-
 
 #### Illusion Game
 
 ##### Participant exclusions (per illusion)
 
-During data inspection, a **small number** of participants **showed very high error rates in the congruent condition, where the illusion makes the task easier and errors are typically rare. These patterns are more consistent with a misunderstanding of the instructions (e.g., selecting the smaller instead of the larger circle) than with illusion sensitivity. In the unregistered analysis, participants whose congruent error rate for a given illusion lay above the 97.5% highest density interval (HDI) of its distribution were therefore excluded from the analyses of that illusion only (10 participants, 2.14%, for each illusion), leaving 458 participants per illusion. Because congruent error rates are bounded at zero, the lower bound of this interval was zero, so only the upper tail was flagged. In the initial submission, this procedure was applied more broadly, to both tails of both the congruent and incongruent error rates, which also excluded participants with very low incongruent error rates who may simply be highly resistant to the illusion. Results without this exclusion, and with the original two-sided version, are reported in Table S1.** Histograms showing the distribution of error rates and the **HDI** bounds are available on the project's GitHub repository (see link above).
+During data inspection, a **small number** of participants **showed very high error rates in the congruent condition, where the illusion makes the task easier and errors are typically rare. These patterns are more consistent with a misunderstanding of the instructions (e.g., selecting the smaller instead of the larger circle) than with illusion sensitivity. In the unregistered analysis, participants whose congruent error rate for a given illusion lay above the 97.5% highest density interval (HDI) of its distribution (computed after the removal of extreme trials; see Trial exclusions) were therefore excluded from the analyses of that illusion only (10 participants, 2.14%, for each illusion), leaving 458 participants per illusion. Results without this exclusion are reported in Table S1.**
 
 ##### Trial exclusions
 
 **The Stage 1 protocol referred to the removal of problematic trials but did not specify a criterion. In the unregistered analysis, trials with response times below 0.2 s or above 5 s were excluded as implausible [@theriault2024], removing 864 trials (0.39% of the data; 298 faster than 0.2 s and 566 slower than 5 s). Retaining these trials did not change the classification of any test of the primary outcome (Table S1).**
+
+#### Native speakers
 
 ## Manipulation Check
 
@@ -357,8 +356,6 @@ table |>
   flextable::fontsize(size = 10)
   
 ```
-
-
 
 
 ## Score Consistency
