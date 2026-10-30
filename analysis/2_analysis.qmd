@@ -145,26 +145,24 @@ ig_scores <- compute_scores(data_ig)
 ig_scores_reg <- compute_scores(data_ig_reg)
 ```
 
-### Sensitivity Datasets (unregistered)
+### Unregistered Analysis
 
-- **Trial-level RT filter**: trials with RT < 0.2 s or > 5 s removed.
-- **Block-wise RT rule**: the block-specific exclusion rule (registered for error rates only) also applied to the RT criterion, as in the initial submission. This is approximate, as participants excluded by the registered (participant-level) RT rule are not in the data.
+Two main analyses are reported:
+
+- **Fully registered analysis** (`ig_scores_reg`): all registered exclusion criteria, and no unregistered step.
+- **Unregistered analysis** (`ig_scores_unreg`): all registered criteria except the space bar check, plus two unregistered exclusions: (1) trials with RT < 0.2 s or > 5 s are removed; and (2) participants whose congruent error rate for a given illusion lies above the 97.5% highest density interval (HDI) of its distribution are excluded for that illusion (likely misunderstanding of the instructions, i.e., high error rates where the illusion makes the task easier).
+
+`ig_scores` (all registered criteria except the space bar check, and no other deviation) is used to isolate the effect of the space bar check.
+
+#### Trial-Level RT Filter (unregistered)
 
 ```{r}
 ig_scores_trialfilter <- compute_scores(filter(data_ig, !RT_Outlier))
-
-data_ig_rtblock <- data_ig |>
-  filter(!Participant %in% data_ppt$Participant[data_ppt$IG_Outlier_RTBlock_Full]) |>
-  filter(!((Block == "B") & (Participant %in% data_ppt$Participant[data_ppt$IG_Outlier_RTBlock_Half])))
-ig_scores_rtblock <- compute_scores(data_ig_rtblock)
 ```
 
+#### HDI Exclusion (unregistered)
 
-### Outlier Removal (unregistered)
-
-#### Exclusion
-
-Participants with extreme error rates were flagged using the 97.5% highest density interval (HDI) of each error-rate distribution. Two versions are computed: (1) **congruent upper tail only**, which targets participants who likely misunderstood the instructions (high error rates where the illusion makes the task easier); and (2) the **two-sided** procedure used in the initial submission (both tails of the congruent and incongruent error rates). Neither is applied in the main or the registered analysis.
+The HDI exclusion is computed on the trial-filtered scores. Two versions are computed: (1) **congruent upper tail only**, used in the unregistered analysis; and (2) the **two-sided** procedure used in the initial submission (both tails of the congruent and incongruent error rates), reported as a sensitivity analysis only.
 
 ```{r}
 hdi_flag <- function(scores, mode = c("congruent_upper", "two_sided")) {
@@ -198,11 +196,8 @@ apply_flags <- function(scores, flags) {
   scores
 }
 
-hdi_cong <- hdi_flag(ig_scores, "congruent_upper")
-hdi_two <- hdi_flag(ig_scores, "two_sided")
-
-ig_scores_hdicong <- apply_flags(ig_scores, hdi_cong$flags)
-ig_scores_hditwo <- apply_flags(ig_scores, hdi_two$flags)
+hdi_cong <- hdi_flag(ig_scores_trialfilter, "congruent_upper")
+hdi_two <- hdi_flag(ig_scores_trialfilter, "two_sided")
 
 hdi_two$breakdown |>
   format_table() |>
@@ -222,11 +217,11 @@ data.frame(
 #| fig-width: 15
 #| fig-height: 8
 
-vars <- names(ig_scores)[str_detect(names(ig_scores), "ErrorRate_.*_(Congruent|Incongruent)_General")]
+vars <- names(ig_scores_trialfilter)[str_detect(names(ig_scores_trialfilter), "ErrorRate_.*_(Congruent|Incongruent)_General")]
 ps <- list()
 for (var in vars) {
-  bounds <- bayestestR::hdi(na.omit(ig_scores[[var]]), ci = 0.975)
-  ps[[var]] <- ggplot(ig_scores, aes(x = !!as.name(var))) +
+  bounds <- bayestestR::hdi(na.omit(ig_scores_trialfilter[[var]]), ci = 0.975)
+  ps[[var]] <- ggplot(ig_scores_trialfilter, aes(x = !!as.name(var))) +
     geom_histogram(binwidth = 0.015) +
     geom_vline(xintercept = c(bounds$CI_low, bounds$CI_high), color = "red") +
     coord_cartesian(xlim = c(0, 1)) +
@@ -236,14 +231,52 @@ for (var in vars) {
 wrap_plots(ps)
 ```
 
-#### Correlation
+#### Unregistered Scores and Sensitivity Versions
+
+`make_unreg()` builds the unregistered scores from a trial-level dataset, with each deviation switchable, so that each deviation can be removed one at a time (sensitivity analyses).
+
+```{r}
+make_unreg <- function(data, trial_filter = TRUE, hdi = c("congruent_upper", "two_sided", "none")) {
+  hdi <- match.arg(hdi)
+  if (trial_filter) data <- filter(data, !RT_Outlier)
+  scores <- compute_scores(data)
+  if (hdi != "none") scores <- apply_flags(scores, hdi_flag(scores, hdi)$flags)
+  scores
+}
+
+ig_scores_unreg <- make_unreg(data_ig)
+
+# Block-wise RT rule (initial submission): the block-specific rule, registered for error rates
+# only, also applied to the RT criterion. Approximate, as participants excluded by the
+# registered (participant-level) RT rule are not in the data.
+data_ig_rtblock <- data_ig |>
+  filter(!Participant %in% data_ppt$Participant[data_ppt$IG_Outlier_RTBlock_Full]) |>
+  filter(!((Block == "B") & (Participant %in% data_ppt$Participant[data_ppt$IG_Outlier_RTBlock_Half])))
+
+unreg_versions <- list(
+  "Unregistered without the trial-level RT filter" = make_unreg(data_ig, trial_filter = FALSE),
+  "Unregistered without the HDI exclusion" = make_unreg(data_ig, hdi = "none"),
+  "Unregistered with the two-sided HDI exclusion (initial submission)" = make_unreg(data_ig, hdi = "two_sided"),
+  "Unregistered with the block-wise RT rule (initial submission)" = make_unreg(data_ig_rtblock)
+)
+
+data.frame(
+  Illusion = c("MullerLyer", "Ebbinghaus", "VerticalHorizontal"),
+  N_Unregistered = sapply(c("MullerLyer", "Ebbinghaus", "VerticalHorizontal"),
+                          function(illu) sum(!is.na(ig_scores_unreg[[paste0("ErrorRate_", illu, "_Incongruent_General")]])))
+) |>
+  gt::gt() |>
+  gt::tab_header("Number of participants per illusion in the unregistered analysis")
+```
+
+### Correlation Between Indices (unregistered analysis)
 
 
 ```{r}
 #| fig-width: 15
 #| fig-height: 15
 
-correlation::correlation(select(ig_scores, -Participant), redundant=TRUE) |>
+correlation::correlation(select(ig_scores_unreg, -Participant), redundant=TRUE) |>
   cor_sort() |>
   ggplot(aes(Parameter1, Parameter2, fill = r)) +
   geom_tile() +
@@ -258,7 +291,7 @@ correlation::correlation(select(ig_scores, -Participant), redundant=TRUE) |>
 
 ### Should we collapse across Mild and Strong, and Easy and Hard?
 
-Following the registered protocol, Bayesian correlations are computed between the Mild and Strong conditions for each illusion and outcome. If the correlation is above .50, the two conditions are collapsed (i.e., the registered test uses the "Incongruent" score); otherwise they are analysed separately. The decision is made separately for each sample.
+Following the registered protocol, Bayesian correlations are computed between the Mild and Strong conditions for each illusion and outcome. If the correlation is above .50, the two conditions are collapsed (i.e., the registered test uses the "Incongruent" score); otherwise they are analysed separately. The tables below show the unregistered analysis; the decision itself is made separately for each analysis (see *Registered Decision*).
 
 ::: {.panel-tabset}
 
@@ -272,8 +305,8 @@ for (outcome in c("ErrorRate", "IES")) {
        for (dif in c("Easy", "Hard")) {
 
          corrs <- correlation::correlation(
-                ig_scores[paste0(outcome, "_", ill_type,"_Mild", "_", dif )],
-                ig_scores[paste0(outcome, "_", ill_type, "_Strong", "_", dif )],
+                ig_scores_unreg[paste0(outcome, "_", ill_type,"_Mild", "_", dif )],
+                ig_scores_unreg[paste0(outcome, "_", ill_type, "_Strong", "_", dif )],
                 bayesian = TRUE
             ) |>
                 mutate(Illusion = ill_type,
@@ -287,8 +320,8 @@ corrs2 <- data.frame()
 for (outcome in c("ErrorRate", "IES")) {
     for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
             corrs2 <- correlation::correlation(
-                ig_scores[paste0(outcome, "_", ill_type, "_Mild_General")],
-                ig_scores[paste0(outcome, "_", ill_type, "_Strong_General")],
+                ig_scores_unreg[paste0(outcome, "_", ill_type, "_Mild_General")],
+                ig_scores_unreg[paste0(outcome, "_", ill_type, "_Strong_General")],
                 bayesian = TRUE
             ) |>
                 mutate(Illusion = ill_type,
@@ -329,8 +362,8 @@ for (outcome in c("ErrorRate", "IES")) {
     for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
         for (cond in c("Congruent", "Mild", "Strong")) {
             corrs3 <- correlation::correlation(
-                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Easy")],
-                ig_scores[paste0(outcome, "_", ill_type, "_", cond, "_Hard")],
+                ig_scores_unreg[paste0(outcome, "_", ill_type, "_", cond, "_Easy")],
+                ig_scores_unreg[paste0(outcome, "_", ill_type, "_", cond, "_Hard")],
                 bayesian = TRUE
             ) |>
                 mutate(Illusion = ill_type,
@@ -371,14 +404,16 @@ registered_vars <- function(decision) {
   }))
 }
 
-decisions <- list(
-  "Fully registered" = collapse_decision(ig_scores_reg),
-  "Main (space bar check not applied)" = collapse_decision(ig_scores),
-  "+ Trial-level RT filter" = collapse_decision(ig_scores_trialfilter),
-  "+ Block-wise RT rule" = collapse_decision(ig_scores_rtblock),
-  "+ HDI exclusion (congruent upper tail)" = collapse_decision(ig_scores_hdicong),
-  "+ HDI exclusion (two-sided)" = collapse_decision(ig_scores_hditwo)
+analysis_scores <- c(
+  list(
+    "Fully registered" = ig_scores_reg,
+    "Unregistered" = ig_scores_unreg,
+    "Registered criteria without the space bar check (no other deviation)" = ig_scores
+  ),
+  unreg_versions
 )
+
+decisions <- lapply(analysis_scores, collapse_decision)
 
 collapse_table <- bind_rows(decisions, .id = "Analysis")
 saveRDS(collapse_table, "figures/table_collapse.rds")
@@ -395,18 +430,18 @@ collapse_table |>
 
 #### Manipulation Check
 
-Strong evidence (BF > 10) for differences between the Congruent and Mild and the Mild and Strong groups is taken as evidence that illusions functioned as intended.
+Evidence (BF > 3) for differences between the Congruent and Mild and the Mild and Strong groups is taken as evidence that illusions functioned as intended (unregistered analysis).
 
 ```{r}
 ttests <- data.frame()
 for (outcome in c("ErrorRate", "IES")) {
     for (ill_type in c("Ebbinghaus", "MullerLyer", "VerticalHorizontal")) {
         for (cond in c("Congruent", "Mild")) {
-            x1 <- ig_scores[[paste0(outcome, "_", ill_type, "_", cond, "_General")]]
+            x1 <- ig_scores_unreg[[paste0(outcome, "_", ill_type, "_", cond, "_General")]]
             if (cond == "Congruent") {
-                x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Mild_General")]]
+                x2 <- ig_scores_unreg[[paste0(outcome, "_", ill_type, "_", "Mild_General")]]
             } else {
-                x2 <- ig_scores[[paste0(outcome, "_", ill_type, "_", "Strong_General")]]
+                x2 <- ig_scores_unreg[[paste0(outcome, "_", ill_type, "_", "Strong_General")]]
             }
 
             complete <- complete.cases(x1, x2)
@@ -471,7 +506,7 @@ gt_apastyle <- function(gt_table, font.size=12) {
 }
 
 
-ig_means <- ig_scores |>
+ig_means <- ig_scores_unreg |>
   select(contains("Mild_General"), contains("Strong_General"), contains("_Congruent_General")) |>
   describe_distribution()
 
@@ -582,7 +617,7 @@ bf_press
 #### Error Rate - Mild
 
 ```{r}
-ig_scores |>
+ig_scores_unreg |>
     select(matches("ErrorRate_.*_Mild.*_General")) |>
     psych::alpha()
 ```
@@ -590,7 +625,7 @@ ig_scores |>
 #### Error Rate - Strong
 
 ```{r}
-ig_scores |>
+ig_scores_unreg |>
     select(matches("ErrorRate_.*_Strong.*_General")) |>
     psych::alpha()
 ```
@@ -598,7 +633,7 @@ ig_scores |>
 #### IES - Mild
 
 ```{r}
-ig_scores |>
+ig_scores_unreg |>
     select(matches("IES_.*_Mild.*_General")) |>
     psych::alpha()
 ```
@@ -606,7 +641,7 @@ ig_scores |>
 #### IES - Strong
 
 ```{r}
-ig_scores |>
+ig_scores_unreg |>
     select(matches("IES_.*_Strong.*_General")) |>
     psych::alpha()
 ```
@@ -647,7 +682,7 @@ ggsave("figures/fig_traits_distribution.png", width = 10, height = 4, dpi = 300)
 
 ## Correlations
 
-The main sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`, for a total trial number of `r nrow(data_ig)`. The fully registered sample includes `r nrow(data_ppt_reg)` participants.
+The fully registered analysis includes `r nrow(data_ppt_reg)` participants. The unregistered analysis includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`, for a total trial number of `r sum(!data_ig$RT_Outlier)` after removing extreme trials (and minus participants excluded per illusion by the HDI exclusion).
 
 Bayesian correlations use the *BayesFactor* medium prior (r-scale = 1/3), as registered. BF~10~ ≤ 1/3 is interpreted as evidence for the null (H0), BF~10~ ≥ 3 as evidence for a relationship (H1), and values in between as inconclusive.
 
@@ -688,14 +723,10 @@ cor_table <- function(rez) {
     )
 }
 
-rez <- list(
-  "Fully registered" = make_cor(data_ppt_reg, ig_scores_reg),
-  "Main (space bar check not applied)" = make_cor(data_ppt, ig_scores),
-  "+ Trial-level RT filter" = make_cor(data_ppt, ig_scores_trialfilter),
-  "+ Block-wise RT rule" = make_cor(data_ppt, ig_scores_rtblock),
-  "+ HDI exclusion (congruent upper tail)" = make_cor(data_ppt, ig_scores_hdicong),
-  "+ HDI exclusion (two-sided)" = make_cor(data_ppt, ig_scores_hditwo)
-)
+rez <- lapply(names(analysis_scores), function(a) {
+  make_cor(if (a == "Fully registered") data_ppt_reg else data_ppt, analysis_scores[[a]])
+})
+names(rez) <- names(analysis_scores)
 ```
 
 ::: {.panel-tabset}
@@ -706,34 +737,21 @@ rez <- list(
 cor_table(rez[["Fully registered"]])
 ```
 
-#### Main (Space Bar Check Not Applied)
+#### Unregistered
 
 ```{r}
-cor_table(rez[["Main (space bar check not applied)"]])
+cor_table(rez[["Unregistered"]])
 ```
 
-#### + Trial-Level RT Filter
+#### Sensitivity Analyses
 
 ```{r}
-cor_table(rez[["+ Trial-level RT filter"]])
-```
+#| results: asis
 
-#### + Block-Wise RT Rule
-
-```{r}
-cor_table(rez[["+ Block-wise RT rule"]])
-```
-
-#### + HDI (Congruent Upper Tail)
-
-```{r}
-cor_table(rez[["+ HDI exclusion (congruent upper tail)"]])
-```
-
-#### + HDI (Two-Sided)
-
-```{r}
-cor_table(rez[["+ HDI exclusion (two-sided)"]])
+for (a in setdiff(names(rez), c("Fully registered", "Unregistered"))) {
+  cat("\n\n**", a, "**\n\n", sep = "")
+  cat(gt::as_raw_html(cor_table(rez[[a]]), inline_css = FALSE))
+}
 ```
 
 :::
@@ -761,16 +779,21 @@ tests <- lapply(names(rez), function(a) registered_tests(rez[[a]], registered_va
 names(tests) <- names(rez)
 
 saveRDS(tests[["Fully registered"]], "figures/table_correlations_registered.rds")
-saveRDS(tests[["Main (space bar check not applied)"]], "figures/table_correlations_main.rds")
+saveRDS(tests[["Unregistered"]], "figures/table_correlations_unregistered.rds")
 
-bind_rows(tests[c("Fully registered", "Main (space bar check not applied)")], .id = "Analysis") |>
-  format_table() |>
+bind_rows(tests[c("Fully registered", "Unregistered")], .id = "Analysis") |>
+  mutate(
+    rho = insight::format_value(rho, zap_small = TRUE),
+    `95% CI` = insight::format_ci(CI_low, CI_high, ci = NULL),
+    BF = insight::format_bf(BF, name = NULL)
+  ) |>
+  select(Analysis, Trait, Outcome, Illusion, Condition, rho, `95% CI`, BF, n = n_Obs, Evidence) |>
   gt::gt(groupname_col = "Analysis")
 ```
 
 ### Sensitivity Analyses
 
-Number of registered tests supporting the null / inconclusive / supporting a relationship, for each version of the analysis. The last row keeps Mild and Strong separate for all scores (as in the initial submission).
+Number of registered tests supporting the null / inconclusive / supporting a relationship, for each version of the analysis. The rows after the two main analyses remove (or replace) one deviation at a time from the unregistered analysis. The last row keeps Mild and Strong separate for all scores in the unregistered analysis (exploratory, as in the initial submission).
 
 ```{r}
 summarise_tests <- function(t) {
@@ -785,8 +808,8 @@ summarise_tests <- function(t) {
     mutate(N = paste(unique(range(t$n_Obs)), collapse = "–"), .before = 1)
 }
 
-all_mildstrong <- names(ig_scores)[str_detect(names(ig_scores), "_(Mild|Strong)_General$")]
-tests[["Main, Mild and Strong not collapsed"]] <- registered_tests(rez[["Main (space bar check not applied)"]], all_mildstrong)
+all_mildstrong <- names(ig_scores_unreg)[str_detect(names(ig_scores_unreg), "_(Mild|Strong)_General$")]
+tests[["Unregistered, Mild and Strong not collapsed (exploratory)"]] <- registered_tests(rez[["Unregistered"]], all_mildstrong)
 
 sensitivity_table <- bind_rows(lapply(tests, summarise_tests), .id = "Analysis")
 saveRDS(sensitivity_table, "figures/table_sensitivity.rds")
@@ -797,6 +820,72 @@ sensitivity_table |>
 ```
 
 ## Figures
+
+### Exclusion Flow Diagram
+
+```{r}
+#| fig-width: 11
+#| fig-height: 9
+#| dpi: 300
+
+ex <- readRDS("figures/exclusion_counts.rds")
+hdi_n <- sapply(hdi_cong$flags, length)
+fmt <- function(x) format(x, big.mark = ",")
+
+boxes <- tribble(
+  ~x, ~y, ~type, ~label,
+  5, 9.3, "sample", paste0("Recruited via Prolific\nN = ", ex$n_raw, " (", fmt(ex$n_trials_raw), " trials)"),
+  8.6, 8.45, "excluded", paste0("Excluded: PCS attention checks\n\"Hello\" check failed: n = ", ex$pcs_hello, "\n\"No balls\" reported: n = ", ex$pcs_balls),
+  5, 7.6, "sample", paste0("Passed the first two PCS checks\nN = ", ex$n_after_pcs),
+  2.5, 6.3, "excluded", paste0("Excluded: space bar check\nn = ", ex$pcs_press),
+  7.5, 6.3, "deviation", "Space bar check not applied\n(deviation)",
+  2.5, 5.0, "sample", paste0("Passed all three PCS checks\nN = ", ex$reg_n_pass),
+  2.5, 3.5, "excluded", paste0("Excluded: Illusion Game\nError rate > 45% in block A: n = ", ex$reg_error_full,
+                               "\nMean RT > 4 SD: n = ", ex$reg_rt_full, "\nBlock B removed: n = ", ex$reg_half),
+  7.5, 4.6, "excluded", paste0("Excluded: Illusion Game\nError rate > 45% in block A: n = ", ex$error_full,
+                               "\nMean RT > 4 SD: n = ", ex$rt_full, "\nBlock B removed: n = ", ex$half),
+  2.5, 1.9, "analysed", paste0("Fully registered analysis\nN = ", ex$reg_n, " (", fmt(ex$reg_trials), " trials)"),
+  7.5, 3.1, "sample", paste0("After Illusion Game exclusions\nN = ", ex$n, " (", fmt(ex$trials), " trials)"),
+  7.5, 1.55, "deviation", paste0("Excluded (deviations)\nTrials with RT < 0.2 s or > 5 s: ", fmt(ex$trials_rt_outlier),
+                                " (", round(100 * ex$trials_rt_outlier / ex$trials, 2), "%)\nCongruent error rate above 97.5% HDI (per illusion):\nMüller-Lyer ",
+                                hdi_n[["MullerLyer"]], ", Ebbinghaus ", hdi_n[["Ebbinghaus"]], ", Vertical–Horizontal ", hdi_n[["VerticalHorizontal"]]),
+  7.5, 0.1, "analysed", paste0("Unregistered analysis\nN = ", paste(unique(range(ex$n - hdi_n)), collapse = "–"), " per illusion (",
+                               fmt(ex$trials - ex$trials_rt_outlier), " trials before per-illusion exclusions)")
+)
+
+arrows_df <- tribble(
+  ~x, ~y, ~xend, ~yend,
+  5, 8.95, 5, 7.95,
+  5, 8.45, 7.3, 8.45,
+  5, 7.25, 2.5, 6.75,
+  5, 7.25, 7.5, 6.75,
+  2.5, 5.85, 2.5, 5.4,
+  7.5, 5.95, 7.5, 5.25,
+  2.5, 4.6, 2.5, 4.15,
+  2.5, 2.85, 2.5, 2.3,
+  7.5, 3.95, 7.5, 3.45,
+  7.5, 2.75, 7.5, 2.2,
+  7.5, 0.9, 7.5, 0.45
+)
+
+p_consort <- ggplot() +
+  geom_segment(data = arrows_df, aes(x = x, y = y, xend = xend, yend = yend),
+               arrow = arrow(length = unit(0.2, "cm"), type = "closed"), color = "grey40") +
+  geom_label(data = boxes, aes(x = x, y = y, label = label, fill = type),
+             size = 3.3, lineheight = 1.1, label.padding = unit(0.4, "lines"), key_glyph = "rect") +
+  scale_fill_manual(values = c("sample" = "white", "excluded" = "#FDE0DD", "analysed" = "#DEEBF7", "deviation" = "#FFF2CC"),
+                    breaks = c("excluded", "deviation", "analysed"),
+                    labels = c("Registered exclusion", "Deviation from the registered protocol", "Analysed sample")) +
+  coord_cartesian(xlim = c(0, 10.6), ylim = c(-0.4, 9.8)) +
+  labs(fill = NULL) +
+  theme_void() +
+  theme(legend.position = "bottom", legend.text = element_text(size = 10))
+
+ggsave("figures/fig_consort.png", p_consort, width = 11, height = 9, dpi = 300, bg = "white")
+p_consort
+```
+
+### Correlations
 
 ```{r fig1}
 #| fig-width: 10
@@ -812,7 +901,7 @@ plot_cor <- function(rez, title) {
            Illusion = recode(Illusion, "MullerLyer" = "Müller-Lyer", "VerticalHorizontal" = "Vertical–Horizontal"),
            Condition = recode(Condition, "Incongruent" = "Mild + Strong"),
            Condition = factor(Condition, levels = c("Congruent", "Mild", "Strong", "Mild + Strong")),
-           Label = format_bf(BF, stars = TRUE, protect_ratio = TRUE)) |>
+           Label = format_bf(BF, stars = TRUE, protect_ratio = FALSE, digits = 2)) |>
     ggplot(aes(x = rho, y = Illusion, color = Condition)) +
     geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
     geom_point(position = position_dodge(width = 0.8), size = 2.5) +
@@ -826,21 +915,22 @@ plot_cor <- function(rez, title) {
     facet_grid(Measure ~ Trait) +
     labs(x = "Correlation (posterior median and 95% credible interval)", y = NULL, color = "Illusion strength",
          title = title,
-         caption = "Labels show BF10. ° BF10 < 1/3 (evidence for the absence of a relationship); * BF10 > 3, ** BF10 > 10, *** BF10 > 30 (evidence for a relationship).\n'Mild + Strong' = Mild and Strong collapsed, as per the registered decision rule. The Congruent condition is not a measure of illusion sensitivity and is shown for reference only.") +
+         caption = "Note. Labels show BF10. ° BF10 < 1/3 (evidence for the absence of a relationship); * BF10 > 3, ** BF10 > 10, *** BF10 > 30 (evidence for a relationship).\n'Mild + Strong' = Mild and Strong collapsed, as per the registered decision rule. The Congruent condition is not a measure of illusion sensitivity and is shown for reference only.") +
     theme_minimal() +
     theme(axis.text.y = element_text(size = 10, face = "bold"),
           legend.title = element_text(size = 11),
           strip.text.x = element_text(size = 11, face = "bold"),
           strip.text.y = element_text(size = 10, face = "italic"),
           plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
-          plot.caption = element_text(size = 8, hjust = 0))
+          plot.caption = element_text(size = 8, hjust = 0),
+          panel.spacing.y = unit(2.5, "lines"))
 }
 
 p <- plot_cor(rez[["Fully registered"]], "Correlation between Illusion Sensitivity and Dispositional Traits")
 ggsave("figures/fig_correlations_registered.png", p, width = 10, height = 11, dpi = 300)
 
-p_main <- plot_cor(rez[["Main (space bar check not applied)"]], "Correlation between Illusion Sensitivity and Dispositional Traits (space bar check not applied)")
-ggsave("figures/fig_correlations_main.png", p_main, width = 10, height = 11, dpi = 300)
+p_unreg <- plot_cor(rez[["Unregistered"]], "Correlation between Illusion Sensitivity and Dispositional Traits (unregistered analysis)")
+ggsave("figures/fig_correlations_unregistered.png", p_unreg, width = 10, height = 11, dpi = 300)
 
 p
 ```
