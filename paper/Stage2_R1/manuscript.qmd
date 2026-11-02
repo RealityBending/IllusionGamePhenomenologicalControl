@@ -188,7 +188,7 @@ study_design_table
 
 Five hundred **adult English speakers** (Mean age = 38.6, SD = 13.1, range: [18, 75], 50% of women) were recruited via Prolific (www.prolific.com) and completed the study on a desktop device.^[**Eligibility was implemented using Prolific's screening filters for participants whose first or primary language was English, which departs from the Stage 1 description (see Deviations From Registration).**]
 Out of these participants,  2.8\%  reported having a doctoral degree, 18.2% masters degree, 49.6\% a bachelors degree, 27.4\% a high school degree and 2%  other qualifications. 
-Participants were first presented with an explanatory statement and **the consent form**, and could proceed by pressing a button to confirm they had read and understood the information. This study has been approved by the ethics board of the School of Psychology of the University of Sussex (ER/ASF25/5).
+Participants were first presented with an explanatory statement and **the consent form**, and could proceed by pressing a button to confirm they **had** read and understood the information. This study has been approved by the ethics board of the School of Psychology of the University of Sussex (ER/ASF25/5).
 
 Following the **exclusion steps (see Results and @fig-s1), 295 participants (Mean age = 38.1, *SD* = 12.9, 48.8\% women) were retained in the registered analysis.**
 **Sensitivity analyses addressing deviations from the registered protocol were conducted on a larger sample of 468 participants (Mean age = 38.7, *SD* = 13.2, 48.7\% women), of whom 458 were analysed for each illusion (see Deviations From Registration).**
@@ -282,12 +282,12 @@ Finally, reliability analyses **were** conducted on all resulting indices, with 
 Bayesian correlations **were** then computed between PCS and illusion sensitivity scores - with the resulting IES and error rate indices.
 Following @lush2022, we **expected** to collect evidence against ($BF_{10} \leq 1/3$) a relationship between PCS and VI sensitivity.
 Additionally, Bayesian correlations **were** computed between maladaptive trait facets and illusion sensitivity scores.
-Based on prior research [@makowski2023], we **expected** to find evidence ($BF_{10} \geq 3$) supporting a **(negative)** relationship between the psychoticism facet of the PID-5 and illusion sensitivity.
+Based on prior research [@makowski2023], we **expected** to find evidence (**$BF_{10} \geq 3$**) supporting a **(negative)** relationship between the psychoticism facet of the PID-5 and illusion sensitivity.
 **Bayes factors between 1/3 and 3 were interpreted as inconclusive.**
 
 All Bayesian analyses **were** conducted using the *BayesFactor* package [@BayesFactor].
 For correlations, a medium shifted beta prior **was** applied (r-scale parameter set to  1/3), as recommended by @morey2018baysefactor, providing a balanced approach to estimating effect sizes, without placing undue weight on larger effect sizes or artificially inflating evidence for the null hypothesis.
-For t-tests, the *ttestBF* function **was** used with a medium Cauchy prior on the standardised effect size (r-scale = √2⁄2), the default in the **BayesFactor package.**
+For t-tests, the *ttestBF* function **was** used with a medium Cauchy prior on the standardised effect size (r-scale = √2⁄2), **the default in the BayesFactor package.**
 
 Data analysis **was** carried out using R, using *tidyverse* [@tidyverse] and *easystats* [@easystats; @parameters; @correlation; @bayestestR; @datawizard].
 The analysis script and additional information are available at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**.
@@ -359,7 +359,7 @@ For the illusion scores, the registered plan was to first evaluate **whether the
 **Error rates were collapsed for all three illusions (Müller-Lyer: *r* = .67; Ebbinghaus: *r* = .76; Vertical–Horizontal: *r* = .72).**
 **IES were collapsed for the Müller-Lyer (*r* = .55) and Ebbinghaus illusions (*r* = .54), but analysed separately for the Vertical–Horizontal illusion (*r* = .43).** **Analyses with Mild and Strong kept separate for all scores are reported as exploratory analyses.**
 
-Consistency analyses between the 3 illusions were conducted as registered, using Cronbach’s alpha. Error rate consistency was low (Mild: **$\alpha = .33$**; Strong: **$\alpha = .06$**; collapsed: **$\alpha = .19$**), whereas IES **consistency** was mixed (Mild: $\alpha = .83$; Strong: $\alpha = .17$; **collapsed: $\alpha = .74$**), overall providing no evidence for combining the scores of the 3 illusions.
+Consistency analyses between the 3 illusions were conducted as registered, using Cronbach’s alpha. Error rate consistency was low (Mild: **$\alpha = .33$**; Strong: **$\alpha = .06$**; collapsed: **$\alpha = .19$**), whereas IES **consistency** was mixed (Mild: **$\alpha = .83$**; Strong: **$\alpha = .17$**; **collapsed: $\alpha = .74$**), overall providing no evidence for combining the scores of the 3 illusions.
 
 
 ## Correlations
@@ -447,16 +447,16 @@ In contrast to our registered hypothesis, we found no evidence of an association
 This result was unexpected, given the literature linking schizophrenia-spectrum traits and schizotypy to reduced susceptibility to visual illusions, a phenomenon often attributed to the reduced precision of perceptual priors within predictive coding frameworks. 
 **One possible contributor is the limited variability of psychoticism in our general-population sample: scores were low on average (*M* = 0.48 on a 0–3 scale) and positively skewed, with most participants scoring near the bottom of the scale (@fig-s2).**
 **Such a restricted range limits the ability to detect associations.**
-However, this discrepancy may also be driven by how individual differences were operationalized in the current study. 
+However, this discrepancy may **also** be driven by how individual differences were operationalized in the current study. 
 For instance, whereas @makowski2023 measured sensitivity across an aggregate of 10 different visual illusions, the current procedure was streamlined to include only three, **and the relationship with psychoticism was analyzed for each illusion individually.** 
-We may therefore have lacked the statistical breadth required to extract a robust, common “illusion sensitivity” factor. 
+**We may therefore have lacked the statistical breadth required to extract a robust, common “illusion sensitivity” factor.** 
 Conceptually, we could hypothesize that the task-performance on any single illusion is driven by a combination of illusion-specific factors (e.g., the particular perceptual properties and localized prior-systems engaged by that specific visual configuration) and illusion-general factors (an overarching, trait-level characteristic tapped into during illusory perceptual interference). 
 When analyzing specific illusions in isolation, the illusion-specific factors might overweigh the common component, potentially masking associations with broad personality constructs. 
 However, this assumption is challenged by the fact that the internal consistency (i.e., the inter-correlation) between the three illusions in our sample was remarkably low, inconsistent at first glance with the notion of a common “illusion sensitivity” factor. This lack of coherence might result from a compounding of issues related to both the low number of illusions, as well as the specific measurement indices utilized.
 
 Indeed, it is important to underline that the above findings and hypotheses are predicated on one critical assumption: that the outcome measures used in the current study (error rate and IES) are valid and sensitive indices to the individual differences in illusion sensitivity. 
 Previous studies that successfully detected relationships with personality traits, such as @makowski2023, utilized indices derived from participant-specific parameters extracted from group-level hierarchical Bayesian General Additive Models (GAMs). 
-In contrast, the current pre-registered analysis intentionally relied on rather crude summary measures. This critical methodological trade-off regarding how perceptual interference is quantified was adopted as complex computational models, while sensitive, carry considerable drawbacks. 
+In contrast, the current pre-registered analysis intentionally relied on rather crude summary measures. This critical methodological trade-off regarding how perceptual interference is quantified was adopted as complex computational models, while sensitive, carry **considerable** drawbacks. 
 For instance, they are computationally challenging and complex, and the resulting individual indices are not easily reproducible and replicable (as the estimates are inherently dependent on a bespoke parent model estimated from a specific dataset). 
 Moreover, they are inherently limited by the appropriateness of the parent model as an accurate representation of the underlying data-generating process, which as noted by @makowski2023, is not yet established. 
 In particular, while the GAMs used are great models to describe complex, potentially non-linear, patterns and relationships, they did not account for the interaction between speed and accuracy, which might be an important aspect of illusion-related perceptual interference effects.
