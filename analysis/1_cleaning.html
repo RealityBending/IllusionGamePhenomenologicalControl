@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-10-30">
+<meta name="dcterms.date" content="2026-11-02">
 
 <title>Illusion Sensitivity and Phenomenological Control</title>
 <style>
@@ -2494,7 +2494,7 @@ border: 0;
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 30, 2026</p>
+      <p class="date">November 2, 2026</p>
     </div>
   </div>
   
@@ -2517,8 +2517,8 @@ border: 0;
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(easystats)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data_ppt <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv&quot;</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>data_ig <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data_ppt <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;../data/rawdata_participants.csv&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>data_ig <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;../data/rawdata_illusion.csv&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">Illusion_Effect =</span> <span class="fu">ifelse</span>(<span class="fu">sign</span>(Illusion_Strength) <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>),</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">Task_Difficulty =</span> <span class="fu">abs</span>(Illusion_Difference),</span>
@@ -2629,7 +2629,7 @@ border: 0;
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>outliers_pcs1 <span class="ot">&lt;-</span> data_ppt[data_ppt<span class="sc">$</span>pcs_hello <span class="sc">!=</span> <span class="st">&quot;Hello&quot;</span>, <span class="st">&quot;Participant&quot;</span>]</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>outliers_pcs2 <span class="ot">&lt;-</span> data_ppt[data_ppt<span class="sc">$</span>pcs_noballs <span class="sc">==</span> <span class="cn">TRUE</span>, <span class="st">&quot;Participant&quot;</span>]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>outliers_pcs3 <span class="ot">&lt;-</span> data_ppt[data_ppt<span class="sc">$</span>pcs_press <span class="sc">&lt;</span> <span class="dv">5</span>, <span class="st">&quot;Participant&quot;</span>] <span class="co"># get PP count</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>outliers_pcs3 <span class="ot">&lt;-</span> data_ppt[data_ppt<span class="sc">$</span>pcs_press <span class="sc">&lt;</span> <span class="dv">5</span>, <span class="st">&quot;Participant&quot;</span>] <span class="co"># space bar check (fewer than 5 presses)</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>outliers_pcs <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(outliers_pcs1, outliers_pcs2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -2862,7 +2862,7 @@ border: 0;
 </section>
 <section id="sensitivity-block-wise-rt-rule-unregistered" class="level4">
 <h4 class="anchored" data-anchor-id="sensitivity-block-wise-rt-rule-unregistered">Sensitivity: Block-Wise RT Rule (unregistered)</h4>
-<p>The block-specific rule (registered for error rates only) applied to the RT criterion, as in the initial submission. Participants are flagged only; the flags are used in the corresponding sensitivity analysis.</p>
+<p>The block-specific rule (registered for error rates only) applied to the RT criterion, as in the initial Stage 2 submission. Participants are flagged only; the flags are used in the corresponding sensitivity analysis.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -3239,7 +3239,7 @@ border: 0;
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href>Summary</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href>Age and Gender</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false" href>Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false" href>Ethnicity</a></li></ul>
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
-<p>The final sample includes 468 participants (Mean age = 38.7, SD = 13.2, range: [18, 75]; Gender: 48.7% women, 50.4% men, 0.85% non-binary; Education: Bachelor, 48.50%; Doctorate, 2.78%; Elementary school, 0.21%; High school, 28.42%; Master, 18.16%; Other, 1.92%), for a total trial number of 222960.</p>
+<p>The sample without the space bar check includes 468 participants (Mean age = 38.7, SD = 13.2, range: [18, 75]; Gender: 48.7% women, 50.4% men, 0.85% non-binary; Education: Bachelor, 48.50%; Doctorate, 2.78%; Elementary school, 0.21%; High school, 28.42%; Master, 18.16%; Other, 1.92%), for a total trial number of 222960.</p>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <div class="cell">
@@ -3327,11 +3327,15 @@ border: 0;
 </section>
 <section id="save" class="level1">
 <h1>Save</h1>
+<p>The fully registered sample (main analysis) is saved as <code>data_participants.csv</code> and <code>data_illusion.csv</code>. The sample without the space bar check, used for the unregistered sensitivity analysis, is saved as <code>data_participants_unregistered.csv</code> and <code>data_illusion_unregistered.csv</code> (extreme trials are flagged in <code>RT_Outlier</code>, not removed).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data_ppt, <span class="st">&quot;../data/data_participants.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data_ig, <span class="st">&quot;../data/data_illusion.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data_ppt_registered, <span class="st">&quot;../data/data_participants_registered.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data_ig_registered, <span class="st">&quot;../data/data_illusion_registered.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Main analysis: fully registered sample</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data_ppt_registered, <span class="st">&quot;../data/data_participants.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data_ig_registered, <span class="st">&quot;../data/data_illusion.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Sensitivity analysis: space bar check not applied (unregistered)</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data_ppt, <span class="st">&quot;../data/data_participants_unregistered.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data_ig, <span class="st">&quot;../data/data_illusion_unregistered.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 

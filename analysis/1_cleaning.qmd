@@ -27,8 +27,8 @@ library(ggside)
 library(easystats)
 library(patchwork)
 
-data_ppt <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_participants.csv")
-data_ig <- read.csv("https://raw.githubusercontent.com/RealityBending/IllusionGamePhenomenologicalControl/refs/heads/main/data/rawdata_illusion.csv") |>
+data_ppt <- read.csv("../data/rawdata_participants.csv")
+data_ig <- read.csv("../data/rawdata_illusion.csv") |>
     mutate(
         Illusion_Effect = ifelse(sign(Illusion_Strength) > 0, "Incongruent", "Congruent"),
         Task_Difficulty = abs(Illusion_Difference),
@@ -127,7 +127,7 @@ The registered protocol specified that participants failing any of the three PCS
 ```{r}
 outliers_pcs1 <- data_ppt[data_ppt$pcs_hello != "Hello", "Participant"]
 outliers_pcs2 <- data_ppt[data_ppt$pcs_noballs == TRUE, "Participant"]
-outliers_pcs3 <- data_ppt[data_ppt$pcs_press < 5, "Participant"] # get PP count
+outliers_pcs3 <- data_ppt[data_ppt$pcs_press < 5, "Participant"] # space bar check (fewer than 5 presses)
 outliers_pcs <- unique(c(outliers_pcs1, outliers_pcs2))
 ```
 
@@ -239,7 +239,7 @@ Based on RT, `r length(outliers_rt)` participants were excluded entirely (`r sum
 
 #### Sensitivity: Block-Wise RT Rule (unregistered)
 
-The block-specific rule (registered for error rates only) applied to the RT criterion, as in the initial submission. Participants are flagged only; the flags are used in the corresponding sensitivity analysis.
+The block-specific rule (registered for error rates only) applied to the RT criterion, as in the initial Stage 2 submission. Participants are flagged only; the flags are used in the corresponding sensitivity analysis.
 
 ```{r}
 data_rt_block <- data_ig |>
@@ -454,7 +454,7 @@ plot_ethnicity(data_ppt_registered)
 
 ##### Summary
 
-The final sample includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`, for a total trial number of `r nrow(data_ig)`.
+The sample without the space bar check includes `r report::report_participants(data_ppt, age="Age", sex="Sex", education="Education")`, for a total trial number of `r nrow(data_ig)`.
 
 ##### Age and Gender
 
@@ -512,12 +512,17 @@ saveRDS(exclusion_counts, "figures/exclusion_counts.rds")
 
 # Save
 
+The fully registered sample (main analysis) is saved as `data_participants.csv` and `data_illusion.csv`. The sample without the space bar check, used for the unregistered sensitivity analysis, is saved as `data_participants_unregistered.csv` and `data_illusion_unregistered.csv` (extreme trials are flagged in `RT_Outlier`, not removed).
+
 ```{r}
 #| code-fold: false
 
-write.csv(data_ppt, "../data/data_participants.csv", row.names = FALSE)
-write.csv(data_ig, "../data/data_illusion.csv", row.names = FALSE)
-write.csv(data_ppt_registered, "../data/data_participants_registered.csv", row.names = FALSE)
-write.csv(data_ig_registered, "../data/data_illusion_registered.csv", row.names = FALSE)
+# Main analysis: fully registered sample
+write.csv(data_ppt_registered, "../data/data_participants.csv", row.names = FALSE)
+write.csv(data_ig_registered, "../data/data_illusion.csv", row.names = FALSE)
+
+# Sensitivity analysis: space bar check not applied (unregistered)
+write.csv(data_ppt, "../data/data_participants_unregistered.csv", row.names = FALSE)
+write.csv(data_ig, "../data/data_illusion_unregistered.csv", row.names = FALSE)
 ```
 
