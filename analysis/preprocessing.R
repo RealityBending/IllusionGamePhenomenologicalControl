@@ -2,7 +2,8 @@ library(jsonlite)
 library(progress)
 
 
-path <- 
+path <-
+prolific_path <-  
 
 
 # JsPsych experiment ------------------------------------------------------
@@ -46,6 +47,7 @@ for (file in files) {
     Screen_Width = dat$screen_width,
     Screen_Height = dat$screen_height
   )
+  data_ppt$Prolific_ID <- prolific_id # only used to match the Prolific exports; removed before saving
 
   # Demographics
   demog <- jsonlite::fromJSON(rawdata[rawdata$screen == "demographic_questions", ]$response)
@@ -221,6 +223,34 @@ for (file in files) {
 
   alldata_ig <- rbind(alldata_ig, df_ig)
 }
+
+# Prolific demographics ===================================================
+
+# First language is not recorded by the experiment: it is taken from the Prolific
+# demographic exports (one per Prolific study) and matched by Prolific ID. Only a
+# TRUE/FALSE flag is kept (NA if the participant is missing from the exports).
+prolific_files <- list.files(prolific_path, pattern = "*.csv", full.names = TRUE)
+if (length(prolific_files) == 0) stop("No Prolific export found in prolific_path")
+
+prolific <- do.call(rbind, lapply(prolific_files, function(f) {
+  d <- read.csv(f, check.names = FALSE)
+  id <- intersect(c("Participant id", "participant_id"), names(d))[1]
+  lang <- intersect(c("First language", "Language"), names(d))[1]
+  data.frame(Prolific_ID = d[[id]], Status = d[["Status"]], First_Language = d[[lang]])
+}))
+# Prolific placeholders (e.g., participants who revoked consent for sharing demographics) are unknown, not a language
+prolific$First_Language[prolific$First_Language %in% c("CONSENT_REVOKED", "DATA_EXPIRED", "")] <- NA
+# If a participant appears in several exports, keep the approved submission
+prolific <- prolific[order(prolific$Status != "APPROVED"), ]
+prolific <- prolific[!duplicated(prolific$Prolific_ID), ]
+
+first_language <- prolific$First_Language[match(alldata_sub$Prolific_ID, prolific$Prolific_ID)]
+alldata_sub$Native_English <- ifelse(is.na(first_language), NA, first_language == "English")
+cat("Native English speakers:", sum(alldata_sub$Native_English, na.rm = TRUE),
+    "| Non-native:", sum(!alldata_sub$Native_English, na.rm = TRUE),
+    "| Not found in the exports:", sum(is.na(alldata_sub$Native_English)), "\n")
+
+alldata_sub$Prolific_ID <- NULL # identifiers are not saved
 
 # Reanonimize ============================================================
 
