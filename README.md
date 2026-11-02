@@ -80,11 +80,11 @@ The scripts are run in the following order. Each Quarto document renders to an H
 | Block-wise RT rule | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Exclusions → Illusion Game Participants → Sensitivity: Block-Wise RT Rule (unregistered)*; `2_analysis.qmd` → *Unregistered Analysis → Unregistered Scores and Sensitivity Versions* |
 | Trial-level RT filter (< 0.2 s or > 5 s) | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Exclusions → Illusion Game Trials → Unregistered*; `2_analysis.qmd` → *Unregistered Analysis → Trial-Level RT Filter* |
 | 97.5% HDI exclusion of extreme congruent error rates | Unregistered (sensitivity analysis) | `2_analysis.qmd` → *Unregistered Analysis → HDI Exclusion* |
-| Manipulation checks (Bayesian *t*-tests) | Registered | `2_analysis.qmd` → *Manipulation Check* |
-| Decision rule for collapsing Mild and Strong (r > .50) | Registered | `2_analysis.qmd` → *Should we collapse across Mild and Strong?* → *Registered Decision* |
+| Manipulation checks (Bayesian *t*-tests) | Registered | `2_analysis.qmd` → *Illusion Game Scores* → *Manipulation Check* |
+| Decision rule for collapsing Mild and Strong (r > .50) | Registered | `2_analysis.qmd` → *Should we collapse across Mild and Strong, and Easy and Hard?* → *Registered Decision* |
 | Reliability (Cronbach's α) | Registered | `2_analysis.qmd` → *Reliability* |
 | Bayesian correlations (PCS and psychoticism × error rate and IES; r-scale = 1/3) | Registered | `2_analysis.qmd` → *Correlations* → *Registered Tests* |
-| Mild and Strong analysed separately; Easy and Hard trials analysed separately | Exploratory | `2_analysis.qmd` → *Correlations* and *Sensitivity Analyses* |
+| Mild and Strong analysed separately; Easy and Hard trials analysed separately | Exploratory | `2_analysis.qmd` → *Correlations* → *Exploratory Analyses* |
 
 ## Reproducing the analyses
 
