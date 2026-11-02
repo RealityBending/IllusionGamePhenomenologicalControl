@@ -2,7 +2,7 @@
 
 *A Stage 2 Registered Report (PCI Registered Reports), registered on OSF ([osf.io/kvjnm](https://osf.io/kvjnm)) following Stage 1 in-principle acceptance on 5 December 2025.*
 
-**Abstract**. Visual illusions highlight how easily our conscious experience can be altered with respect to perceptual reality. Despite sharing in-principle mechanisms with phenomenological control, i.e., the ability to alter our perceptual experience to match task demands or expectations, research tying the two remains scarce. This study aimed to replicate and extend Lush et al., (2022) by testing for a relationship between phenomenological control and illusion sensitivity across multiple illusion types, assessing the role of higher-level (top-down) processes. It also examines associations between visual illusion sensitivity and psychoticism to assess the potential contribution of lower-level effects (e.g., weak priors). Five hundred participants were recruited in an online study using an illusion-based perceptual decision paradigm (Illusion Game; Makowski et al., 2023) measuring sensitivity to three visual illusions (Ebbinghaus, Müller-Lyer, Vertical-Horizontal), alongside the Phenomenological Control Scale and personality measures. Bayesian correlation analyses provided evidence against a relationship between phenomenological control and sensitivity to the Müller-Lyer and Ebbinghaus illusions, whereas the evidence was inconclusive for the Vertical-Horizontal illusion. The data also favoured the absence of the hypothesised association between illusion sensitivity and psychoticism. These findings are consistent with the hypothesis that these illusions are to some degree cognitively impenetrable under the present task conditions, and suggest that susceptibility to them operates independently of trait-level control over subjective experience. However, low consistency across illusion measures highlights important methodological limitations in capturing individual differences related to illusion sensitivity.
+**Abstract**. Visual illusions highlight how easily our conscious experience can be altered with respect to perceptual reality. Despite sharing in-principle mechanisms with phenomenological control, i.e., the ability to alter our perceptual experience to match task demands or expectations, research tying the two remains scarce. This study aimed to replicate and extend Lush et al., (2022) by testing for a relationship between phenomenological control and illusion sensitivity across multiple illusion types, assessing the role of higher-level (top-down) processes. It also examined associations between visual illusion sensitivity and psychoticism to assess the potential contribution of lower-level effects (e.g., weak priors). Five hundred participants were recruited in an online study using an illusion-based perceptual decision paradigm (Illusion Game; Makowski et al., 2023) measuring sensitivity to three visual illusions (Ebbinghaus, Müller-Lyer, Vertical-Horizontal), alongside the Phenomenological Control Scale and personality measures. In the registered analysis (N = 295), Bayesian correlations provided evidence against a relationship between phenomenological control and error rates for the Müller-Lyer and Ebbinghaus illusions, but were inconclusive for the Vertical-Horizontal illusion. The data also favoured the absence of the hypothesised association between error rates and psychoticism. These conclusions were unchanged in an unregistered sensitivity analysis addressing data quality issues. These findings are consistent with the cognitive impenetrability of these two illusions under the present task conditions, and suggest that susceptibility to them is not related to trait-level control over subjective experience. However, low consistency across illusion measures highlights important methodological limitations in capturing individual differences related to illusion sensitivity.
 
 - [**Try the experiment**](https://realitybending.github.io/IllusionGamePhenomenologicalControl/experiment/index?exp=readme)
 - [**Stage 1 Registered Report (preprint)**](https://osf.io/preprints/psyarxiv/873th)
@@ -15,7 +15,7 @@
 
 | You are looking for… | Go to |
 |---|---|
-| The current version of the manuscript (Stage 2, revision 1) | [`paper/Stage2_R1/manuscript_R1.qmd`](paper/Stage2_R1/manuscript_R1.qmd) (rendered: `manuscript_R1.docx`) |
+| The current version of the manuscript (Stage 2, revision 1) | [`paper/Stage2_R1/manuscript.qmd`](paper/Stage2_R1/manuscript.qmd) (rendered: `manuscript.docx`) |
 | The response to the recommender and reviewers | [`paper/Stage2_R1/IllusionPCS_Revision_response.docx`](paper/Stage2_R1/) |
 | Previous versions of the manuscript | [`paper/R0/`](paper/R0/), [`paper/R1/`](paper/R1/) (Stage 1, initial submission and revision), [`paper/Stage2/`](paper/Stage2/) (Stage 2, initial submission) |
 | The data | [`data/`](data/) (see [Data](#data)) |
@@ -30,12 +30,12 @@ All data files are in [`data/`](data/). Participants are identified by codes (`S
 
 | File | Content | Produced by |
 |---|---|---|
-| `rawdata_participants.csv` | One row per recruited participant (N = 500): demographics, experiment metadata, PCS item responses and attention checks (`pcs_hello`, `pcs_noballs`, `pcs_press`), PID-5 and IPIP-6 items | `analysis/preprocessing.R` |
+| `rawdata_participants.csv` | One row per recruited participant (N = 500): demographics, first language (`Native_English`: whether English was reported as first language in the Prolific demographic data), experiment metadata, PCS item responses and attention checks (`pcs_hello`, `pcs_noballs`, `pcs_press`), PID-5 and IPIP-6 items | `analysis/preprocessing.R` |
 | `rawdata_illusion.csv` | One row per Illusion Game trial (240,000 trials): illusion type, illusion strength and difference, block, RT (in seconds), response, accuracy and error | `analysis/preprocessing.R` |
-| `data_participants.csv` | Participants retained after all registered exclusions **except** the space bar attention check (N = 468), with computed questionnaire scores (e.g., `PID5_Psychoticism`) and exclusion flags (`PCS_Outlier_Press`, `IG_Outlier_RTBlock_Full`, `IG_Outlier_RTBlock_Half`) | `analysis/1_cleaning.qmd` |
-| `data_illusion.csv` | Illusion Game trials of these participants, with the derived conditions (`Condition_Illusion`: Congruent / Mild / Strong; `Condition_Difficulty`: Easy / Hard) and the trial-level flag `RT_Outlier` (RT < 0.2 s or > 5 s) | `analysis/1_cleaning.qmd` |
-| `data_participants_registered.csv` | Participants retained after **all** registered exclusion criteria, including the space bar check (N = 295) | `analysis/1_cleaning.qmd` |
-| `data_illusion_registered.csv` | Illusion Game trials of the fully registered sample | `analysis/1_cleaning.qmd` |
+| `data_participants.csv` | **Main analysis.** Participants retained after **all** registered exclusion criteria, including the space bar attention check (N = 295), with computed questionnaire scores (e.g., `PID5_Psychoticism`) | `analysis/1_cleaning.qmd` |
+| `data_illusion.csv` | Illusion Game trials of these participants, with the derived conditions (`Condition_Illusion`: Congruent / Mild / Strong; `Condition_Difficulty`: Easy / Hard) | `analysis/1_cleaning.qmd` |
+| `data_participants_unregistered.csv` | **Sensitivity analysis.** Participants retained after all registered exclusions **except** the space bar attention check (N = 468), with exclusion flags (`PCS_Outlier_Press`, `IG_Outlier_RTBlock_Full`, `IG_Outlier_RTBlock_Half`) | `analysis/1_cleaning.qmd` |
+| `data_illusion_unregistered.csv` | Illusion Game trials of these participants, with the trial-level flag `RT_Outlier` (RT < 0.2 s or > 5 s) | `analysis/1_cleaning.qmd` |
 
 Key variables of the trial-level files:
 
@@ -60,26 +60,26 @@ The scripts are run in the following order. Each Quarto document renders to an H
      - *Experiment Duration*
      - *Personality Questionnaires*: IPIP6 and PID-5 scores
      - *Exclusions*
-       - *PCS*: the three attention checks as registered (*PCS (registered)*), the deviation of not applying the space bar check in the main analysis (*PCS (unregistered)*), and *Apply*
+       - *PCS*: the three attention checks as registered (*PCS (registered)*), the deviation of not applying the space bar check in the unregistered sensitivity analysis (*PCS (unregistered)*), and *Apply*
        - *Illusion Game Participants*: error rate > 45% with the block-specific rule (*Error Rate (registered)*), mean RT > 4 SD (*Response Time (registered)*), the block-wise RT rule flagged for a sensitivity analysis (*Sensitivity: Block-Wise RT Rule (unregistered)*), and *Apply*
        - *Illusion Game Trials*: no trial-level criterion was registered (*Registered*); trials with RT < 0.2 s or > 5 s are flagged for a sensitivity analysis (*Unregistered*); and *Apply*
        - *Final Sample*: the fully registered sample, N = 295 (*Registered*), and the sample without the space bar check, N = 468 (*Without the Space Bar Check (unregistered)*), each with a summary and plots of age and gender, education and ethnicity
    - **Exclusion Counts**: the numbers used in the exclusion flow diagram
    - **Save**: writes the four cleaned data files
-3. **[`analysis/2_analysis.qmd`](analysis/2_analysis.qmd)** — Computes the illusion sensitivity scores (error rate and inverse efficiency score, IES), runs the manipulation checks, the registered decision rule for collapsing Mild and Strong conditions, reliability analyses, the registered Bayesian correlations, and all sensitivity and exploratory analyses. Saves all tables (`.rds`) and figures (`.png`) used in the manuscript to `analysis/figures/`.
-4. **[`paper/Stage2_R1/manuscript_R1.qmd`](paper/Stage2_R1/manuscript_R1.qmd)** — The manuscript, which reads the tables and figures from `analysis/figures/`.
+3. **[`analysis/2_analysis.qmd`](analysis/2_analysis.qmd)** — Computes the illusion sensitivity scores (error rate and inverse efficiency score, IES) for the main analysis (fully registered sample) and the unregistered sensitivity analysis, runs the manipulation checks, the registered decision rule for collapsing Mild and Strong conditions, reliability analyses, the registered Bayesian correlations, and all sensitivity and exploratory analyses. Saves all tables (`.rds`) and figures (`.png`) used in the manuscript to `analysis/figures/`.
+4. **[`paper/Stage2_R1/manuscript.qmd`](paper/Stage2_R1/manuscript.qmd)** — The manuscript, which reads the tables and figures from `analysis/figures/`.
 
 ### Registered and unregistered analyses
 
 | Step | Status | Where |
 |---|---|---|
 | PCS attention checks (“Hello”, “no balls”) | Registered | `1_cleaning.qmd` → *Exclusions → PCS → PCS (registered)* |
-| PCS space bar attention check | Registered; applied in the fully registered analysis only (deviation: not applied in the analysis without the space bar check) | `1_cleaning.qmd` → *Exclusions → PCS → PCS (registered)* and *PCS (unregistered)*; *Final Sample → Registered* |
+| PCS space bar attention check | Registered; applied in the main (fully registered) analysis (deviation: not applied in the unregistered sensitivity analysis) | `1_cleaning.qmd` → *Exclusions → PCS → PCS (registered)* and *PCS (unregistered)*; *Final Sample → Registered* |
 | Error rate > 45% (block-specific rule) | Registered | `1_cleaning.qmd` → *Exclusions → Illusion Game Participants → Error Rate (registered)* |
 | Mean RT > 4 SD (participant-level) | Registered | `1_cleaning.qmd` → *Exclusions → Illusion Game Participants → Response Time (registered)* |
-| Block-wise RT rule | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Exclusions → Illusion Game Participants → Sensitivity: Block-Wise RT Rule (unregistered)*; `2_analysis.qmd` → *Sensitivity Datasets* |
-| Trial-level RT filter (< 0.2 s or > 5 s) | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Exclusions → Illusion Game Trials → Unregistered*; `2_analysis.qmd` → *Sensitivity Datasets* |
-| 97.5% HDI exclusion of extreme error rates | Unregistered (sensitivity analysis) | `2_analysis.qmd` → *Outlier Removal* |
+| Block-wise RT rule | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Exclusions → Illusion Game Participants → Sensitivity: Block-Wise RT Rule (unregistered)*; `2_analysis.qmd` → *Unregistered Analysis → Unregistered Scores and Sensitivity Versions* |
+| Trial-level RT filter (< 0.2 s or > 5 s) | Unregistered (sensitivity analysis) | `1_cleaning.qmd` → *Exclusions → Illusion Game Trials → Unregistered*; `2_analysis.qmd` → *Unregistered Analysis → Trial-Level RT Filter* |
+| 97.5% HDI exclusion of extreme congruent error rates | Unregistered (sensitivity analysis) | `2_analysis.qmd` → *Unregistered Analysis → HDI Exclusion* |
 | Manipulation checks (Bayesian *t*-tests) | Registered | `2_analysis.qmd` → *Manipulation Check* |
 | Decision rule for collapsing Mild and Strong (r > .50) | Registered | `2_analysis.qmd` → *Should we collapse across Mild and Strong?* → *Registered Decision* |
 | Reliability (Cronbach's α) | Registered | `2_analysis.qmd` → *Reliability* |
@@ -103,7 +103,7 @@ Then, from the repository root:
 ```bash
 quarto render analysis/1_cleaning.qmd
 quarto render analysis/2_analysis.qmd
-quarto render paper/Stage2_R1/manuscript_R1.qmd --to apaquarto-docx
+quarto render paper/Stage2_R1/manuscript.qmd --to apaquarto-docx
 ```
 
 ## Experiment
