@@ -186,7 +186,7 @@ study_design_table
 
 ## Participants
 
-Five hundred **adult English speakers** (Mean age = 38.6, SD = 13.1, range: [18, 75], 50% of women) were recruited via Prolific (www.prolific.com) and completed the study on a desktop device.^[**Eligibility was implemented using Prolific's screening filters for participants whose first or primary language was English, which departs from the Stage 1 description (see Deviations From Registration).**]
+Five hundred **adult English speakers** (Mean age = 38.6, SD = 13.1, range: [18, 75], 49.4\% of women) were recruited via Prolific (www.prolific.com) and completed the study on a desktop device.^[**Eligibility was implemented using Prolific's screening filters for participants whose first or primary language was English, which departs from the Stage 1 description (see Deviations From Registration).**]
 Out of these participants,  2.8\%  reported having a doctoral degree, 18.2% masters degree, 49.6\% a bachelors degree, 27.4\% a high school degree and 2%  other qualifications. 
 Participants were first presented with an explanatory statement and **the consent form**, and could proceed by pressing a button to confirm they **had** read and understood the information. This study has been approved by the ethics board of the School of Psychology of the University of Sussex (ER/ASF25/5).
 
@@ -399,7 +399,7 @@ readRDS("../../analysis/figures/table_correlations_registered.rds") |>
 #| label: fig-corr
 #| apa-twocolumn: true  # A Figure Spanning Two Columns When in Journal Mode
 #| out-width: "100%"
-#| fig-cap: "Bayesian correlations (posterior median and 95% credible interval) between illusion sensitivity and dispositional traits in the fully registered analysis (N = 295). Error rate (primary outcome) and IES (secondary outcome) are shown in separate panels. Labels show $BF_{10}$ (° $BF_{10} \\leq 1/3$; * $BF_{10} \\geq 3$; ** $BF_{10} > 10$). 'Mild + Strong' denotes scores collapsed across illusion strength. The Congruent condition is not a measure of illusion sensitivity and is shown for reference only. The corresponding figure for the unregistered analysis is available in the project repository."
+#| fig-cap: "Bayesian correlations (posterior median and 95% credible interval) between illusion sensitivity and dispositional traits in the fully registered analysis (N = 295). Error rate (primary outcome) and IES (secondary outcome) are shown in separate panels. Labels show $BF_{10}$ (° $BF_{10} \\leq 1/3$; * $BF_{10} \\geq 3$; ** $BF_{10} > 10$; *** $BF_{10} > 30$). 'Mild + Strong' denotes scores collapsed across illusion strength. The Congruent condition is not a measure of illusion sensitivity and is shown for reference only. The corresponding figure for the unregistered analysis is available in the project repository."
 
 knitr::include_graphics("../../analysis/figures/fig_correlations_registered.png")
 ```
@@ -409,7 +409,7 @@ knitr::include_graphics("../../analysis/figures/fig_correlations_registered.png"
 **The registered analyses were repeated in the unregistered analysis described in Deviations From Registration, which addressed the issues identified during analysis: the space bar check was not applied, and extreme trials and participants with extreme congruent error rates were excluded (N = 458 per illusion).** 
 **The registered decision rule for collapsing Mild and Strong was applied separately in this sample, leading to the same decisions except for the IES of the Müller-Lyer illusion, which was analysed separately (*r* = .43; @tbl-s2).**
 **The effect of each deviation was also evaluated separately (@tbl-s1; test-by-test Bayes factors in @tbl-s1-bf).**
-**Applying the registered criteria without the space bar check (N = 468) led to the same conclusions for the primary outcome, but one test of the relationship between psychoticism and IES provided evidence for a relationship (Vertical-Horizontal, Strong: $BF_{10} = 3.21$; @tbl-s1-bf).**
+**Applying the registered criteria without the space bar check (N = 468) led to the same conclusions for the primary outcome. For the secondary outcome (IES), two tests of the Vertical-Horizontal illusion (Mild) were inconclusive rather than supporting the null (PCS: $BF_{10} = 0.38$; psychoticism: $BF_{10} = 0.74$), and one test of the relationship between psychoticism and IES provided evidence for a relationship (Vertical-Horizontal, Strong: $BF_{10} = 3.21$; @tbl-s1-bf), although in the direction opposite to the registered hypothesis.**
 **Restricting the registered analysis to native English speakers (N = 252), as specified in the Stage 1 protocol, also led to the same conclusions for the primary outcome, with evidence for the null for all three illusions (Vertical-Horizontal: $BF_{10} = 0.25$).**
 **None of these changes altered the conclusions for the primary outcome: in the unregistered analysis, PCS was unrelated to error rates for the Müller-Lyer ($BF_{10} = 0.11$) and Ebbinghaus illusions ($BF_{10} = 0.11$), the evidence for the Vertical-Horizontal illusion remained inconclusive ($BF_{10} = 0.42$), and all psychoticism–error rate correlations supported the null ($BF_{10} = 0.11$–$0.20$).**
 **The classification of a few tests of the secondary outcome (IES) lying close to the evidential thresholds varied between versions, but none supported a relationship in the unregistered analysis.**
@@ -420,7 +420,7 @@ knitr::include_graphics("../../analysis/figures/fig_correlations_registered.png"
 To ensure the robustness of these findings to various analysis decisions, we additionally computed the correlations with variant scores of the illusion game, namely with **Mild and Strong analysed separately for all scores, and with outcomes computed separately for each difficulty level (i.e., Easy and Hard).**
 **With Mild and Strong analysed separately, 9 of the 12 PCS correlations supported the null and 3 were inconclusive; across the 36 difficulty-specific PCS correlations, 29 supported the null and 7 were inconclusive.**
 **No PCS correlation supported a relationship.**
-**For psychoticism, one correlation supported a relationship in both variants: IES for the Ebbinghaus illusion in the Strong condition (Mild and Strong separate: *r* = .17, $BF_{10} = 11.4$; Easy trials: *r* = .17, $BF_{10} = 11.2$), which was positive, i.e., in the direction opposite to the registered hypothesis.**
+**For psychoticism, one correlation supported a relationship in both variants: IES for the Ebbinghaus illusion in the Strong condition (Mild and Strong separate: $\rho = 0.17$, $BF_{10} = 11.4$; Easy trials: $\rho = 0.17$, $BF_{10} = 11.2$), which was positive, i.e., in the direction opposite to the registered hypothesis.**
 **All other psychoticism correlations supported the null or were inconclusive.**
 **Finally, PCS correlated with the error rate ($BF_{10} = 6.32$) and IES ($BF_{10} = 4.94$) in the congruent condition of the Ebbinghaus illusion (@fig-corr); as the congruent condition does not index illusion sensitivity, these correlations were not part of the registered tests and should be interpreted with caution.**
 
@@ -493,7 +493,7 @@ Until such high-resolution, reliable metrics are established, the subtle links b
 
 # Data Availability
 
-All the study materials, experiment, data, and analysis are available on GitHub at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**.
+All the study materials, experiment, data, and analysis are available on GitHub at **https://github.com/RealityBending/IllusionGamePhenomenologicalControl**. **A permanent copy of the repository is also archived on Zenodo (DOI: [ADD ZENODO DOI]).**
 
 This study was pre-registered as a Registered Report (https://osf.io/kvjnm) following Stage 1 in-principle acceptance on the 5/12/2025. 
 
