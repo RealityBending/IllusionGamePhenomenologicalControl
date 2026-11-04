@@ -16,7 +16,8 @@
 | You are looking for… | Go to |
 |---|---|
 | The current version of the manuscript (Stage 2, revision 1) | [`paper/Stage2_R1/manuscript.qmd`](paper/Stage2_R1/manuscript.qmd) (rendered: `manuscript.docx`) |
-| The response to the recommender and reviewers | [`paper/Stage2_R1/IllusionPCS_Revision_response.docx`](paper/Stage2_R1/) |
+| The response to the recommender and reviewers | [`paper/Stage2_R1/IllusionPCS_Revision.pdf`](paper/Stage2_R1/IllusionPCS_Revision.pdf) |
+| The changes relative to the initial Stage 2 submission (tracked changes) | [`paper/Stage2_R1/track_changes.docx`](paper/Stage2_R1/track_changes.docx) (also as `track_changes.htm`) |
 | Previous versions of the manuscript | [`paper/R0/`](paper/R0/), [`paper/R1/`](paper/R1/) (Stage 1, initial submission and revision), [`paper/Stage2/`](paper/Stage2/) (Stage 2, initial submission) |
 | The data | [`data/`](data/) (see [Data](#data)) |
 | The analysis code | [`analysis/`](analysis/) (see [Analysis pipeline](#analysis-pipeline)) |
