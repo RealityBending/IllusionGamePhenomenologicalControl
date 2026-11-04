@@ -9,7 +9,7 @@
 - [**Stage 2 manuscript (preprint)**](https://osf.io/preprints/psyarxiv/873th_v5)
 - [**Data Cleaning Report**](https://realitybending.github.io/IllusionGamePhenomenologicalControl/analysis/1_cleaning.html)
 - [**Data Analysis Report**](https://realitybending.github.io/IllusionGamePhenomenologicalControl/analysis/2_analysis.html)
-- **Archived version (Zenodo)**: [DOI]
+- **Archived version (Zenodo)**: https://doi.org/10.5281/zenodo.23943901
 
 ## Where to find what
 
