@@ -1,0 +1,46 @@
+{
+  "title": "Testing the Relationship between Phenomenological Control related to Illusion Sensitivity: data, analysis code and materials (Stage 2 Registered Report)",
+  "upload_type": "dataset",
+  "description": "<p>Data, analysis code, analysis reports, experiment code and study materials for the Stage 2 Registered Report (PCI Registered Reports) testing the relationship between phenomenological control and sensitivity to visual illusions (Ebbinghaus, Müller-Lyer, Vertical-Horizontal) and between illusion sensitivity and psychoticism.</p><p>The archive contains the anonymised participant- and trial-level data (raw and cleaned, for the fully registered analysis and the unregistered sensitivity analysis), the preprocessing, cleaning and analysis scripts (R and Quarto) with their rendered reports, the manuscript source, the jsPsych experiment code and stimuli, and the Phenomenological Control Scale materials. See the README for a description of each file and the order in which the scripts are run.</p>",
+  "creators": [
+    {
+      "name": "Makowski, Dominique",
+      "affiliation": "School of Psychology, University of Sussex",
+      "orcid": "0000-0001-5375-9967"
+    },
+    {
+      "name": "Neves, Ana",
+      "affiliation": "School of Psychology, University of Sussex",
+      "orcid": "0009-0006-0020-7599"
+    }
+  ],
+  "keywords": [
+    "illusion sensitivity",
+    "visual illusions",
+    "phenomenological control",
+    "suggestibility",
+    "hypnotizability",
+    "psychoticism",
+    "registered report"
+  ],
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "language": "eng",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/RealityBending/IllusionGamePhenomenologicalControl",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "https://osf.io/kvjnm",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "identifier": "https://osf.io/preprints/psyarxiv/873th",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-preprint"
+    }
+  ]
+}
